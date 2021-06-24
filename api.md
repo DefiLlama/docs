@@ -2,7 +2,7 @@
 
 ### Authentication
 
-Interacting with the API that powers our site doesn't require any authentication, the API is  completely open and anyone can start using it without having to contact us.
+Interacting with the API that powers our site doesn't require any authentication, the API is completely open and anyone can start using it without having to contact us.
 
 {% api-method method="get" host="https://api.llama.fi" path="/protocols" %}
 {% api-method-summary %}
@@ -38,20 +38,33 @@ Returns basic information on all listed protocols, their current TVL and the cha
     "gecko_id": "uniswap",
     "cmcId": "7083",
     "category": "Dexes",
-    "tvl": "5050848297.03",
-    "change_1h": 0,
-    "change_1d": -0.7085764798524287,
-    "change_7d": 12.845304274849878
+    "chains": ["Ethereum"],
+    "module": "uniswap/index.js",
+    "twitter": "Uniswap",
+    "audit_links": [
+      "https:\/\/github.com\/Uniswap\/uniswap-v3-core\/tree\/main\/audits",
+      "https:\/\/github.com\/Uniswap\/uniswap-v3-periphery\/tree\/main\/audits",
+      "https:\/\/github.com\/ConsenSys\/Uniswap-audit-report-2018-12"
+    ],
+    "slug": "uniswap",
+    "tvl": 4294270703.8317223,
+    "chainTvls": {
+      "Ethereum": 4294270703.8317223
+    },
+    "change_1h": 2.4355323149076753,
+    "change_1d": 4.591169165988049,
+    "change_7d": -11.268195007383326
   },
   ...
 ]
 ```
+
 {% endapi-method-response-example %}
 {% endapi-method-response %}
 {% endapi-method-spec %}
 {% endapi-method %}
 
-{% api-method method="get" host="https://api.llama.fi" path="/protocol/:name" %}
+{% api-method method="get" host="https://api.llama.fi" path="/protocol/:slug" %}
 {% api-method-summary %}
 Get Protocol
 {% endapi-method-summary %}
@@ -63,8 +76,8 @@ Returns historical data on the TVL of a protocol along with some basic data on i
 {% api-method-spec %}
 {% api-method-request %}
 {% api-method-path-parameters %}
-{% api-method-parameter name="name" type="string" required=true %}
-ID of the protocol to get \(eg: uniswap, WBTC...\).  
+{% api-method-parameter name="slug" type="string" required=true %}
+Slug of the protocol to get \(eg: uniswap, yearn-finance...\).  
 This can be obtained from the /protocols endpoint
 {% endapi-method-parameter %}
 {% endapi-method-path-parameters %}
@@ -85,46 +98,49 @@ This can be obtained from the /protocols endpoint
   "url": "https:\/\/info.uniswap.org\/",
   "description": "A fully decentralized protocol for automated liquidity provision on Ethereum.\r\n",
   "chain": "Ethereum",
-  "chains": ["Ethereum"],
-  "logo": "https://icons.llama.fi/eq0vIOD1_400x400.jpg",
+  "logo": null,
   "audits": "2",
   "audit_note": null,
   "gecko_id": "uniswap",
   "cmcId": "7083",
   "category": "Dexes",
-  "tvl": [
-    {
-      "date": 1611360000,
-      "totalLiquidityUSD": "3225225307.35"
-    },
-    {
-      "date": 1611446400,
-      "totalLiquidityUSD": "3166055013.42"
-    },
-    ...
+  "chains": ["Ethereum"],
+  "module": "uniswap/index.js",
+  "twitter": "Uniswap",
+  "audit_links": [
+    "https:\/\/github.com\/Uniswap\/uniswap-v3-core\/tree\/main\/audits",
+    "https:\/\/github.com\/Uniswap\/uniswap-v3-periphery\/tree\/main\/audits",
+    "https:\/\/github.com\/ConsenSys\/Uniswap-audit-report-2018-12"
   ],
-  "tokensInUsd": [
+  "chainTvls": {
+    "Ethereum":
     {
-      "date":1616713200,
-      "tokens":{
-        "DPI":129070.08340457824,
-        "WETH":89700.8000047377
-      }
-    },
-    ...
-  ],
-  "tokens":[
-    {
-      "date":1616713200,
-      "tokens":{
-        "DPI":341.1262424986834
-        "WETH":55.61780506546786
-      }
-    },
-    ...
-  ]
-}
+      "tvl": [
+        {
+          "date": 1588716000,
+          "totalLiquidityUSD": 0.9892225217628695
+        },
+        {
+          "date": 1588802400,
+          "totalLiquidityUSD": 3.206759871028627
+        },
+        ...
+        {
+          "date": 1624406400,
+          "tokens": {
+            "USDT": 4112596483.605813
+            }
+          },
+        {
+          "date": 1624492800,
+          "tokens": {
+            "USDT": 4237678349.747973
+            }
+          }
+      ]
+    }
 ```
+
 {% endapi-method-response-example %}
 {% endapi-method-response %}
 {% endapi-method-spec %}
@@ -167,12 +183,13 @@ Returns historical values of the total sum of TVLs from all listed protocols.
   ...
 ]
 ```
+
 {% endapi-method-response-example %}
 {% endapi-method-response %}
 {% endapi-method-spec %}
 {% endapi-method %}
 
-{% api-method method="get" host="https://api.llama.fi" path="/tvl/:name" %}
+{% api-method method="get" host="https://api.llama.fi" path="/tvl/:slug" %}
 {% api-method-summary %}
 Get protocol TVL
 {% endapi-method-summary %}
@@ -184,8 +201,8 @@ Mainly meant to make life easier for users that import data to spreadsheets
 {% api-method-spec %}
 {% api-method-request %}
 {% api-method-path-parameters %}
-{% api-method-parameter name="name" type="string" required=false %}
-ID of the protocol \(eg: uniswap\)
+{% api-method-parameter name="slug" type="string" required=false %}
+Slug of the protocol to get \(eg: uniswap, yearn-finance...\).
 {% endapi-method-parameter %}
 {% endapi-method-path-parameters %}
 {% endapi-method-request %}
@@ -199,8 +216,8 @@ Directly returns the TVL as a number
 ```
 58605464.543818
 ```
+
 {% endapi-method-response-example %}
 {% endapi-method-response %}
 {% endapi-method-spec %}
 {% endapi-method %}
-
