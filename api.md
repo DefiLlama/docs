@@ -1,12 +1,12 @@
 # API
 
-### Authentication
+## Authentication
 
 Interacting with the API that powers our site doesn't require any authentication, the API is completely open and anyone can start using it without having to contact us.
 
 {% api-method method="get" host="https://api.llama.fi" path="/protocols" %}
 {% api-method-summary %}
-Get All Protocols
+Get all protocols
 {% endapi-method-summary %}
 
 {% api-method-description %}
@@ -15,6 +15,12 @@ Returns basic information on all listed protocols, their current TVL and the cha
 
 {% api-method-spec %}
 {% api-method-request %}
+{% api-method-path-parameters %}
+{% api-method-parameter name="" type="string" required=false %}
+
+{% endapi-method-parameter %}
+{% endapi-method-path-parameters %}
+{% endapi-method-request %}
 
 {% api-method-response %}
 {% api-method-response-example httpCode=200 %}
@@ -58,7 +64,6 @@ Returns basic information on all listed protocols, their current TVL and the cha
   ...
 ]
 ```
-
 {% endapi-method-response-example %}
 {% endapi-method-response %}
 {% endapi-method-spec %}
@@ -140,7 +145,6 @@ This can be obtained from the /protocols endpoint
       ]
     }
 ```
-
 {% endapi-method-response-example %}
 {% endapi-method-response %}
 {% endapi-method-spec %}
@@ -148,7 +152,7 @@ This can be obtained from the /protocols endpoint
 
 {% api-method method="get" host="https://api.llama.fi" path="/charts" %}
 {% api-method-summary %}
-Get historical values of total TVL
+Get charts
 {% endapi-method-summary %}
 
 {% api-method-description %}
@@ -183,7 +187,6 @@ Returns historical values of the total sum of TVLs from all listed protocols.
   ...
 ]
 ```
-
 {% endapi-method-response-example %}
 {% endapi-method-response %}
 {% endapi-method-spec %}
@@ -213,11 +216,11 @@ Slug of the protocol to get \(eg: uniswap, yearn-finance...\).
 Directly returns the TVL as a number
 {% endapi-method-response-example-description %}
 
-```
+```text
 58605464.543818
 ```
-
 {% endapi-method-response-example %}
 {% endapi-method-response %}
 {% endapi-method-spec %}
 {% endapi-method %}
+
