@@ -192,6 +192,38 @@ Returns historical values of the total sum of TVLs from all listed protocols.
 {% endapi-method-spec %}
 {% endapi-method %}
 
+{% api-method method="get" host="https://api.llama.fi" path="/charts/:chain" %}
+{% api-method-summary %}
+Get chain chart
+{% endapi-method-summary %}
+
+{% api-method-description %}
+Returns the total sum of TVLs for projects on a specific chain
+{% endapi-method-description %}
+
+{% api-method-spec %}
+{% api-method-request %}
+{% api-method-path-parameters %}
+{% api-method-parameter name="chain" type="string" required=false %}
+Slug of the chain you wish to obtain the aggregated TVLs from. You can get these slugs from the /protocols endpoint
+{% endapi-method-parameter %}
+{% endapi-method-path-parameters %}
+{% endapi-method-request %}
+
+{% api-method-response %}
+{% api-method-response-example httpCode=200 %}
+{% api-method-response-example-description %}
+
+{% endapi-method-response-example-description %}
+
+```
+
+```
+{% endapi-method-response-example %}
+{% endapi-method-response %}
+{% endapi-method-spec %}
+{% endapi-method %}
+
 {% api-method method="get" host="https://api.llama.fi" path="/tvl/:slug" %}
 {% api-method-summary %}
 Get protocol TVL
