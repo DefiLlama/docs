@@ -131,7 +131,7 @@ Once you are done writing it you can verify that it returns the correct value by
 ```bash
 $ npm install
 # Replace with your adapter's name
-$ npx @defillama/sdk projects/pooltogether/index.js 
+$ node test.js projects/pooltogether/index.js 
 ```
 
 ### Submit 🎉
