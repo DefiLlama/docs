@@ -32,21 +32,6 @@ When returning the balances of Binance Chain tokens, the token addresses should 
 
 ### Chains supported
 
-Here's the full list:
-
-* `ethereum`
-* `bsc`
-* `polygon`
-* `heco`
-* `fantom`
-* `rsk`
-* `tomochain`
-* `xdai`
-* `avax`
-* `wan`
-* `harmony`
-* `thundercore`
-* `okexchain`
+The full list of chains is on [https://github.com/DefiLlama/defillama-sdk/blob/master/src/general.ts#L34](https://github.com/DefiLlama/defillama-sdk/blob/master/src/general.ts#L34), along with the slugs we use for them.
 
 If you'd like us to add support for any other chain just let us know on discord!
-

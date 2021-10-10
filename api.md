@@ -4,30 +4,16 @@
 
 Interacting with the API that powers our site doesn't require any authentication, the API is completely open and anyone can start using it without having to contact us.
 
-{% api-method method="get" host="https://api.llama.fi" path="/protocols" %}
-{% api-method-summary %}
-Get all protocols
-{% endapi-method-summary %}
-
-{% api-method-description %}
+{% swagger baseUrl="https://api.llama.fi" path="/protocols" method="get" summary="Get all protocols" %}
+{% swagger-description %}
 Returns basic information on all listed protocols, their current TVL and the changes to it in the last hour/day/week.
-{% endapi-method-description %}
+{% endswagger-description %}
 
-{% api-method-spec %}
-{% api-method-request %}
-{% api-method-path-parameters %}
-{% api-method-parameter name="" type="string" required=false %}
+{% swagger-parameter in="path" name="" type="string" %}
 
-{% endapi-method-parameter %}
-{% endapi-method-path-parameters %}
-{% endapi-method-request %}
+{% endswagger-parameter %}
 
-{% api-method-response %}
-{% api-method-response-example httpCode=200 %}
-{% api-method-response-example-description %}
-
-{% endapi-method-response-example-description %}
-
+{% swagger-response status="200" description="" %}
 ```javascript
 [
   {
@@ -64,36 +50,24 @@ Returns basic information on all listed protocols, their current TVL and the cha
   ...
 ]
 ```
-{% endapi-method-response-example %}
-{% endapi-method-response %}
-{% endapi-method-spec %}
-{% endapi-method %}
+{% endswagger-response %}
+{% endswagger %}
 
-{% api-method method="get" host="https://api.llama.fi" path="/protocol/:slug" %}
-{% api-method-summary %}
-Get Protocol
-{% endapi-method-summary %}
+{% swagger baseUrl="https://api.llama.fi" path="/protocol/:slug" method="get" summary="Get Protocol" %}
+{% swagger-description %}
+Returns historical data on the TVL of a protocol along with some basic data on it. The fields `tokensInUsd` and `tokens` are only available for some protocols.
+{% endswagger-description %}
 
-{% api-method-description %}
-Returns historical data on the TVL of a protocol along with some basic data on it. The fields \`tokensInUsd\` and \`tokens\` are only available for some protocols.
-{% endapi-method-description %}
+{% swagger-parameter in="path" name="slug" type="string" %}
+Slug of the protocol to get (eg: uniswap, yearn-finance...).
 
-{% api-method-spec %}
-{% api-method-request %}
-{% api-method-path-parameters %}
-{% api-method-parameter name="slug" type="string" required=true %}
-Slug of the protocol to get \(eg: uniswap, yearn-finance...\).  
+\
+
+
 This can be obtained from the /protocols endpoint
-{% endapi-method-parameter %}
-{% endapi-method-path-parameters %}
-{% endapi-method-request %}
+{% endswagger-parameter %}
 
-{% api-method-response %}
-{% api-method-response-example httpCode=200 %}
-{% api-method-response-example-description %}
-
-{% endapi-method-response-example-description %}
-
+{% swagger-response status="200" description="" %}
 ```javascript
 {
   "id": "1",
@@ -145,29 +119,15 @@ This can be obtained from the /protocols endpoint
       ]
     }
 ```
-{% endapi-method-response-example %}
-{% endapi-method-response %}
-{% endapi-method-spec %}
-{% endapi-method %}
+{% endswagger-response %}
+{% endswagger %}
 
-{% api-method method="get" host="https://api.llama.fi" path="/charts" %}
-{% api-method-summary %}
-Get charts
-{% endapi-method-summary %}
-
-{% api-method-description %}
+{% swagger baseUrl="https://api.llama.fi" path="/charts" method="get" summary="Get charts" %}
+{% swagger-description %}
 Returns historical values of the total sum of TVLs from all listed protocols.
-{% endapi-method-description %}
+{% endswagger-description %}
 
-{% api-method-spec %}
-{% api-method-request %}
-
-{% api-method-response %}
-{% api-method-response-example httpCode=200 %}
-{% api-method-response-example-description %}
-
-{% endapi-method-response-example-description %}
-
+{% swagger-response status="200" description="" %}
 ```javascript
 [
   {
@@ -187,72 +147,36 @@ Returns historical values of the total sum of TVLs from all listed protocols.
   ...
 ]
 ```
-{% endapi-method-response-example %}
-{% endapi-method-response %}
-{% endapi-method-spec %}
-{% endapi-method %}
+{% endswagger-response %}
+{% endswagger %}
 
-{% api-method method="get" host="https://api.llama.fi" path="/charts/:chain" %}
-{% api-method-summary %}
-Get chain chart
-{% endapi-method-summary %}
-
-{% api-method-description %}
+{% swagger baseUrl="https://api.llama.fi" path="/charts/:chain" method="get" summary="Get chain chart" %}
+{% swagger-description %}
 Returns the total sum of TVLs for projects on a specific chain
-{% endapi-method-description %}
+{% endswagger-description %}
 
-{% api-method-spec %}
-{% api-method-request %}
-{% api-method-path-parameters %}
-{% api-method-parameter name="chain" type="string" required=false %}
+{% swagger-parameter in="path" name="chain" type="string" %}
 Slug of the chain you wish to obtain the aggregated TVLs from. You can get these slugs from the /protocols endpoint
-{% endapi-method-parameter %}
-{% endapi-method-path-parameters %}
-{% endapi-method-request %}
+{% endswagger-parameter %}
 
-{% api-method-response %}
-{% api-method-response-example httpCode=200 %}
-{% api-method-response-example-description %}
-
-{% endapi-method-response-example-description %}
-
+{% swagger-response status="200" description="" %}
 ```
-
 ```
-{% endapi-method-response-example %}
-{% endapi-method-response %}
-{% endapi-method-spec %}
-{% endapi-method %}
+{% endswagger-response %}
+{% endswagger %}
 
-{% api-method method="get" host="https://api.llama.fi" path="/tvl/:slug" %}
-{% api-method-summary %}
-Get protocol TVL
-{% endapi-method-summary %}
-
-{% api-method-description %}
+{% swagger baseUrl="https://api.llama.fi" path="/tvl/:slug" method="get" summary="Get protocol TVL" %}
+{% swagger-description %}
 Mainly meant to make life easier for users that import data to spreadsheets
-{% endapi-method-description %}
+{% endswagger-description %}
 
-{% api-method-spec %}
-{% api-method-request %}
-{% api-method-path-parameters %}
-{% api-method-parameter name="slug" type="string" required=false %}
-Slug of the protocol to get \(eg: uniswap, yearn-finance...\).
-{% endapi-method-parameter %}
-{% endapi-method-path-parameters %}
-{% endapi-method-request %}
+{% swagger-parameter in="path" name="slug" type="string" %}
+Slug of the protocol to get (eg: uniswap, yearn-finance...).
+{% endswagger-parameter %}
 
-{% api-method-response %}
-{% api-method-response-example httpCode=200 %}
-{% api-method-response-example-description %}
-Directly returns the TVL as a number
-{% endapi-method-response-example-description %}
-
-```text
+{% swagger-response status="200" description="Directly returns the TVL as a number" %}
+```
 58605464.543818
 ```
-{% endapi-method-response-example %}
-{% endapi-method-response %}
-{% endapi-method-spec %}
-{% endapi-method %}
-
+{% endswagger-response %}
+{% endswagger %}

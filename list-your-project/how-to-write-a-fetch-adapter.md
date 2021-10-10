@@ -1,6 +1,6 @@
 # How to write a fetch adapter
 
-This is the simplest type of adapter, it's just an adapter that exports a function called `fetch` which returns a project's total TVL \(in USD\) as a number.
+This is the simplest type of adapter, it's just an adapter that exports a function called `fetch` which returns a project's total TVL (in USD) as a number.
 
 The following basic adapter would just always return a TVL of 100$:
 
@@ -86,4 +86,3 @@ module.exports = {
 }
 ```
 {% endcode %}
-

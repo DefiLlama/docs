@@ -6,7 +6,7 @@ description: >-
 
 # Speedrun
 
-The adapter is just a function that takes a timestamp and block-height \(on Ethereum\) and returns the balances of tokens locked in your protocol's smart contracts at that point in time:
+The adapter is just a function that takes a timestamp and block-height (on Ethereum) and returns the balances of tokens locked in your protocol's smart contracts at that point in time:
 
 #### TrueFi
 
@@ -324,7 +324,7 @@ Total: 138.01 M
 {% endtab %}
 {% endtabs %}
 
-#### Alpha Homora \(BSC\)
+#### Alpha Homora (BSC)
 
 {% tabs %}
 {% tab title="Code" %}
@@ -487,4 +487,3 @@ Total: 7.41 B
 ```
 {% endtab %}
 {% endtabs %}
-

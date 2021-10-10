@@ -36,9 +36,12 @@ Right now our SDK only supports EVM chains, so if your project is in any of thes
 
 You probably need to write an SDK adapter, for which you could use the following guide:
 
-{% page-ref page="how-to-write-an-sdk-adapter/" %}
+{% content-ref url="how-to-write-an-sdk-adapter/" %}
+[how-to-write-an-sdk-adapter](how-to-write-an-sdk-adapter/)
+{% endcontent-ref %}
 
 Otherwise you could also try to speedrun it by just taking a look at some examples of adapters and trying to go from there. If that's more your style, check out the following page:
 
-{% page-ref page="speedrun.md" %}
-
+{% content-ref url="speedrun.md" %}
+[speedrun.md](speedrun.md)
+{% endcontent-ref %}

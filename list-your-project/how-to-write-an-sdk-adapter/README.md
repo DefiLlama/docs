@@ -4,7 +4,7 @@ You should start by forking the [DefiLlama/DefiLlama-Adapters](https://github.co
 
 ### Adapters 101
 
-At it's core, an adapter is just some code that takes in a UNIX timestamp and an Ethereum block height and returns the balances of assets locked in a protocol, including all the decimals \(that is, the way it's stored on chain\).
+At it's core, an adapter is just some code that takes in a UNIX timestamp and an Ethereum block height and returns the balances of assets locked in a protocol, including all the decimals (that is, the way it's stored on chain).
 
 For example, the following adapter would return a TVL that increases by 1 WBTC and 3 BAT every block:
 
@@ -122,7 +122,9 @@ Check it out [here](https://github.com/ConcourseOpen/DeFi-Pulse-Adapters/blob/ma
 
 Check the following page for several examples of adapters along with input/outputs:
 
-{% page-ref page="../speedrun.md" %}
+{% content-ref url="../speedrun.md" %}
+[speedrun.md](../speedrun.md)
+{% endcontent-ref %}
 
 ### Testing
 
@@ -137,4 +139,3 @@ $ node test.js projects/pooltogether/index.js
 ### Submit 🎉
 
 Just submit a PR to [the adapter repository on Github](https://github.com/DefiLlama/DefiLlama-Adapters)! 
-
