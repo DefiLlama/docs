@@ -1,17 +1,23 @@
-# Introduction
+# DefiLlama and our methodology
 
-### API
+We pride ourselves in producing inclusive, non-biased, and community driven statistics for the decentralised finance industry. We do our best to treat all projects equally with regards to what is and isn't included in TVL, how long it takes to list or update a project's TVL, and everything else.
 
-{% content-ref url="api.md" %}
-[api.md](api.md)
-{% endcontent-ref %}
+### Our Methodology
 
-### Submit an adapter
+At DefiLlama we consider the value of any tokens locked in the contracts of a protocol / platform as TVL. Below are some notes about how our calculations work.
 
-{% content-ref url="list-your-project/submit-a-project.md" %}
-[submit-a-project.md](list-your-project/submit-a-project.md)
-{% endcontent-ref %}
+Valuing different tokens:
 
-### Contact us
+* Almost all tokens are priced using CoinGecko's API. Where this can't be done, we can accommodate using on-chain methods to quantify the value of a token. This is most commonly done by comparing the pool weights of a very liquid Uniswap V2 market.&#x20;
 
-We prefer to have all conversations openly on [GitHub issues or PRs](https://github.com/DefiLlama/DefiLlama-Adapters), but if you'd like to reach out to us directly feel free to join [our Discord server](https://discord.gg/buPFYXzDDd).
+Valuing different NFTs:
+
+*
+
+Node validators and other chain-native token staking:
+
+* For example, ATOM staking to secure the Cosmos hub. However we do count liquid staking solutions, like Lido and Marinade.
+
+Bridges:
+
+* There are arguments both for including bridge TVL on the origin chain and the destination chain. Therefore we count the TVL of bridge projects but do not contribute them towards the TVL of any chain.&#x20;

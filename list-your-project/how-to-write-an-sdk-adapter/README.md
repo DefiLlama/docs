@@ -1,130 +1,99 @@
 # How to write an SDK adapter
 
-You should start by forking the [DefiLlama/DefiLlama-Adapters](https://github.com/DefiLlama/DefiLlama-Adapters) repository on github. Afterwards, just create a new folder on \`/projects\` and write your adapter there.
-
 ### Adapters 101
 
-At it's core, an adapter is just some code that takes in a UNIX timestamp and an Ethereum block height and returns the balances of assets locked in a protocol, including all the decimals (that is, the way it's stored on chain).
-
-For example, the following adapter would return a TVL that increases by 1 WBTC and 3 BAT every block:
-
-```javascript
-const BigNumber = require("bignumber.js")
-
-const wbtcContract = "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599"
-const batContract = "0x0d8775f648430679a709e98d2b0cb6250d2887ef"
-
-async function tvl(timestamp, block) {
-  // WBTC has a 8 decimals
-  const wbtcBalance = BigNumber(block).times(1e8)
-  // BAT has 18 decimals
-  const batBalance = BigNumber(block).times(3).times(1e18)
-  
-  // toFixed(0) just converts the numbers into strings
-  return { 
-    [wbtcContract]: wbtcBalance.toFixed(0),
-    [batContract]: batBalance.toFixed(0)
-  };
-}
-
-module.exports = {
-  ethereum:{
-    tvl,
-  },
-  tvl,
-};
-```
-
-If we were to evaluate it to get the TVL at block height 12 we would then get the following output:
-
-```javascript
-{
-  '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599': '1200000000',
-  '0x0d8775f648430679a709e98d2b0cb6250d2887ef': '36000000000000000000'
-}
-```
-
-Which our SDK would then convert into their USD equivalent and sum to obtain total TVL.
-
-So, all in all, adapters just do that, take in a time and return a list of assets locked at that moment, specified by the address of their token, and their respective balances as strings and with all the decimals.
+An adapter is just some code that takes in a UNIX timestamp and chain block heights, and returns the balances of assets locked in a protocol, including all the decimals (that is, the way it's stored on chain). Our SDK will convert all raw asset balances into their USD equivalent and sum to obtain total TVL, so you need minimal processing inside the adapter.
 
 ### Basic adapter
 
-Now let's move on to a real adapter, here's the one we use for PoolTogether:
+Below, you can see the one we use for Mint Club on Binance Smart Chain (BSC). Let's walk through it to get a better understanding of how it works.
 
-{% code title="projects/pooltogether/index.js" %}
+{% code title="projects/mint-club/index.js" %}
 ```javascript
-const sdk = require("@defillama/sdk");
-const { request, gql } = require("graphql-request");
-const abi = require('./abi.json')
+const sdk = require('@defillama/sdk');
+const { transformBscAddress } = require('../helper/portedTokens');
+const MINT_TOKEN_CONTRACT = '0x1f3Af095CDa17d63cad238358837321e95FC5915';
+const MINT_CLUB_BOND_CONTRACT = '0x8BBac0C7583Cc146244a18863E708bFFbbF19975';
 
-const graphUrl =
-  'https://api.thegraph.com/subgraphs/name/pooltogether/pooltogether-v3_1_0';
-const graphQuery = gql`
-query GET_POOLS($block: Int) {
-  prizePools(
-    block: { number: $block }
-  ) {
-    id
-    underlyingCollateralSymbol
-    underlyingCollateralToken
-    compoundPrizePool{
-      cToken
-    }
-  }
+async function tvl(timestamp, block, chainBlocks) {
+  const balances = {};
+  const transform = await transformBscAddress();
+
+  const collateralBalance = (await sdk.api.abi.call({
+    abi: 'erc20:balanceOf',
+    chain: 'bsc',
+    target: MINT_TOKEN_CONTRACT,
+    params: [MINT_CLUB_BOND_CONTRACT],
+    block: chainBlocks['bsc'],
+  })).output;
+
+  await sdk.util.sumSingleBalance(balances, transform(MINT_TOKEN_CONTRACT), collateralBalance)
+
+  return balances;
 }
-`;
-
-async function tvl(timestamp, block) {
-  let balances = {};
-
-  const { prizePools } = await request(
-    graphUrl,
-    graphQuery,
-    {
-      block,
-    }
-  );
-  const lockedTokens = await sdk.api.abi.multiCall({
-    abi: abi['accountedBalance'],
-    calls: prizePools.map(pool => ({
-      target: pool.id
-    })),
-    block
-  });
-  lockedTokens.output.forEach((call, index) => {
-    const underlyingToken = prizePools[index].underlyingCollateralToken;
-    const underlyingTokenBalance = call.output;
-    sdk.util.sumSingleBalance(balances, underlyingToken, underlyingTokenBalance);
-  })
-  return balances
-}
-
 
 module.exports = {
-  ethereum:{
+  bsc: {
     tvl,
-  },
-  tvl
-}
+  }
+}; 
 ```
 {% endcode %}
 
-What we are doing here is getting all their pools from their subgraph, then making an Ethereum call to each of them to get how many tokens are locked in each and then just returning each of these tokens along with the balances we got.
+The adapter consists of 3 main sections. First, any dependencies we want to use. Next, an async function containing the code for calculating TVL (where the bulk of the code usually is). Finally, the module exports.
 
-On top of all this, it's also important to notice that all calls are done through an SDK, this allows our adapters to be compatible with DeFi Pulse's and makes it so you only have to write them once and can submit them to multiple pages.
+#### Line 6 - Input Parameters:
 
-### SDK Reference
+1. The first param taken by the function (line 6) will be a timestamp. In your testing this will be the current timestamp, but when we back fill chart data for your protocol, past timestamps will also be input.&#x20;
+2. Next is the Ethereum mainnet block height corresponding the the timestamp in the first param.
+3. Last is an optional object containing block heights for other EVM chains. This is not needed if your project is only on Ethereum mainnet. In this example it was required because Mint Club is on BSC. &#x20;
 
-Check it out [here](https://github.com/ConcourseOpen/DeFi-Pulse-Adapters/blob/master/docs/sdk.md).
+#### Line 7 - Initialising The Balances Object:
 
-### Examples
+SDK adapters always export balances objects, which is a dictionary where all the keys are either token addresses or Coingecko token IDs. On this line we just initialise the balances object to be empty.
 
-Check the following page for several examples of adapters along with input/outputs:
+If a token balance has an address key, the DefiLlama SDK will manage any raw to real amount conversion for you (so you don't need to worry about erc20 decimals). If a token balance has a Coingecko ID key, you will need to process the decimals and use a real token amount in the balances object. Example:\
 
-{% content-ref url="../speedrun.md" %}
-[speedrun.md](../speedrun.md)
-{% endcontent-ref %}
+
+```
+{ 
+    'polygon:0xc2132d05d31c914a87c6611c10748aeb04b58e8f' : 456245893460345345234,
+    '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2' : 985678356234523456,
+    'wrapped-bitcoin': 4.002342
+}
+```
+
+#### Line 8 - Address Transform Function:
+
+Many assets have been deployed on multiple chains. It's hard for CoinGecko to keep up with asset addresses for every chain, so sometimes we have to transform the addresses to ones known by CoinGecko. We have managed most cases for you in the transform\_\_Address() functions, found in projects/helper/portedTokens.js (notice line 2).
+
+![](<../../.gitbook/assets/Screenshot 2022-02-08 at 16.11.38.png>)
+
+{% hint style="info" %}
+If you export token addresses in your balances object that aren't on CoinGecko, DefiLlama won't be able to fetch prices for the tokens. You can check which addresses are supported by going to the token on CoinGecko and checking the  'Contract' field on the right (pictured above).
+{% endhint %}
+
+#### Line 10 - On Chain Function Calls
+
+Here we use the SDK to get the erc20 token balance of a contract, but this sdk.api.abi.call() function can be used to call all sorts of contract functions. Parameters used:
+
+* abi - Because we have used a common erc20 function for Mint Club, we're able to use a string for the 'abi' parameter. However for other contract functions you will need to pass a [JSON ABI](https://www.quicknode.com/guides/solidity/what-is-an-abi) (can find these on etherscan).
+* chain - An optional parameter (defaults to Ethereum) which determines which chain the contract call is made on.
+* target - The target address of the contract call.
+* params - Optional, must take the same amount of params expected by the on-chain contract function.
+* block - The block height that the contract call will be executed on. This should always correspond to the chain parameter, and in this case we use the chainBlocks object to get the bsc block height (remember, the second param on line 6 is the Ethereum mainnet block, not BSCs, which we are interested in for Mint Club).
+
+#### Line 18 - Adding Data To The Balances Object
+
+In the SDK we have utilities to add data to the balances dictionary. sdk.util.sumSingleBalance() takes 3 parameters:
+
+1. The object you want to add token balances to.
+2. The token key you want to add to. We will transform the MINT token address so that we can fetch the CoinGecko price.
+3. The balance we want to add. (NB: If we were using a CoinGecko ID in position 2, we'd need to divide collateralBalance by 10 \*\* \<MINT token decimals> to convert the raw balance to a real balance).
+
+#### Line 23 - Module Exports
+
+The module exports must be constructed correctly, and use the correct keys, so that the DefiLlama UI can show your data. Nest chain TVL (and separate types of TVL like staking, pool2 etc) inside the chain key (eg 'bsc', 'ethereum').&#x20;
 
 ### Testing
 
@@ -133,9 +102,11 @@ Once you are done writing it you can verify that it returns the correct value by
 ```bash
 $ npm install
 # Replace with your adapter's name
-$ node test.js projects/pooltogether/index.js 
+$ node test.js projects/mint-club/index.js 
 ```
+
+If the adapter runs successfully, the console will show you a breakdown of your project's TVL in USD. If it all looks accurate, you're ready to submit.
 
 ### Submit 🎉
 
-Just submit a PR to [the adapter repository on Github](https://github.com/DefiLlama/DefiLlama-Adapters)! 
+Just submit a PR to [the adapter repository on Github](https://github.com/DefiLlama/DefiLlama-Adapters)!&#x20;

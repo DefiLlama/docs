@@ -1,8 +1,6 @@
 # How to write a fetch adapter
 
-This is the simplest type of adapter, it's just an adapter that exports a function called `fetch` which returns a project's total TVL (in USD) as a number.
-
-The following basic adapter would just always return a TVL of 100$:
+Fetch adapters export a function, called `fetch`, which returns a project's total TVL (in USD) as a number. The following basic adapter would just always return a TVL of 100$:
 
 ```javascript
 async function fetch() {
@@ -14,8 +12,10 @@ module.exports = {
 }
 ```
 
+Fetch adapters only allow us to get the TVL at the current time, so it's impossible to fill old values on a protocol's TVL chart or recompute them, thus leading to charts that look jumpy. To solve this we introduced SDK adapters, which allow us to retrieve a protocol's TVL at any point in time.
+
 {% hint style="info" %}
-While most of the old adapters are of this type, now we have migrated to SDK adapters and the only fetch adapters we accept are those for projects that are not on Ethereum nor BSC.
+Fetch adapters can only be used for projects on non-EVM chains. Where possible, [SDK adapters](how-to-write-an-sdk-adapter/) are preferred to fetch adapters because on-chain calls are more transparent.
 {% endhint %}
 
 ## Examples
