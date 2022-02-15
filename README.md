@@ -21,3 +21,7 @@ Node validators and other chain-native token staking:
 Bridges:
 
 * There are arguments both for including bridge TVL on the origin chain and the destination chain. Therefore we count the TVL of bridge projects but do not contribute them towards the TVL of any chain.&#x20;
+
+Smart Wallets:
+
+* We don't count funds in smart contract wallets, such as Argent or Gnosis Safe.

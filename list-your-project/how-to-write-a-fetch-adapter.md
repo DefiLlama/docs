@@ -15,7 +15,7 @@ module.exports = {
 Fetch adapters only allow us to get the TVL at the current time, so it's impossible to fill old values on a protocol's TVL chart or recompute them, thus leading to charts that look jumpy. To solve this we introduced SDK adapters, which allow us to retrieve a protocol's TVL at any point in time.
 
 {% hint style="info" %}
-Fetch adapters can only be used for projects on non-EVM chains. Where possible, [SDK adapters](how-to-write-an-sdk-adapter/) are preferred to fetch adapters because on-chain calls are more transparent.
+Fetch adapters can only be used for projects on non-EVM chains. Where possible, [SDK adapters](how-to-write-an-sdk-adapter.md) are preferred to fetch adapters because on-chain calls are more transparent.
 {% endhint %}
 
 ## Examples

@@ -8,7 +8,7 @@ If you'd like to list a DeFi project on DefiLlama:
 
 1. Fork the [Adapters repo](https://github.com/DefiLlama/DefiLlama-Adapters) (button towards the top right of the repo page).
 2. Add a new folder with the same name as the project to projects/.
-3. Write an [SDK adapter](how-to-write-an-sdk-adapter/) (or a [fetch adapter](how-to-write-a-fetch-adapter.md) if you cant use the SDK for this project) in the new folder.
+3. Write an [SDK adapter](how-to-write-an-sdk-adapter.md) (or a [fetch adapter](how-to-write-a-fetch-adapter.md) if you cant use the SDK for this project) in the new folder.
 4. Make a Pull Request with the changes on your fork, to the main DefiLlama Adapters repo, with a brief explanation of what you changed.
 5. Wait for someone to either comment on or merge your Pull Request. There is no need to ask for someone to check your PR as there a monitored regularly.
 
@@ -38,6 +38,6 @@ Right now our SDK only supports EVM chains, so if your project is in any of thes
 
 You probably need to write an SDK adapter, for which you could use the following guide:
 
-{% content-ref url="how-to-write-an-sdk-adapter/" %}
-[how-to-write-an-sdk-adapter](how-to-write-an-sdk-adapter/)
+{% content-ref url="how-to-write-an-sdk-adapter.md" %}
+[how-to-write-an-sdk-adapter.md](how-to-write-an-sdk-adapter.md)
 {% endcontent-ref %}
