@@ -11,6 +11,7 @@ If you'd like to list a DeFi project on DefiLlama:
 3. Write an [SDK adapter](how-to-write-an-sdk-adapter.md) (or a [fetch adapter](how-to-write-a-fetch-adapter.md) if you cant use the SDK for this project) in the new folder.
 4. Make a Pull Request with the changes on your fork, to the main DefiLlama Adapters repo, with a brief explanation of what you changed.
 5. Wait for someone to either comment on or merge your Pull Request. There is no need to ask for someone to check your PR as there a monitored regularly.
+6. Once your PR has been merged, please give 24 hours for the front-end team to load your listing onto the UI.
 
 ## How to build an adapter
 
