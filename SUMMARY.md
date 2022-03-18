@@ -13,3 +13,12 @@
 * [What to include as TVL?](list-your-project/what-to-include-as-tvl.md)
 * [How to update a project](list-your-project/how-to-update-a-project.md)
 * [How to list an NFT project](list-your-project/how-to-list-an-nft-project.md)
+
+***
+
+* [How to add](how-to-add.md)
+
+## Chainlist
+
+* [How to change Ethereum's RPC](chainlist/how-to-change-ethereums-rpc.md)
+* [Add a new RPC endpoint](chainlist/add-a-new-rpc-endpoint.md)
