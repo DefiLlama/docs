@@ -7,4 +7,4 @@ To change the RPC endpoint used for Ethereum follow these steps:
 3. Add the RPC URL you want to use, with a chainID of `1` and currency of `ETH`.
 4. Click “Save”
 
-![](<../.gitbook/assets/metamask-add (1).png>)
+![](<../.gitbook/assets/metamask-add (2).png>)
