@@ -18,6 +18,8 @@ Fetch adapters only allow us to get the TVL at the current time, so it's impossi
 Fetch adapters can only be used for projects on non-EVM chains. Where possible, [SDK adapters](how-to-write-an-sdk-adapter.md) are preferred to fetch adapters because on-chain calls are more transparent.
 {% endhint %}
 
+Third party APIs should be used where possible to reduce bias. If third party APIs are not available for the data you need, proprietary APIs can be used if they're open source.
+
 ## Examples
 
 {% code title="projects/balancer.js" %}
