@@ -49,7 +49,7 @@ The adapter consists of 3 main sections. First, any dependencies we want to use.
 #### Line 6 - Input Parameters:
 
 1. The first param taken by the function (line 6) will be a timestamp. In your testing this will be the current timestamp, but when we back fill chart data for your protocol, past timestamps will also be input.&#x20;
-2. Next is the Ethereum mainnet block height corresponding the the timestamp in the first param.
+2. Next is the Ethereum mainnet block height corresponding the timestamp in the first param.
 3. Last is an optional object containing block heights for other EVM chains. This is not needed if your project is only on Ethereum mainnet. In this example it was required because Mint Club is on BSC. &#x20;
 
 #### Line 7 - Initialising The Balances Object:
