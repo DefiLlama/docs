@@ -22,3 +22,7 @@
 
 * [How to change Ethereum's RPC](chainlist/how-to-change-ethereums-rpc.md)
 * [Add a new RPC endpoint](chainlist/add-a-new-rpc-endpoint.md)
+
+## FAQs
+
+* [Frequently Asked Questions](faqs/frequently-asked-questions.md)
