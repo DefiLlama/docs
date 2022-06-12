@@ -35,7 +35,7 @@ async function tvl(timestamp, block, chainBlocks) {
 module.exports = {
   timetravel: true,
   misrepresentedTokens: false,
-  methodology: 'counts the number of MINT tokens in the Club Bonding contract.'
+  methodology: 'counts the number of MINT tokens in the Club Bonding contract.',
   start: 1000235,
   bsc: {
     tvl,
