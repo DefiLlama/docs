@@ -8,7 +8,7 @@ Total value locked inside a platform / protocol's own contracts by users.
 
 We separate TVL into different types. This lets users decide what they do and do not want to include in the dashboard data. These types are:
 
-* Staking - the platform's own governance token
+* Staking - the platform's own tokens
 * Pool2 - staked LP tokens where one side of the market is the platform's own governance token.
 * Borrows - deposits borrowed from the platform&#x20;
 * Offers - funds that are approved for spending on a non-custodial platform, but not actually deposited into the platform contracts

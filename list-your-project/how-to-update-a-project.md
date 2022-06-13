@@ -12,7 +12,7 @@ If you'd like to update the code used to calculate the TVL of a DeFi project alr
 If you'd like to update the metadata (name, logo, description etc) of a project already listed on DefiLlama:
 
 1. Join the DefiLlama [Discord server](https://discord.gg/bQNGsqgD).&#x20;
-2. Message the 'project-update' channel about the changes you'd like to make.
+2. Message the 'listings' channel about the changes you'd like to make.
 3. Wait for a response from the team.
 
 If you don't have Discord account, you can always reach the DefiLlama team through Github or Twitter. Responses are generally quicker on Discord.
