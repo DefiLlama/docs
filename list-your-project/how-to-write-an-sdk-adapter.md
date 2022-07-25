@@ -48,16 +48,15 @@ The adapter consists of 3 main sections. First, any dependencies we want to use.
 
 #### Line 6 - Input Parameters:
 
-1. The first param taken by the function (line 6) will be a timestamp. In your testing this will be the current timestamp, but when we back fill chart data for your protocol, past timestamps will also be input.&#x20;
+1. The first param taken by the function (line 6) will be a timestamp. In your testing this will be the current timestamp, but when we back fill chart data for your protocol, past timestamps will also be input.
 2. Next is the Ethereum mainnet block height corresponding the timestamp in the first param.
-3. Last is an optional object containing block heights for other EVM chains. This is not needed if your project is only on Ethereum mainnet. In this example it was required because Mint Club is on BSC. &#x20;
+3. Last is an optional object containing block heights for other EVM chains. This is not needed if your project is only on Ethereum mainnet. In this example it was required because Mint Club is on BSC.
 
 #### Line 7 - Initialising The Balances Object:
 
 SDK adapters always export balances objects, which is a dictionary where all the keys are either token addresses or Coingecko token IDs. On this line we just initialise the balances object to be empty.
 
-If a token balance has an address key, the DefiLlama SDK will manage any raw to real amount conversion for you (so you don't need to worry about erc20 decimals). If a token balance has a Coingecko ID key, you will need to process the decimals and use a real token amount in the balances object. Example:\
-
+If a token balance has an address key, the DefiLlama SDK will manage any raw to real amount conversion for you (so you don't need to worry about erc20 decimals). If a token balance has a Coingecko ID key, you will need to process the decimals and use a real token amount in the balances object. Example:\\
 
 ```
 { 
@@ -74,7 +73,7 @@ Many assets have been deployed on multiple chains. It's hard for CoinGecko to ke
 ![](<../.gitbook/assets/Screenshot 2022-02-08 at 16.11.38.png>)
 
 {% hint style="info" %}
-If you export token addresses in your balances object that aren't on CoinGecko, DefiLlama won't be able to fetch prices for the tokens. You can check which addresses are supported by going to the token on CoinGecko and checking the  'Contract' field on the right (pictured above).
+If you export token addresses in your balances object that aren't on CoinGecko, DefiLlama won't be able to fetch prices for the tokens. You can check which addresses are supported by going to the token on CoinGecko and checking the 'Contract' field on the right (pictured above).
 {% endhint %}
 
 #### Line 10 - On Chain Function Calls
@@ -97,14 +96,15 @@ In the SDK we have utilities to add data to the balances dictionary. sdk.util.su
 
 #### Line 23 - Module Exports
 
-The module exports must be constructed correctly, and use the correct keys, so that the DefiLlama UI can show your data. Nest chain TVL (and separate types of TVL like staking, pool2 etc) inside the chain key (eg 'bsc', 'ethereum').&#x20;
+The module exports must be constructed correctly, and use the correct keys, so that the DefiLlama UI can show your data. Nest chain TVL (and separate types of TVL like staking, pool2 etc) inside the chain key (eg 'bsc', 'ethereum').
 
 Please also let us know:
 
 * timetravel (bool) - if we can backfill data with your adapter. Most SDK adapters will allow this, but not all. For example, if you fetch a list of live contracts from an API before querying data on-chain, timetravel should be 'false'.
 * misrepresentedTokens (bool) - if you have used token substitutions at any point in the adapter this should be 'true'.
 * methodology (string) - this is a small description that will explain to DefiLlama users how the adapter works out your protocol's TVL.
-* start (number) - the earliest block height the adapter will work at.
+* start (number) - the earliest timestamp the adapter will work at.
+* hallmarks (array of \[number, string]) - set of events that greatly affected protocol TVL and we display on the chart ([example](https://defillama.com/protocol/uniswap)).
 
 ### Testing
 
@@ -120,4 +120,4 @@ If the adapter runs successfully, the console will show you a breakdown of your 
 
 ### Submit 🎉
 
-Just submit a PR to [the adapter repository on Github](https://github.com/DefiLlama/DefiLlama-Adapters)!&#x20;
+Just submit a PR to [the adapter repository on Github](https://github.com/DefiLlama/DefiLlama-Adapters)!

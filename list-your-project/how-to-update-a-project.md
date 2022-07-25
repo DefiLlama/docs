@@ -7,7 +7,13 @@ If you'd like to update the code used to calculate the TVL of a DeFi project alr
 3. Make a Pull Request from your fork, to the main DefiLlama Adapters repo, with a brief explanation of what you changed.
 4. Wait for someone to either comment on or merge your Pull Request. There is no need to ask for someone to check your PR as there a monitored regularly.
 
+If you'd like to add a **Hallmark** to a DeFi project listed on DefiLlama:
 
+1. Same as steps 1 & 2 above, fork the [Adapters repo](https://github.com/DefiLlama/DefiLlama-Adapters) (button towards the top right of the repo page) so that you can make your changes.
+2. Add a "hallmarks" export to module.exports and add your hallmark as an array inside of an array(i.e. hallmarks: \[\[unix timestamp, "your note as a string"]]. You can add more by separating  the inner arrays with a comma(","). View an example of hallmark entries [here](https://github.com/DefiLlama/DefiLlama-Adapters/blob/main/projects/uniswap/index.js#L57). An easy way to convert a regular date into a unix timestamp is using the website [here](https://www.epochconverter.com/). Timestamp needs to be in seconds.
+3. Once you have added the Hallmarks make a Pull Request from your fork, to the main DefiLlama Adapters repo, with a brief explanation of what you changed.
+4. Hallmarks is not for adding any product development but instead its meant to explain changes in TVL. Only add events that had an impact on the TVL of a project.&#x20;
+5. Wait for someone to either comment on or merge your Pull Request. There is no need to ask for someone to check your PR&#x20;
 
 If you'd like to update the metadata (name, logo, description, adding an audit info etc) of a project already listed on DefiLlama:
 
