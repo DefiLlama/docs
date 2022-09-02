@@ -7,7 +7,7 @@ An adapter is simply an object that contains mainly a promise that returns the p
 A volume adapter could be either a `SimpleVolumeAdapter` or a `BreakdownVolumeAdapter`. A `BreakdownVolumeAdapter` adapter is a set of `SimpleVolumeAdapter` and is used to define adapters for a protocol that has multiple versions (I.e. Uniswap v1, v2, v3).
 
 
-```
+```typescript
 type SimpleVolumeAdapter = {
   volume: Adapter
 };
@@ -30,7 +30,7 @@ type Adapter = {
 
 `Adapter` properties:
 - `fetch`: Promise that returns the daily and total volume given a timestamp or a block number. Returns an object with the `dailyVolume` and/or `totalVolume`, the `timestamp` of the volume and the `block` of the volume. If the adapter only returns totalVolume, our servers will calculate the `s` based on previous day `totalVolume`.
-```
+```typescript
 type FetchResult = {
   block?: number;
   dailyVolume?: string;
