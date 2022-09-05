@@ -2,7 +2,7 @@
 
 ## Volume adapter
 
-An adapter is simply an object that contains mainly a promise that returns the protocol's volume given a timestamp or a block number.
+An adapter is a typescript file that exports an async function that, when run, returns the daily volume of a protocol at a given time, split by chain and protocol version (eg: uniswap v2, v3...).
 
 A volume adapter could be either a `SimpleVolumeAdapter` or a `BreakdownVolumeAdapter`. A `BreakdownVolumeAdapter` adapter is a set of `SimpleVolumeAdapter` and is used to define adapters for a protocol that has multiple versions (I.e. Uniswap v1, v2, v3).
 
