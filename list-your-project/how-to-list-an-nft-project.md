@@ -4,6 +4,6 @@
 
 If you'd like to list an NFT project or chain on DefiLlama:
 
-1. Join the DefiLlama [Discord server](https://discord.gg/bQNGsqgD).&#x20;
+1. Join the DefiLlama [Discord server](https://discord.gg/buPFYXzDDd).&#x20;
 2. Message the 'nft' channel about the changes you'd like to make.
 3. Wait for a response from the team.
