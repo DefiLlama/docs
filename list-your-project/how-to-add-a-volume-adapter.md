@@ -96,3 +96,15 @@ const adapter: SimpleVolumeAdapter = {
 export default adapter;
 
 ```
+
+## Testing
+
+After adding your volume adapter, you can test if it works using the following command
+
+`npm run test-dex <adapter-name> <timestamp>`
+
+Examples:
+```
+npm run test-dex uniswap
+npm run test-dex uniswap 1662110960016
+```
