@@ -73,7 +73,7 @@ Many assets have been deployed on multiple chains. It's hard for CoinGecko to ke
 ![](<../.gitbook/assets/Screenshot 2022-02-08 at 16.11.38.png>)
 
 {% hint style="info" %}
-If you export token addresses in your balances object that aren't on CoinGecko, DefiLlama won't be able to fetch prices for the tokens. You can check which addresses are supported by going to the token on CoinGecko and checking the 'Contract' field on the right (pictured above).
+DefiLlama uses a wide variety of sources to price tokens, such as CoinGecko and chain calls to price exotic tokens such as Curve and uniswap LPs. If you find that a token is missing and it's not getting priced in your adapter, just let us know in our discord!
 {% endhint %}
 
 #### Line 10 - On Chain Function Calls
