@@ -11,7 +11,6 @@ Below, you can see the one we use for Mint Club on Binance Smart Chain (BSC). Le
 {% code title="projects/mint-club/index.js" %}
 ```javascript
 const sdk = require('@defillama/sdk');
-const { transformBscAddress } = require('../helper/portedTokens');
 const MINT_TOKEN_CONTRACT = '0x1f3Af095CDa17d63cad238358837321e95FC5915';
 const MINT_CLUB_BOND_CONTRACT = '0x8BBac0C7583Cc146244a18863E708bFFbbF19975';
 
@@ -27,7 +26,7 @@ async function tvl(timestamp, block, chainBlocks) {
     block: chainBlocks['bsc'],
   })).output;
 
-  await sdk.util.sumSingleBalance(balances, transform(MINT_TOKEN_CONTRACT), collateralBalance)
+  await sdk.util.sumSingleBalance(balances, `bsc:{MINT_TOKEN_CONTRACT}`, collateralBalance)
 
   return balances;
 }
@@ -56,7 +55,7 @@ The adapter consists of 3 main sections. First, any dependencies we want to use.
 
 SDK adapters always export balances objects, which is a dictionary where all the keys are either token addresses or Coingecko token IDs. On this line we just initialise the balances object to be empty.
 
-If a token balance has an address key, the DefiLlama SDK will manage any raw to real amount conversion for you (so you don't need to worry about erc20 decimals). If a token balance has a Coingecko ID key, you will need to process the decimals and use a real token amount in the balances object. Example:\\
+If a token balance has an address key, the DefiLlama SDK will manage any raw to real amount conversion for you (so you don't need to worry about erc20 decimals). If a token balance has a Coingecko ID key, you will need to process the decimals and use a real token amount in the balances object. Example:
 
 ```
 { 
@@ -65,12 +64,6 @@ If a token balance has an address key, the DefiLlama SDK will manage any raw to 
     'wrapped-bitcoin': 4.002342
 }
 ```
-
-#### Line 8 - Address Transform Function:
-
-Many assets have been deployed on multiple chains. It's hard for CoinGecko to keep up with asset addresses for every chain, so sometimes we have to transform the addresses to ones known by CoinGecko. We have managed most cases for you in the transform\_\_Address() functions, found in projects/helper/portedTokens.js (notice line 2).
-
-![](<../.gitbook/assets/Screenshot 2022-02-08 at 16.11.38.png>)
 
 {% hint style="info" %}
 DefiLlama uses a wide variety of sources to price tokens, such as CoinGecko and chain calls to price exotic tokens such as Curve and uniswap LPs. If you find that a token is missing and it's not getting priced in your adapter, just let us know in our discord!
