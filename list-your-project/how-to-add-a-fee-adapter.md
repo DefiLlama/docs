@@ -64,9 +64,9 @@ Some data sources are only able to return data given a 00:00:00 day timestamp. I
 - TBD, work in progress
 
 
-### Adapter examples
+## Adapter examples
 
-## Using existing volume adapters
+### Using existing volume adapters
 ```typescript
 import { getDexChainFees } from "../helpers/getUniSubgraphFees";
 import volumeAdapter from "@defillama/adapters/volumes/adapters/pancakeswap";
@@ -89,7 +89,7 @@ export default adapter;
 ```
 
 
-## Custom query from api
+### Custom query from api
 ```typescript
 import { FeeAdapter } from "../utils/adapters.type";
 import { getTimestampAtStartOfPreviousDayUTC } from "../utils/date";
@@ -141,7 +141,7 @@ const adapter: FeeAdapter = {
 export default adapter;
 ```
 
-## Custom data from subgraph
+### Custom data from subgraph
 ```typescript
 import { FeeAdapter } from "../utils/adapters.type";
 import { ARBITRUM, AVAX } from "../helpers/chains";
