@@ -4,6 +4,8 @@
 
 An adapter is a typescript file that exports an async function that, when run, returns the daily volume of a protocol at a given time, split by chain and protocol version (eg: uniswap v2, v3...).
 
+The given time will be the timestamp of the last second of the day of which we want the volume, so the adapter should return the volume of the 24h before of the given timestamp. All times will be UTC time. As an example, if passed `1663718399` timestamp should return the volume that happened during `20/09/2022 UTC`.
+
 A volume adapter could be either a `SimpleVolumeAdapter` or a `BreakdownVolumeAdapter`. A `BreakdownVolumeAdapter` adapter is a set of `SimpleVolumeAdapter` and is used to define adapters for a protocol that has multiple versions (I.e. Uniswap v1, v2, v3).
 
 
@@ -48,6 +50,8 @@ For situations where the fetch function can only return `totalVolume` and can re
 If the data is available in a subgraph and it follows a structure similar to uniswap, you can use the folling helper functions to easily query it. More docs about it to be added soon but for now... take a look at other implementations/the code!
 - `getChainVolume` from `volumes/helper/getUniSubgraphVolume`
 - `getStartTimestamp` from `volumes/helper/getStartTimestamp`
+###### Exact day timestamp
+Some data sources are only able to return data given a 00:00:00 day timestamp. In that case you can use the function `startOfTodayTimestamp` to get the timestamp of the specific day. For example passing `1663718399 (2022-09-20T23:59:59.000Z)` timestamp will return `1663632000000 (2022-09-20T00:00:00.000Z)`
 
 
 
