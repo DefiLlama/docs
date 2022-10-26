@@ -15,6 +15,11 @@
 * [How to list an NFT project](list-your-project/how-to-list-an-nft-project.md)
 * [How to add a volume adapter](list-your-project/how-to-add-a-volume-adapter.md)
 * [How to add a fee adapter](list-your-project/how-to-add-a-fee-adapter.md)
+* [Other dashboards](list-your-project/other-dashboards/README.md)
+  * [Listing your project](list-your-project/other-dashboards/listing-your-project.md)
+  * [How to build an adapter](list-your-project/other-dashboards/how-to-build-an-adapter.md)
+  * [Helper functions](list-your-project/other-dashboards/helper-functions.md)
+  * [Testing](list-your-project/other-dashboards/testing.md)
 
 ## Chainlist
 
