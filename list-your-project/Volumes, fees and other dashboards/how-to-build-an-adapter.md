@@ -56,7 +56,7 @@ The example we have seen before is a `SimpleAdapter` of a protocol deployed on d
 
 Find the full code of Uniswap breakdown adapter [here](https://github.com/DefiLlama/adapters/tree/master/volumes/uniswap).
 
-```
+```typescript
 const adapter: BreakdownAdapter = {
   breakdown: {
     v1: {
