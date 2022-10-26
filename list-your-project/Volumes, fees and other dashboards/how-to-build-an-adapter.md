@@ -88,3 +88,7 @@ const adapter: BreakdownAdapter = {
   }
 }
 ```
+
+As you could see in the above example the adapter is using the `BreakdownAdapter` type to make sure the types of the exported adapter is correct. Please use the appropiate types for a smooth listing.
+
+Since most adapters follow a similar structure, we've written some helper functions that you might help you writting your adapter. More information about the functions [here](helper-functions.md).
