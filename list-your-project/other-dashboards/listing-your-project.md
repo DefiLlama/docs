@@ -15,6 +15,6 @@ The simple instructions to add your project are:
 
 1. Fork the [`Adapters`](https://github.com/DefiLlama/adapters) repository.
 2. Add a new folder with the slug of the project under the respective adapteres folder (under `/fees` for fees dashboard, under `/incentives` for incentives dashboard, etc.)
-3. Add your adapter to an `index.ts` file and export it. You can find more information here.
-4. Test that the adapter works correctly by running `yarn test [dashboard] [protocolSlug]`. More information on how to test your adapter here.
+3. Add your adapter to an `index.ts` file and export it. It should look like this: `./[dashboard]/[slug]/index.ts`. You will find more information in the next sections.
+4. Test that the adapter works correctly by running `yarn test [dashboard] [protocolSlug]`. You will find more information in the next sections.
 5. Submit a PR! A llama will take a look at it and merge it. Once merged, it can take up to 24h to be available in the dashboard.
