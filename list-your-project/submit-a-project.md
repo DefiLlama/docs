@@ -13,7 +13,7 @@ If you'd like to list a DeFi project on DefiLlama:
 
 1. Fork the [Adapters repo](https://github.com/DefiLlama/DefiLlama-Adapters) (button towards the top right of the repo page).
 2. Add a new folder with the same name as the project to projects/.
-3. Write an [SDK adapter](how-to-write-an-sdk-adapter.md) (or a [fetch adapter](how-to-write-a-fetch-adapter.md) if you cant use the SDK for this project) in the new folder.
+3. Write an [SDK adapter](how-to-write-an-sdk-adapter.md) in the new folder.
 4. Make a Pull Request with the changes on your fork, to the main DefiLlama Adapters repo, with a brief explanation of what you changed.
 5. Wait for someone to either comment on or merge your Pull Request. There is no need to ask for someone to check your PR as there a monitored regularly.
 6. Once your PR has been merged, please give 24 hours for the front-end team to load your listing onto the UI.
@@ -29,16 +29,7 @@ And adapter is just some code that:
 
 Right now there's two types of adapters co-existing within the repository:
 
-* Fetch adapters: These calculate the TVL directly and just export a `fetch` method
 * SDK adapters: These use the SDK and return all the assets locked along with their balances
-
-{% hint style="info" %}
-Our SDK is fully compatible with DefiPulse's, so the adapters developed for defillama can also be directly submitted to DeFiPulse, no need repeat the same work!
-{% endhint %}
-
-#### Which adapter type should I develop?
-
-Right now our SDK only supports EVM chains, so if your project is in any of these chains you should develop a SDK-based adapter, while if your project is on another chain a fetch adapter is likely the way to go. If your project is not on an EVM chain but you are able to give us historical data, we can help support this if you message us in Discord.
 
 ### Next steps
 
