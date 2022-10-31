@@ -1,4 +1,6 @@
-# How to write a fetch adapter
+# [Deprecated] How to write a fetch adapter
+
+**Note: We no longer support fetch adapters**
 
 Fetch adapters export a function, called `fetch`, which returns a project's total TVL (in USD) as a number. The following basic adapter would just always return a TVL of 100$:
 
