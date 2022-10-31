@@ -17,6 +17,73 @@ module.exports = {
 Example adapter
 {% endembed %}
 
+
+### Token balance queries
+
+if you have a known set of tokens and contract addresses, there are few ways to fetch and export it as tvl using `sumTokensExport` 
+
+if single contract and multiple tokens
+
+```
+const { sumTokensExport } = require("./helper/unwrapLPs");
+
+module.exports = {
+    fantom: {
+        tvl: sumTokensExport({ 
+          chain: 'fantom', 
+          owner: '0x..., 
+          tokens: [ '0x...',...   ],
+        }),
+    }
+};
+```
+
+if there are multiple contracts to look up:
+
+
+```
+const { sumTokensExport } = require("./helper/unwrapLPs");
+
+module.exports = {
+    fantom: {
+        tvl: sumTokensExport({ 
+          chain: 'fantom', 
+          owners: ['0x...', '0x...', ...],
+          tokens: [ '0x...',...   ],
+        }),
+    }
+};
+```
+
+if all contracts dont share same set of tokens:
+
+```
+const { sumTokensExport } = require("./helper/unwrapLPs");
+
+module.exports = {
+    fantom: {
+        tvl: sumTokensExport({ 
+          chain: 'fantom', 
+          tokensAndOwners: [
+            // [tokenAddress, ownerContractAddress]
+            ['0x...', '0x...'],
+            ['0x...', '0x...'],
+          ],
+        }),
+    }
+};
+```
+
+if any of these tokens are LP tokens, set `resolveLP: true` to resolve them into underlying tokens 
+
+{% embed url="https://github.com/DefiLlama/DefiLlama-Adapters/blob/main/projects/svivel/index.js" %}
+Example adapter
+{% endembed %}
+
+{% embed url="https://github.com/DefiLlama/DefiLlama-Adapters/blob/main/projects/puli/index.js" %}
+Example adapter
+{% endembed %}
+
 ### General API Calls
 
 Using the retry function can be useful to make graphQL and REST API requests more reliable, by repeating the call a number of times when an unsuccessful response is received.
@@ -55,14 +122,14 @@ Example Solana Adapter
 We value tokens through CoinGecko. If you export token balances for addresses that aren't listed on CoinGecko, you'll need to transform the addresses to something that is on CoinGecko. Usually the best way to do this is through the getChainTransform helper.
 
 ```
-const { getChainTransform } = require("../helper/portedTokens");
+const { transformBalances } = require("../helper/portedTokens");
 
-const chainTransform = await getChainTransform(chain);
 const transformedAssetId = await chainTransform(assetId);
-sdk.util.sumSingleBalance(balances, transformedAssetId, balance);
+sdk.util.sumSingleBalance(balances, assetId, balance);
+return transformBalances(chain, balances)
 ```
 
-{% embed url="https://github.com/DefiLlama/DefiLlama-Adapters/blob/main/projects/railgun/index.js" %}
+{% embed url="https://github.com/DefiLlama/DefiLlama-Adapters/blob/main/projects/aries-markets/index.js" %}
 Example Address Transform
 {% endembed %}
 
@@ -71,48 +138,16 @@ Example Address Transform
 To count the TVL of LP token balances, the positions must be unwrapped into their underlying tokens.
 
 ```
-const { unwrapUniswapLPs } = require('./helper/unwrapLPs');
+const { sumTokens2 } = require('./helper/unwrapLPs');
 
 const balances = {};
 const transform = await transformBscAddress();
-
-await unwrapUniswapLPs(
-  balances,
-  [
-    {balance: balance1, token: tokenAddress1}, 
-    {balance: balance2, token: tokenAddress2}
-  ],
-  chainBlocks['bsc'],
-  'bsc',
-  transform
-);
+...
+return sumTokens2({ balances, tokensAndOwners: [...], chain, block, resolveLP: true })
 ```
 
-{% embed url="https://github.com/DefiLlama/DefiLlama-Adapters/blob/main/projects/tomb/index.js" %}
+{% embed url="https://github.com/DefiLlama/DefiLlama-Adapters/blob/main/projects/drachma/index.js" %}
 Example Unwrap Uni V2 Adapter
-{% endembed %}
-
-If you have a list of contracts that hold a range of different assets, it could be easiest to use sumTokensAndLPsSharedOwners. This will check all contracts for all tokens, and try to unwrap all uni v2 LP tokens.
-
-```
-const { sumTokensAndLPsSharedOwners } = require("./helper/unwrapLPs");
-const balances = {};
-
-await sumTokensAndLPsSharedOwners(
-    balances,
-    [
-      [token1, isLP],
-      [token2, isLP],
-    ],
-    [contracts],
-    block,
-    chain,
-    transform
-  );
-```
-
-{% embed url="https://github.com/DefiLlama/DefiLlama-Adapters/blob/main/projects/euphoria/index.js" %}
-Example Sum Tokens and LPs Adapter
 {% endembed %}
 
 ### Getting Block Heights
