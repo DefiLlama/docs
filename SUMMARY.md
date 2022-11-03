@@ -27,3 +27,7 @@
 ## FAQs
 
 * [Frequently Asked Questions](faqs/frequently-asked-questions.md)
+
+***
+
+* [Coin Prices API](coin-prices-api.md)
