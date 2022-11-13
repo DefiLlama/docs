@@ -21,5 +21,5 @@ Examples:
 ```
 
 ```
-> yarn test dexs uniswap 1662110960016
+> yarn test dexs uniswap 1662110960
 ```
