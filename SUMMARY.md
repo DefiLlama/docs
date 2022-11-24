@@ -16,8 +16,12 @@
 * [Other dashboards](list-your-project/other-dashboards/README.md)
   * [Listing your project](list-your-project/other-dashboards/listing-your-project.md)
   * [How to build an adapter](list-your-project/other-dashboards/how-to-build-an-adapter.md)
+  * [Important considerations](list-your-project/other-dashboards/important-considerations.md)
   * [Helper functions](list-your-project/other-dashboards/helper-functions.md)
   * [Testing](list-your-project/other-dashboards/testing.md)
+  * [Examples](list-your-project/other-dashboards/examples/README.md)
+    * [Fees adapter](list-your-project/other-dashboards/examples/fees-adapter.md)
+    * [Dex adapter](list-your-project/other-dashboards/examples/dex-adapter.md)
 
 ## Chainlist
 
