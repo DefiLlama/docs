@@ -1,6 +1,6 @@
 # Listing your project
 
-Same as TVL adapters, the majority of adapters for the dashboards under this section are contributed and maintained by their respective communities, with all changes being coordinated through the [`DefiLlama/adapters` github repo](https://github.com/DefiLlama/adapters).
+Same as TVL adapters, the majority of adapters for the dashboards under this section are contributed and maintained by their respective communities, with all changes being coordinated through the [`DefiLlama/dimension-adapters` github repo](https://github.com/DefiLlama/dimension-adapters).
 
 Here you will find information about how you can list your DeFi project to one of the following dashboards:
 
