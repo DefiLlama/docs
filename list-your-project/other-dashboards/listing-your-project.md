@@ -13,7 +13,7 @@ Here you will find information about how you can list your DeFi project to one o
 
 The simple instructions to add your project are:
 
-1. Fork the [`Adapters`](https://github.com/DefiLlama/adapters) repository.
+1. Fork the [`dimension-adapters`](https://github.com/DefiLlama/dimension-adapters) repository.
 2. Add a new folder with the slug of the project under the respective adapteres folder (under `/fees` for fees dashboard, under `/incentives` for incentives dashboard, etc.)
 3. Add your adapter to an `index.ts` file and export it. It should look like this: `./[dashboard]/[slug]/index.ts`. You will find more information in the next sections.
 4. Test that the adapter works correctly by running `yarn test [dashboard] [protocolSlug]`. You will find more information in the next sections.
