@@ -12,7 +12,6 @@
   * [General EVM contract calls](list-your-project/functions-weve-written-so-you-dont-have-to/general-evm-contract-calls.md)
 * [What to include as TVL?](list-your-project/what-to-include-as-tvl.md)
 * [How to update a project](list-your-project/how-to-update-a-project.md)
-* [How to list an NFT project](list-your-project/how-to-list-an-nft-project.md)
 * [Other dashboards](list-your-project/other-dashboards/README.md)
   * [Listing your project](list-your-project/other-dashboards/listing-your-project.md)
   * [How to build an adapter](list-your-project/other-dashboards/how-to-build-an-adapter.md)
