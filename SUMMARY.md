@@ -15,6 +15,7 @@
 * [Other dashboards](list-your-project/other-dashboards/README.md)
   * [Listing your project](list-your-project/other-dashboards/listing-your-project.md)
   * [How to build an adapter](list-your-project/other-dashboards/how-to-build-an-adapter.md)
+  * [Dimensions](list-your-project/other-dashboards/dimensions.md)
   * [Important considerations](list-your-project/other-dashboards/important-considerations.md)
   * [Helper functions](list-your-project/other-dashboards/helper-functions.md)
   * [Testing](list-your-project/other-dashboards/testing.md)
