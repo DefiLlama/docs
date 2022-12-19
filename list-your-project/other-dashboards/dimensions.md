@@ -63,4 +63,3 @@ If you are not sure how to fit the different fees and revenues generated in your
 >
 > * Protocol governance includes trasury + gov token holders
 > * Revenue = HoldersRevenue + ProtocolRevenue
-> * Total revenue = Fees from all sources
