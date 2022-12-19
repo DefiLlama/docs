@@ -41,12 +41,12 @@ Examples
 * `dailyProtocolRevenue`: Treasury revenue.
 * `dailyHoldersRevenue`: Value going to gov token holders, this includes burned coins.
 * `dailySupplySideRevenue`: Value earned by liquidity providers.
-* `totalFees` (Accomulative value of dailyFees)
-* `totalUserFees` (Accomulative dailyUserFees)
-* `totalRevenue` (Accomulative value of dailyRevenue)
-* `totalProtocolRevenue` (Accomulative value of dailyProtocolRevenue)
-* `totalSupplySideRevenue` (Accomulative value of dailySupplySideRevenue)
-* `totalDailyHoldersRevenue` (Accomulative value of dailyHoldersRevenue)
+* `totalFees` (Cumulative value of dailyFees)
+* `totalUserFees` (Cumulative dailyUserFees)
+* `totalRevenue` (Cumulative value of dailyRevenue)
+* `totalProtocolRevenue` (Cumulative value of dailyProtocolRevenue)
+* `totalSupplySideRevenue` (Cumulative value of dailySupplySideRevenue)
+* `totalDailyHoldersRevenue` (Cumulative value of dailyHoldersRevenue)
 
 If you are not sure how to fit the different fees and revenues generated in your protocol, take a look at the following table or ping us on Discord!
 
