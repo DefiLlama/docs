@@ -2,9 +2,9 @@
 
 In the previous page we have seen how to create the structure of our adapter. In this section we will focus on explaining the different dimensions that our adapters can return.
 
-We call dimension to the attributes returned by the `fetch` function of our adapters. Depending on where would you like to list your project, you should return one of the following dimensions:
+We call dimension to the attributes returned by the `fetch` function of our adapters. Depending on where would you like to list your project, you should return one of the below dimensions.
 
-All dimensions can be returned in USD value (as `string`) or as a tokens object (as `Object<string>`).
+All dimensions can be returned in USD value (`string`) or as balance object (`Object<string>`).
 
 Examples
 
@@ -21,10 +21,10 @@ Examples
 }
 ```
 
-**Dexs, aggregators and derivatives dimensions:**
+**Dexs, dexs aggregators and derivatives dimensions:**
 
-* dailyVolume
-* totalVolume
+* `dailyVolume`
+* `totalVolume`
 
 **Options dimensions**
 
