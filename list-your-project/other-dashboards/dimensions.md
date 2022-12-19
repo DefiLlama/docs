@@ -55,7 +55,7 @@ User fees
 Fees
 ├─ Revenue
 │  ├─ ProtocolRevenue
-│  ├─ HoldersRevenue
+│  └─ HoldersRevenue
 └─ SupplySideRevenue
 ```
 
