@@ -35,13 +35,32 @@ Examples
 
 **Fees dimensions**
 
-* `dailyFees` (Fees paid by protocol users excluding gas fees)
-* `dailyRevenue` (Fees accrued to the protocol)
-* `dailySupplySideRevenue` (Fees earned by liquidity providers)
-* `dailyHoldersRevenue` (Money going to gov token holders or burned coins)
+* `dailyFees`: All fees and value collected from all sources, this also includes liquid staking rewards, generated yields and possible mint and burn fees paid by LP (but not transaction or gas fees).
+* `dailyUserFees`: Fees paid by protocol users excluding gas fees. This includes swap fees to open/close positions, borrow fees and all fees user has to pay.
+* `dailyRevenue`: Revenue of the protocol governance, this includes treasury and gov token holders (`dailyHoldersRevenue + dailyProtocolRevenue`)
+* `dailyProtocolRevenue`: Treasury revenue.
+* `dailyHoldersRevenue`: Value going to gov token holders, this includes burned coins.
+* `dailySupplySideRevenue`: Value earned by liquidity providers.
 * `totalFees` (Accomulative value of dailyFees)
+* `totalUserFees` (Accomulative dailyUserFees)
 * `totalRevenue` (Accomulative value of dailyRevenue)
+* `totalProtocolRevenue` (Accomulative value of dailyProtocolRevenue)
 * `totalSupplySideRevenue` (Accomulative value of dailySupplySideRevenue)
 * `totalDailyHoldersRevenue` (Accomulative value of dailyHoldersRevenue)
 
-If you are not sure how to fit the different fees and revenues generated in your protocol, in [this page](https://github.com/DefiLlama/dimension-adapters/blob/master/README.md) you will find a table with different categories of protocols and with the different types of fees and revenues that can generate.
+If you are not sure how to fit the different fees and revenues generated in your protocol, take a look at the following table or ping us on Discord!
+
+| Attribute         | DEXs                                        | Lending                                    | Chains                                         | NFT Marketplace                        | Derivatives                      | CDP                         | Liquid Staking                  | Yield                              | Synthetics                  |
+| ----------------- | ------------------------------------------- | ------------------------------------------ | ---------------------------------------------- | -------------------------------------- | -------------------------------- | --------------------------- | ------------------------------- | ---------------------------------- | --------------------------- |
+| UserFees          | Swap fees paid by users                     | Interest paid by borrowers                 | Gas fees paid by users                         | Fees paid by users                     | Fees paid by users               | Interest paid by borrowers  | % of rewards paid to protocol   | Paid management + performance fees | Fees paid by users          |
+| Fees              | =UserFees                                   | =UserFees                                  | =UserFees                                      | =UserFees                              | UserFees + burn/mint fees        | =UserFees                   | Staking rewards                 | Yield                              | =UserFees                   |
+| Revenue           | % of swap fees going to protocol governance | % of interest going to protocol governance | Burned coins (fees-sequencerCosts for rollups) | Marketplace revenue + creator earnings | Protocol governance revenue      | =ProtocolRevenue            | =ProtocolRevenue                | =ProtocolRevenue                   | =ProtocolRevenue            |
+| ProtocolRevenue   | % of swap fees going to treasury            | % of interest going to protocol            | \*                                             | Marketplace revenue                    | Value going to treasury          | =Interest going to treasury | =UserFees                       | =UserFees                          | % of fees going to treasury |
+| HoldersRevenue    | Money going to gov token holders            | \*                                         | \*                                             | \*                                     | Value going to gov token holders | \*                          | \*                              | \*                                 | \*                          |
+| SupplySideRevenue | LPs revenue                                 | Interest paid to lenders                   | \*                                             | \*                                     | LP revenue                       | \*                          | Revenue earned by stETH holders | Yield excluding protocol fees      | LPs revenue                 |
+
+> Some notes:
+>
+> * Protocol governance includes trasury + gov token holders
+> * Revenue = HoldersRevenue + ProtocolRevenue
+> * Total revenue = Fees from all sources
