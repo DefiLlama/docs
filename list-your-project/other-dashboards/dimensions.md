@@ -21,6 +21,8 @@ Examples
 }
 ```
 
+> In order to be listed your adapter would need to provide a minimum of one **daily** dimension. Providing all of them is not required but recommended in order to have better insights.
+
 **Dexs, dexs aggregators and derivatives dimensions:**
 
 * `dailyVolume`
