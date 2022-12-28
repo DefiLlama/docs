@@ -26,11 +26,8 @@ If you'd like to update the metadata (name, logo, description, adding an audit i
 Updating the logo requires one additional step:
 
 1. Icons need to be saved in both the defillama-server repo and in the defillama-app repo.
-2. Fork the [defillama-app repo](https://github.com/DefiLlama/defillama-app) (button towards the top right of the repo page).
-3. Add your icon to the public [icons](https://github.com/DefiLlama/defillama-app/tree/main/public/icons) file as a 24px x 24px .jpg \*\*Please save the file under the very same name as the protocol.
+2. Fork the [icons repo](https://github.com/DefiLlama/icons) (button towards the top right of the repo page).
+3. Add your icon to the public [icons](https://github.com/DefiLlama/defillama-app/tree/main/public/icons) file as a 240px x 240px .jpg \*\*Please save the file under the very same name as the protocol.
 4. Make a Pull Request from your fork
 5. Wait for someone to either comment on or merge your Pull Request.&#x20;
 
-
-
-If you'd like to list or update the listing for an NFT project, get in contact with the DefiLlama team over Discord.
