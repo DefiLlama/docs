@@ -14,19 +14,16 @@ const sdk = require('@defillama/sdk');
 const MINT_TOKEN_CONTRACT = '0x1f3Af095CDa17d63cad238358837321e95FC5915';
 const MINT_CLUB_BOND_CONTRACT = '0x8BBac0C7583Cc146244a18863E708bFFbbF19975';
 
-async function tvl(timestamp, block, chainBlocks) {
+async function tvl(_, _1, _2, { api }) {
   const balances = {};
-  const transform = await transformBscAddress();
 
-  const collateralBalance = (await sdk.api.abi.call({
+  const collateralBalance = await api.call({
     abi: 'erc20:balanceOf',
-    chain: 'bsc',
     target: MINT_TOKEN_CONTRACT,
     params: [MINT_CLUB_BOND_CONTRACT],
-    block: chainBlocks['bsc'],
-  })).output;
+  });
 
-  await sdk.util.sumSingleBalance(balances, `bsc:{MINT_TOKEN_CONTRACT}`, collateralBalance)
+  await sdk.util.sumSingleBalance(balances, MINT_TOKEN_CONTRACT, collateralBalance, api.chain)
 
   return balances;
 }
@@ -71,13 +68,11 @@ DefiLlama uses a wide variety of sources to price tokens, such as CoinGecko and 
 
 #### Line 10 - On Chain Function Calls
 
-Here we use the SDK to get the erc20 token balance of a contract, but this sdk.api.abi.call() function can be used to call all sorts of contract functions. Parameters used:
+Here we use the SDK to get the erc20 token balance of a contract, but this api.call() function can be used to call all sorts of contract functions. Parameters used:
 
-* abi - Because we have used a common erc20 function for Mint Club, we're able to use a string for the 'abi' parameter. However for other contract functions you will need to pass a [JSON ABI](https://www.quicknode.com/guides/solidity/what-is-an-abi) (can find these on etherscan).
-* chain - An optional parameter (defaults to Ethereum) which determines which chain the contract call is made on.
+* abi - Because we have used a common erc20 function for Mint Club, we're able to use a string for the 'abi' parameter. However for other contract functions you will need to pass a [JSON ABI (or human-readable abi string)](https://www.quicknode.com/guides/solidity/what-is-an-abi) (can find these on etherscan).
 * target - The target address of the contract call.
 * params - Optional, must take the same amount of params expected by the on-chain contract function.
-* block - The block height that the contract call will be executed on. This should always correspond to the chain parameter, and in this case we use the chainBlocks object to get the bsc block height (remember, the second param on line 6 is the Ethereum mainnet block, not BSCs, which we are interested in for Mint Club).
 
 #### Line 18 - Adding Data To The Balances Object
 
@@ -93,10 +88,10 @@ The module exports must be constructed correctly, and use the correct keys, so t
 
 Please also let us know:
 
-* timetravel (bool) - if we can backfill data with your adapter. Most SDK adapters will allow this, but not all. For example, if you fetch a list of live contracts from an API before querying data on-chain, timetravel should be 'false'.
-* misrepresentedTokens (bool) - if you have used token substitutions at any point in the adapter this should be 'true'.
+* timetravel (bool [default: true]) - if we can backfill data with your adapter. Most SDK adapters will allow this, but not all. For example, if you fetch a list of live contracts from an API before querying data on-chain, timetravel should be 'false'.
+* misrepresentedTokens (bool [default: false]) - if you have used token substitutions at any point in the adapter this should be 'true'.
 * methodology (string) - this is a small description that will explain to DefiLlama users how the adapter works out your protocol's TVL.
-* start (number) - the earliest timestamp the adapter will work at.
+* start (number - optional) - the earliest timestamp the adapter will work at.
 * hallmarks (array of \[number, string]) - set of events that greatly affected protocol TVL and we display on the chart ([example](https://defillama.com/protocol/uniswap)).
 
 ### Testing
