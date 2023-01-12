@@ -52,14 +52,7 @@ Examples
 
 If you are not sure how to fit the different fees and revenues generated in your protocol, take a look at the following table or ping us on Discord!
 
-```
-User fees
-Fees
-├─ Revenue
-│  ├─ ProtocolRevenue
-│  └─ HoldersRevenue
-└─ SupplySideRevenue
-```
+<figure><img src="../../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
 
 | Attribute         | DEXs                                        | Lending                                    | Chains                                         | NFT Marketplace                        | Derivatives                      | CDP                        | Liquid Staking                  | Yield                              | Synthetics                       |
 | ----------------- | ------------------------------------------- | ------------------------------------------ | ---------------------------------------------- | -------------------------------------- | -------------------------------- | -------------------------- | ------------------------------- | ---------------------------------- | -------------------------------- |

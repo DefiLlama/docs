@@ -3,11 +3,11 @@
 And adapter is just some code that:
 
 1. Collects data on a protocol by calling some endpoints or making some blockchain calls
-2. Computes a response based on the dashboard the adapter is aiming for and returns it.
+2. Computes a response and returns it.
 
 That's just a typescript file that exports an async function that given a timestamp and/or block numbers returns an object with some information.
 
-A really simplified version of an adapter could be the follwing:
+A really simplified version of an adapter could be the following lines:
 
 ```typescript
 export default {
@@ -29,30 +29,29 @@ export default {
 };
 ```
 
-That adapter is for a protocol that is deployed on `ethereum` and `optimism`, and will return the daily and total volume of the protocol, in this case to be added to the `dexs` or `aggregators` dashboard. Depends on which dashboard the adapter is aiming for, it shuold return different attributes. To know which attributes the adapter should return find in this the corresponding `FetchResult` type [file](https://github.com/DefiLlama/adapters/blob/master/adapters/types.ts) or check the below list.
+The above adapter is for a protocol that is deployed on `ethereum` and `optimism`, and will return the daily and total volume of the protocol. Depends on which dashboard the adapter is aiming for, it should return different attributes. We call those attributes dimensions. In the next page you will find a detailed list of all supported dimensions.
 
-### Fetch return attributes and BaseAdapter attributes
+### BaseAdapter
 
-**Fetch return attributes by dashboard**
+In the above example, the object under the key `ethereum` is what we call a `BaseAdapter` and it contains all the methods and information needed to list, collect data and enable your project.
 
-* Dexs: `dailyVolume: string` and `totalVolume: string`.
-* Aggregators: `dailyVolume: string` and `totalVolume: string`.
-* Fees: `totalFees: string`, `dailyFees: string`, `totalRevenue: string`, `dailyRevenue: string`
-* Incentives: `tokens: Object<string>`
-* Options: `totalPremiumVolume: string`, `totalNotionalVolume: string`, `dailyPremiumVolume: string`, `dailyNotionalVolume: string`
+The attribute `fetch` is the most important part of the BaseAdapter but not the only attribute needed to list your project. Other important attributes needed for an optimal listing are:
 
-In the above example, the object under the key `ethereum` it's what we call a `BaseAdapter` and it contains all the methods and information needed to list collect the data of your project of a specific chain. The attribute `fetch` is the most important but not the only attribute necessary to do that. Here you will find a list of all the necessary attributes for an optimal listing:
-
-* `fetch`: Promise that returns the FetchResult object based on the type of adapter given a timestamp and a block number.
-* `start`: Promise that returns a timestamp indicating the earliest timestamp we can pass to the fetch function. This tells our servers if we can get historical data and how far we can do that.
-* `runAtCurrTime`: Boolean that indicates if the adapter takes into account the timestamp and block passed to the fetch function (`runAtCurrTime: false`) or if it's only able to return data of the execution time, for example there are some adapters that are only able to return the volume of the past 24h from the moment the adapter is executed (`runAtCurrTime: true`).
-* `meta`: Object that contains metadata of the BaseAdapter. The posible attributes are:
-  * `metodology`: Important to add. In this attribute should be some lines describing how the adapter calculates the results returned.
+* `fetch`: Promise that returns different dimensions of a protocol given a timestamp and a block number. The dimensions returned depends on which adapter you would like to list your project (e.g. \`dailyVolume\` and \`totalVolume\` for the [dexs dashboard](https://defillama.com/dexs)).
+* `start`: Promise that returns a timestamp pointing to the earliest timestamp we can pass to the fetch function. This tells our servers how far can we get historical data.
+* `runAtCurrTime`: Boolean that flags if the adapter takes into account the timestamp and block passed to the fetch function (`runAtCurrTime: false`) or if it can only return the latest data, for example there are some adapters that are only able to return the volume of the past 24h from the moment the adapter is executed (`runAtCurrTime: true`).
+* `meta`: Object that contains metadata of the BaseAdapter. The possible attributes are:
+  * `methodology`: Object that describes the methodology used to calculate the different dimensions returned. Find an example [here](https://github.com/DefiLlama/dimension-adapters/blob/c03a108f546707ab75ef727d33cef053348757dd/protocols/pancakeswap/index.ts#L43).
   * `hallmarks`: Set of events that greatly affected protocol data and we display on the chart ([example](https://defillama.com/protocol/uniswap)).
 
 ### Protocol with multiple versions deployed in the same chain
 
-The example we have seen before is a `SimpleAdapter` of a protocol deployed on different chains, but what if we have multiple versions of our protocol deployed in the same chain? For this situations you can add a `BreakdownAdapter` to properly have an `BaseAdapter` for each version and chain. Here's a real example:
+The example we have seen before is a `SimpleAdapter` of a protocol deployed on different chains, but...
+
+* What if we have **multiple versions of our protocol deployed in the same chain**?
+* What if our protocol **has different products?** For example a DEX can provide spot trading as well as derivatives trading to their users.
+
+For this situations you can create a `BreakdownAdapter` to have a `BaseAdapter` for each version and chain. Here's a real example:
 
 Find the full code of Uniswap breakdown adapter [here](https://github.com/DefiLlama/adapters/tree/master/volumes/uniswap).
 
@@ -89,6 +88,10 @@ const adapter: BreakdownAdapter = {
 }
 ```
 
-As you could see in the above example the adapter is using the `BreakdownAdapter` type to make sure the types of the exported adapter is correct. Please use the appropiate types for a smooth listing.
+Keys of the breakdown object should be the name of the protocol version. E.g.: "v1" and "v2" or "swap" and "derivatives" or "elastic" and "classic".
 
-Since most adapters follow a similar structure, we've written some helper functions that you might help you writting your adapter. More information about the functions here.
+By using the above structure (`BreakdownAdapter`) your protocol will be listed as an aggregated of all versions and will include a subrow for each version (see [this ranking](https://defillama.com/fees) for some examples).
+
+As you can see in the above example the adapter is using the `BreakdownAdapter` type to make sure the types of the exported adapter is correct. Please use the appropriate types for a smooth listing.
+
+Since most adapters follow a similar structure, we've written some helper functions that you might help you writing your adapter. You will find information about these functions in the next pages.
