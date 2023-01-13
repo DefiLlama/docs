@@ -5,7 +5,7 @@ And adapter is just some code that:
 1. Collects data on a protocol by calling some endpoints or making some blockchain calls
 2. Computes a response and returns it.
 
-That's just a typescript file that exports an async function that given a timestamp and/or block numbers returns an object with some information.
+That's just a typescript file that exports an async function that given a [timestamp](important-considerations.md) and/or block numbers returns an object with some information.
 
 A really simplified version of an adapter could be the following lines:
 
@@ -37,7 +37,7 @@ In the above example, the object under the key `ethereum` is what we call a `Bas
 
 The attribute `fetch` is the most important part of the BaseAdapter but not the only attribute needed to list your project. Other important attributes needed for an optimal listing are:
 
-* `fetch`: Promise that returns different dimensions of a protocol given a timestamp and a block number. The dimensions returned depends on which adapter you would like to list your project (e.g. \`dailyVolume\` and \`totalVolume\` for the [dexs dashboard](https://defillama.com/dexs)).
+* `fetch`: Promise that returns different dimensions of a protocol given a [timestamp](important-considerations.md) and a block number. The dimensions returned depends on which adapter you would like to list your project (e.g. \`dailyVolume\` and \`totalVolume\` for the [dexs dashboard](https://defillama.com/dexs)).
 * `start`: Promise that returns a timestamp pointing to the earliest timestamp we can pass to the fetch function. This tells our servers how far can we get historical data.
 * `runAtCurrTime`: Boolean that flags if the adapter takes into account the timestamp and block passed to the fetch function (`runAtCurrTime: false`) or if it can only return the latest data, for example there are some adapters that are only able to return the volume of the past 24h from the moment the adapter is executed (`runAtCurrTime: true`).
 * `meta`: Object that contains metadata of the BaseAdapter. The possible attributes are:

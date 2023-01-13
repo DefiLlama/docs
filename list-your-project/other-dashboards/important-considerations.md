@@ -1,5 +1,29 @@
 # Important considerations
 
+#### Timestamp
+
+The timestamp passed to fetch function is the **end of the 24 hour period**, for which the data should be provided. Therefore your adapter should return data for the 24 hours leading up to this timestamp
+
+Correct:
+
+```typescript
+async (timestamp, block) => {
+    const from = timestamp - ONE_DAY_IN_SECONDS // 60*60*24
+    const to = timestamp
+    ...
+}
+```
+
+Wrong:
+
+```typescript
+async (timestamp, block) => {
+    const from = timestamp
+    const to = timestamp + ONE_DAY_IN_SECONDS //wrong!
+    ...
+}
+```
+
 #### Multiple adapters, same protocol
 
 * If you want to list your protocol in different dashboards you can return in the same adapters dimensions of different dashboards. See the following example:
@@ -36,10 +60,6 @@ const adapter: BreakdownAdapter = {
   }
 }
 ```
-
-#### Timestamp
-
-* All adapters should return last data from the `timestamp` time passed to the function. So in the case of the dimension `dailyVolume`, the adapter should return the volume of the last 24 hours from the `timestamp` provided (and not the volume of that day or the next 24 hours).
 
 #### Methodology
 
