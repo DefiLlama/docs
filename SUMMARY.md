@@ -22,6 +22,10 @@
   * [Examples](list-your-project/other-dashboards/examples/README.md)
     * [Fees adapter](list-your-project/other-dashboards/examples/fees-adapter.md)
     * [Dex adapter](list-your-project/other-dashboards/examples/dex-adapter.md)
+* [Emissions dashboard](list-your-project/emissions-dashboard/README.md)
+  * [Protocol Files](list-your-project/emissions-dashboard/protocol-files.md)
+  * [Emission Sections](list-your-project/emissions-dashboard/emission-sections.md)
+  * [Testing](list-your-project/emissions-dashboard/testing.md)
 
 ## Chainlist
 
