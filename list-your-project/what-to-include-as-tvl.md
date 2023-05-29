@@ -11,8 +11,8 @@ We separate TVL into different types. This lets users decide what they do and do
 * Staking - the platform's own tokens
 * Pool2 - staked LP tokens where one side of the market is the platform's own governance token.
 * Borrows - deposits borrowed from the platform&#x20;
+* Vesting - Tokens that are not circulating or not issued yet. This mostly applies to vesting protocols where a token with 10M mcap and 1B FDV could have 500M locked, in these cases it makes no sense for TVL from that token to be 500M when mcap of it is only 10M
 * Offers - funds that are approved for spending on a non-custodial platform, but not actually deposited into the platform contracts
-* Treasury - unvested funds in the platform's treasury, not including the platform's own governance token.
 
 ### Not TVL
 
