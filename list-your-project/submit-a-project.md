@@ -27,12 +27,6 @@ And adapter is just some code that:
 1. Collects data on a protocol by calling some endpoints or making some blockchain calls
 2. Computes the TVL of a protocol and returns it
 
-#### Types of adapters
-
-Right now there's two types of adapters co-existing within the repository:
-
-* SDK adapters: These use the SDK and return all the assets locked along with their balances
-
 ### Next steps
 
 You probably need to write an SDK adapter, for which you could use the following guide:
