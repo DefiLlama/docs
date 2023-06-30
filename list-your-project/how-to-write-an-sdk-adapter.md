@@ -10,22 +10,17 @@ Below, you can see the one we use for Mint Club on Binance Smart Chain (BSC). Le
 
 {% code title="projects/mint-club/index.js" %}
 ```javascript
-const sdk = require('@defillama/sdk');
 const MINT_TOKEN_CONTRACT = '0x1f3Af095CDa17d63cad238358837321e95FC5915';
 const MINT_CLUB_BOND_CONTRACT = '0x8BBac0C7583Cc146244a18863E708bFFbbF19975';
 
 async function tvl(_, _1, _2, { api }) {
-  const balances = {};
-
   const collateralBalance = await api.call({
     abi: 'erc20:balanceOf',
     target: MINT_TOKEN_CONTRACT,
     params: [MINT_CLUB_BOND_CONTRACT],
   });
 
-  await sdk.util.sumSingleBalance(balances, MINT_TOKEN_CONTRACT, collateralBalance, api.chain)
-
-  return balances;
+  api.add(MINT_TOKEN_CONTRACT, collateralBalance)
 }
 
 module.exports = {
@@ -42,31 +37,19 @@ module.exports = {
 
 The adapter consists of 3 main sections. First, any dependencies we want to use. Next, an async function containing the code for calculating TVL (where the bulk of the code usually is). Finally, the module exports.
 
-#### Line 6 - Input Parameters:
+#### Line 4 - Input Parameters:
 
 1. The first param taken by the function (line 6) will be a timestamp. In your testing this will be the current timestamp, but when we back fill chart data for your protocol, past timestamps will also be input.
 2. Next is the Ethereum mainnet block height corresponding the timestamp in the first param.
-3. Last is an optional object containing block heights for other EVM chains. This is not needed if your project is only on Ethereum mainnet. In this example it was required because Mint Club is on BSC.
+3. This is deprecated~~Last is an optional object containing block heights for other EVM chains. This is not needed if your project is only on Ethereum mainnet. In this example it was required because Mint Club is on BSC.~~
+4. This contains `api` object, it is an injected `sdk.ChainApi` object with which you can interact with a given chain through `call/multiCall/batchCall` method based on your need, also stores tvl balances
 
-#### Line 7 - Initialising The Balances Object:
-
-SDK adapters always export balances objects, which is a dictionary where all the keys are either token addresses or Coingecko token IDs. On this line we just initialise the balances object to be empty.
-
-If a token balance has an address key, the DefiLlama SDK will manage any raw to real amount conversion for you (so you don't need to worry about erc20 decimals). If a token balance has a Coingecko ID key, you will need to process the decimals and use a real token amount in the balances object. Example:
-
-```
-{ 
-    'polygon:0xc2132d05d31c914a87c6611c10748aeb04b58e8f' : 456245893460345345234,
-    '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2' : 985678356234523456,
-    'wrapped-bitcoin': 4.002342
-}
-```
 
 {% hint style="info" %}
 DefiLlama uses a wide variety of sources to price tokens, such as CoinGecko and chain calls to price exotic tokens such as Curve and uniswap LPs. If you find that a token is missing and it's not getting priced in your adapter, just let us know in our discord!
 {% endhint %}
 
-#### Line 10 - On Chain Function Calls
+#### Line 5 - On Chain Function Calls
 
 Here we use the SDK to get the erc20 token balance of a contract, but this api.call() function can be used to call all sorts of contract functions. Parameters used:
 
@@ -74,13 +57,19 @@ Here we use the SDK to get the erc20 token balance of a contract, but this api.c
 * target - The target address of the contract call.
 * params - Optional, must take the same amount of params expected by the on-chain contract function.
 
-#### Line 18 - Adding Data To The Balances Object
+#### Line 11 - Adding Data To The Balances Object
 
-In the SDK we have utilities to add data to the balances dictionary. sdk.util.sumSingleBalance() takes 3 parameters:
+In the SDK we have utilities to add data to the balances dictionary. api.add() takes 2 parameters:
 
-1. The object you want to add token balances to.
-2. The token key you want to add to. We will transform the MINT token address so that we can fetch the CoinGecko price.
-3. The balance we want to add. (NB: If we were using a CoinGecko ID in position 2, we'd need to divide collateralBalance by 10 \*\* \<MINT token decimals> to convert the raw balance to a real balance).
+1. The token key you want to add to. We will transform the MINT token address so that we can fetch the CoinGecko price.
+2. The balance we want to add. (NB: If we were using a CoinGecko ID in position 2, we'd need to divide collateralBalance by 10 \*\* \<MINT token decimals> to convert the raw balance to a real balance).
+
+Note: if you want to add balances of multiple tokens at the same time, you can do so by running `api.addTokens(tokens, balances)` 
+
+{% embed url="https://github.com/DefiLlama/DefiLlama-Adapters/blob/2cbe2f0c40848c3cf3d683dfb62d8a5077939ba4/projects/CthulhuFinance/index.js#L27" %}
+Example add tokens
+{% endembed %}
+
 
 #### Line 23 - Module Exports
 
@@ -100,6 +89,8 @@ Once you are done writing it you can verify that it returns the correct value by
 
 ```bash
 $ npm install
+# if you want debug logs
+$ export LLAMA_DEBUG_MODE="true" 
 # Replace with your adapter's name
 $ node test.js projects/mint-club/index.js 
 ```
