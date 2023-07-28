@@ -18,3 +18,14 @@ The simple instructions to add your project are:
 3. Add your adapter to an `index.ts` file and export it. It should look like this: `./[dashboard]/[slug]/index.ts`. You will find more information in the next sections.
 4. Test that the adapter works correctly by running `yarn test [dashboard] [protocolSlug]`. You will find more information in the next sections.
 5. Submit a PR! A llama will take a look at it and merge it. Once merged, it can take up to 24h to be available in the dashboard.
+
+{% hint style="info" %}
+Seeing issues getting logs or with calls at historical blocks?\
+You can replace the RPC being used by creating a .env file and filling it with rows like this:\
+ETHEREUM\_RPC="https://..."
+
+BSC\_RPC="https://..."
+
+POLYGON\_RPC="https://..."\
+...
+{% endhint %}
