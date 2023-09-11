@@ -19,7 +19,7 @@ If you'd like to list a DeFi project on DefiLlama:
 4. Make a Pull Request with the changes on your fork, to the main DefiLlama Adapters repo, with a brief explanation of what you changed.
 5. Wait for someone to either comment on or merge your Pull Request. There is no need to ask for someone to check your PR as there a monitored regularly.
 6. Once your PR has been merged, please give 24 hours for the front-end team to load your listing onto the UI.
-7. If protocol is already listed and you want to add a new product/version, just make a new adapter and submit a PR. DefiLlama team will make the necessary changes afterwards (adding all protocols under a parent listing)
+7. If protocol is already listed and you want to add a new product/version, just make a new adapter and submit a PR. DefiLlama team will make the necessary changes afterwards (adding all protocols under a parent listing).
 
 ## How to build an adapter
 
