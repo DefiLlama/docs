@@ -1,29 +1,5 @@
 # Important considerations
 
-#### Timestamp
-
-The timestamp passed to fetch function is the **end of the 24 hour period**, for which the data should be provided. Therefore your adapter should return data for the 24 hours leading up to this timestamp
-
-Correct:
-
-```typescript
-async (timestamp, block) => {
-    const from = timestamp - ONE_DAY_IN_SECONDS // 60*60*24
-    const to = timestamp
-    ...
-}
-```
-
-Wrong:
-
-```typescript
-async (timestamp, block) => {
-    const from = timestamp
-    const to = timestamp + ONE_DAY_IN_SECONDS //wrong!
-    ...
-}
-```
-
 #### Multiple adapters, same protocol
 
 * If you want to list your protocol in different dashboards you can return in the same adapters dimensions of different dashboards. See the following example:
@@ -32,9 +8,9 @@ async (timestamp, block) => {
 const adapter = {
   adapter: {
     ...,
-    fetch: async (timestamp, block) => {
-        const { dailyVolume } = await querySubgraph(volumeQuery, timestamp)
-        const { dailyFees } = await querySubgraph(feesQuery, timestamp)
+    fetch: async ({ endTimestamp }) => {
+        const { dailyVolume } = await querySubgraph(volumeQuery, endTimestamp)
+        const { dailyFees } = await querySubgraph(feesQuery, endTimestamp)
         return {
             dailyVolume, // dimension for dexs dashboard
             dailyFees, // dimension for fees dashboard
@@ -63,7 +39,7 @@ const adapter: BreakdownAdapter = {
 
 #### Methodology
 
-* For fees and revenue adapters please don' forget to include how have you calculated the values in the methodology attribute.
+* For fees and revenue adapters please don't forget to include how have you calculated the values in the methodology attribute.
 
 ```typescript
 const adapter = {
