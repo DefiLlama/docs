@@ -44,8 +44,8 @@ interface IChartItem {
   fees_spent: number
 }
 
-const fetch: FetchV2 = async ({ startTimestamp }) => {
-  const dayTimestamp = getTimestampAtStartOfPreviousDayUTC(startTimestamp)
+const fetch: FetchV2 = async ({ endTimestamp }) => {
+  const dayTimestamp = getTimestampAtStartOfPreviousDayUTC(endTimestamp)
   const historicalFees: IChartItem[] = (await fetchURL(feeEndpoint))
 
   const totalFee = historicalFees
