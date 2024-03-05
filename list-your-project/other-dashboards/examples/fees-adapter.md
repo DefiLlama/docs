@@ -32,10 +32,10 @@ export default adapter;
 #### Custom query from api
 
 ```typescript
-import { FeeAdapter } from "../utils/adapters.type";
+import { Adapter, FetchV2 } from "../adapters/types";
 import { getTimestampAtStartOfPreviousDayUTC } from "../utils/date";
-import { fetchURL } from "@defillama/adapters/projects/helper/utils";
-import axios from "axios"
+import fetchURL from "../utils/fetchURL";
+import { CHAIN } from "../helpers/chains";
 
 const feeEndpoint = "https://api-osmosis.imperator.co/fees/v1/total/historical"
 
@@ -44,9 +44,9 @@ interface IChartItem {
   fees_spent: number
 }
 
-const fetch = async (timestamp: number) => {
-  const dayTimestamp = getTimestampAtStartOfPreviousDayUTC(timestamp)
-  const historicalFees: IChartItem[] = (await fetchURL(feeEndpoint))?.data
+const fetch: FetchV2 = async ({ endTimestamp }) => {
+  const dayTimestamp = getTimestampAtStartOfPreviousDayUTC(endTimestamp)
+  const historicalFees: IChartItem[] = (await fetchURL(feeEndpoint))
 
   const totalFee = historicalFees
     .filter(feeItem => (new Date(feeItem.time).getTime() / 1000) <= dayTimestamp)
@@ -64,17 +64,13 @@ const fetch = async (timestamp: number) => {
   };
 };
 
-const getStartTimestamp = async () => {
-  const historicalVolume: IChartItem[] = (await axios.get(feeEndpoint))?.data
-  return (new Date(historicalVolume[0].time).getTime()) / 1000
-}
-
-const adapter: FeeAdapter = {
-  fees: {
-    cosmos: {
+const adapter: Adapter = {
+  version: 2,
+  adapter: {
+    [CHAIN.COSMOS]: {
       fetch,
       runAtCurrTime: true,
-      start: getStartTimestamp,
+      start: 1665964800,
     },
   }
 }
@@ -85,22 +81,29 @@ export default adapter;
 #### Custom data from subgraph
 
 ```typescript
-import { FeeAdapter } from "../utils/adapters.type";
+import { Adapter } from "../adapters/types";
 import { ARBITRUM, AVAX } from "../helpers/chains";
 import { request, gql } from "graphql-request";
-import { IGraphUrls } from "../helpers/graphs.type";
-import { Chain } from "../utils/constants";
+import type { ChainEndpoints, FetchV2 } from "../adapters/types"
 import { getTimestampAtStartOfDayUTC } from "../utils/date";
 
 const endpoints = {
-  [ARBITRUM]: "https://api.thegraph.com/subgraphs/name/gmx-io/gmx-stats",
-  [AVAX]: "https://api.thegraph.com/subgraphs/name/gmx-io/gmx-avalanche-stats"
+  [ARBITRUM]: "https://subgraph.satsuma-prod.com/3b2ced13c8d9/gmx/gmx-arbitrum-stats/api",
+  [AVAX]: "https://subgraph.satsuma-prod.com/3b2ced13c8d9/gmx/gmx-avalanche-stats/api"
 }
 
-const graphs = (graphUrls: IGraphUrls) => {
-  return (chain: Chain) => {
-    return async (timestamp: number) => {
-      const todaysTimestamp = getTimestampAtStartOfDayUTC(timestamp)
+const methodology = {
+  Fees: "Fees from open/close position (0.1%), swap (0.2% to 0.8%), mint and burn (based on tokens balance in the pool) and borrow fee ((assets borrowed)/(total assets in pool)*0.01%)",
+  UserFees: "Fees from open/close position (0.1%), swap (0.2% to 0.8%) and borrow fee ((assets borrowed)/(total assets in pool)*0.01%)",
+  HoldersRevenue: "30% of all collected fees goes to GMX stakers",
+  SupplySideRevenue: "70% of all collected fees goes to GLP holders",
+  Revenue: "Revenue is 30% of all collected fees, which goes to GMX stakers",
+  ProtocolRevenue: "Treasury has no revenue"
+}
+
+const graphs = (graphUrls: ChainEndpoints) => {
+    const fetch: FetchV2 = async ({ chain, startTimestamp }) => {
+      const todaysTimestamp = getTimestampAtStartOfDayUTC(startTimestamp)
       const searchTimestamp = chain == "arbitrum" ? todaysTimestamp : todaysTimestamp + ":daily"
 
       const graphQuery = gql
@@ -117,31 +120,43 @@ const graphs = (graphUrls: IGraphUrls) => {
 
       const dailyFee = parseInt(graphRes.feeStat.mint) + parseInt(graphRes.feeStat.burn) + parseInt(graphRes.feeStat.marginAndLiquidation) + parseInt(graphRes.feeStat.swap)
       const finalDailyFee = (dailyFee / 1e30);
+      const userFee = parseInt(graphRes.feeStat.marginAndLiquidation) + parseInt(graphRes.feeStat.swap)
+      const finalUserFee = (userFee / 1e30);
 
       return {
-        timestamp,
-        totalFees: "0",
         dailyFees: finalDailyFee.toString(),
-        totalRevenue: "0",
+        dailyUserFees: finalUserFee.toString(),
         dailyRevenue: (finalDailyFee * 0.3).toString(),
+        dailyProtocolRevenue: "0",
+        totalProtocolRevenue: "0",
+        dailyHoldersRevenue: (finalDailyFee * 0.3).toString(),
+        dailySupplySideRevenue: (finalDailyFee * 0.7).toString(),
       };
     };
-  };
+    return fetch 
 };
 
 
-const adapter: FeeAdapter = {
-  fees: {
+const adapter: Adapter = {
+  version: 2,
+  adapter: {
     [ARBITRUM]: {
-        fetch: graphs(endpoints)(ARBITRUM),
-        start: 1630468800,
+      fetch: graphs(endpoints),
+      start: 1630468800,
+      meta: {
+        methodology
+      }
     },
     [AVAX]: {
-        fetch: graphs(endpoints)(AVAX),
-        start: 1641445200,
+      fetch: graphs(endpoints),
+      start: 1641445200,
+      meta: {
+        methodology
+      }
     },
   }
 }
 
 export default adapter;
+
 ```

@@ -13,10 +13,9 @@ A really simplified version of an adapter could be the following lines:
 export default {
   adapter: {
     ethereum: {
-      fetch: (timestamp: number) => {
+      fetch: () => {
         const { dayVolume, totalVolume } = await getVolumeStats();
         return {
-          timestamp,
           dailyVolume: dayVolume,
           totalVolume: totalVolume,
         };
@@ -37,7 +36,7 @@ In the above example, the object under the key `ethereum` is what we call a `Bas
 
 The attribute `fetch` is the most important part of the BaseAdapter but not the only attribute needed to list your project. Other important attributes needed for an optimal listing are:
 
-* `fetch`: Promise that returns different dimensions of a protocol given a [timestamp](important-considerations.md) and a block number. The dimensions returned depends on which adapter you would like to list your project (e.g. \`dailyVolume\` and \`totalVolume\` for the [dexs dashboard](https://defillama.com/dexs)).
+* `fetch`: Promise that returns different dimensions of a protocol (important-considerations.md). The dimensions returned depends on which adapter you would like to list your project (e.g. \`dailyVolume\` and \`totalVolume\` for the [dexs dashboard](https://defillama.com/dexs)).
 * `start`: Promise that returns a timestamp pointing to the earliest timestamp we can pass to the fetch function. This tells our servers how far can we get historical data.
 * `runAtCurrTime`: Boolean that flags if the adapter takes into account the timestamp and block passed to the fetch function (`runAtCurrTime: false`) or if it can only return the latest data, for example there are some adapters that are only able to return the volume of the past 24h from the moment the adapter is executed (`runAtCurrTime: true`).
 * `meta`: Object that contains metadata of the BaseAdapter. The possible attributes are:
@@ -53,20 +52,21 @@ The example we have seen before is a `SimpleAdapter` of a protocol deployed on d
 
 For this situations you can create a `BreakdownAdapter` to have a `BaseAdapter` for each version and chain. Here's a real example:
 
-Find the full code of Uniswap breakdown adapter [here](https://github.com/DefiLlama/adapters/tree/master/volumes/uniswap).
+Find the full code of Uniswap breakdown adapter [here](https://github.com/DefiLlama/dimension-adapters/blob/master/protocols/uniswap/index.ts).
 
 ```typescript
 const adapter: BreakdownAdapter = {
+  version: 2,
   breakdown: {
     v1: {
       [CHAIN.ETHEREUM]: {
-        fetch: v1Graph(CHAIN.ETHEREUM),
+        fetch: async ({ endTimestamp, getEndBlock }) => v1Graph(CHAIN.ETHEREUM)(endTimestamp, getEndBlock),
         start: async () => 1541203200,
       },
     },
     v2: {
       [CHAIN.ETHEREUM]: {
-        fetch: v2Graph(CHAIN.ETHEREUM),
+        fetch: async ({ endTimestamp, getEndBlock }) => v2Graph(CHAIN.ETHEREUM)(endTimestamp, getEndBlock),
         start: getStartTimestamp({
           endpoints: v2Endpoints,
           chain: CHAIN.ETHEREUM,
@@ -75,7 +75,7 @@ const adapter: BreakdownAdapter = {
     },
     v3: Object.keys(v3Endpoints).reduce((acc, chain) => {
       acc[chain] = {
-        fetch: v3Graphs(chain),
+        fetch: async ({ endTimestamp, getEndBlock }) => v3Graphs(chain)(endTimestamp, getEndBlock),
         start: getStartTimestamp({
           endpoints: v3Endpoints,
           chain: chain,
