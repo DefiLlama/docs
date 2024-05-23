@@ -13,7 +13,7 @@ Below, you can see the one we use for Mint Club on Binance Smart Chain (BSC). Le
 const MINT_TOKEN_CONTRACT = '0x1f3Af095CDa17d63cad238358837321e95FC5915';
 const MINT_CLUB_BOND_CONTRACT = '0x8BBac0C7583Cc146244a18863E708bFFbbF19975';
 
-async function tvl(_, _1, _2, { api }) {
+async function tvl(api) {
   const collateralBalance = await api.call({
     abi: 'erc20:balanceOf',
     target: MINT_TOKEN_CONTRACT,
@@ -24,8 +24,6 @@ async function tvl(_, _1, _2, { api }) {
 }
 
 module.exports = {
-  timetravel: true,
-  misrepresentedTokens: false,
   methodology: 'counts the number of MINT tokens in the Club Bonding contract.',
   start: 1000235,
   bsc: {
@@ -37,12 +35,9 @@ module.exports = {
 
 The adapter consists of 3 main sections. First, any dependencies we want to use. Next, an async function containing the code for calculating TVL (where the bulk of the code usually is). Finally, the module exports.
 
-#### Line 4 - Input Parameters:
+#### Line 4 - Input Parameter:
 
-1. The first param taken by the function (line 6) will be a timestamp. In your testing this will be the current timestamp, but when we back fill chart data for your protocol, past timestamps will also be input.
-2. Next is the Ethereum mainnet block height corresponding the timestamp in the first param.
-3. This is deprecated~~Last is an optional object containing block heights for other EVM chains. This is not needed if your project is only on Ethereum mainnet. In this example it was required because Mint Club is on BSC.~~
-4. This contains `api` object, it is an injected `sdk.ChainApi` object with which you can interact with a given chain through `call/multiCall/batchCall` method based on your need, also stores tvl balances
+t is an injected `sdk.ChainApi` object with which you can interact with a given chain through `call/multiCall/batchCall` method based on your need, also stores tvl balances
 
 
 {% hint style="info" %}
