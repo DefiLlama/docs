@@ -1,7 +1,5 @@
 # Fees adapter
 
-
-
 ## How to write a fee / revenue adapter
 
 ### Adapter examples
@@ -158,5 +156,4 @@ const adapter: Adapter = {
 }
 
 export default adapter;
-
 ```

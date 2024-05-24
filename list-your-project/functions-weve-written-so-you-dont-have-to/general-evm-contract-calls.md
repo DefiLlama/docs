@@ -27,7 +27,7 @@ module.exports = {
 
 module.exports = {
   arbitrum: {
-    tvl: async (api) => {
+    tvl: async (_, _1, _2, { api }) => {
       return sumTokens2({ owner, tokens, api, })
     }
   }
@@ -37,7 +37,6 @@ module.exports = {
 {% embed url="https://github.com/DefiLlama/DefiLlama-Adapters/blob/main/projects/twindex/index.js" %}
 Example ERC20 Token Balance Adapter
 {% endembed %}
-
 
 ### Custom Contract Calls
 
@@ -55,7 +54,7 @@ await sdk.util.sumSingleBalance(balances, tokenAddress, balanceOfToken);
 
 {% embed url="https://github.com/DefiLlama/DefiLlama-Adapters/blob/main/projects/manarium/index.js" %}
 
-When you have lots of calls to functions with the same ABI, it's easier to use multiCall and sumMultiBalanceOf.&#x20;
+When you have lots of calls to functions with the same ABI, it's easier to use multiCall and sumMultiBalanceOf.
 
 ```javascript
 const tokensInacBTC = [
@@ -80,4 +79,3 @@ sdk.util.sumMultiBalanceOf(balances, underlyingacBTC);
 {% embed url="https://github.com/DefiLlama/DefiLlama-Adapters/blob/main/projects/acoconut/index.js" %}
 Example MultiCall Adapter
 {% endembed %}
-

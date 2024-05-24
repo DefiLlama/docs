@@ -27,7 +27,3 @@ Just like for TVL adapters, if you'd like to add an emissions schedule to DefiLl
 5. Once your PR has been merged, **please give 24 hours** for the team to load your listing onto the UI.
 
 ![prayge](https://cdn.discordapp.com/emojis/1011049613186318376.webp?size=48\&quality=lossless)
-
-2
-
-1.

@@ -5,7 +5,6 @@
 * [DefiLlama and our methodology](README.md)
 * [How to list a DeFi project](list-your-project/submit-a-project.md)
 * [How to write an SDK adapter](list-your-project/how-to-write-an-sdk-adapter.md)
-* [How to add new EVM chain](list-your-project/how-to-add-new-chain.md)
 * [Functions we've written so you don't have to](list-your-project/functions-weve-written-so-you-dont-have-to/README.md)
   * [Staking and Pool2](list-your-project/functions-weve-written-so-you-dont-have-to/staking-and-pool2.md)
   * [Fork helpers](list-your-project/functions-weve-written-so-you-dont-have-to/fork-helpers.md)

@@ -9,7 +9,6 @@ For situations where the fetch function can only return `totalVolume` and can re
 If the data is available in a subgraph and it follows a structure similar to uniswap, you can use the folling helper functions to easily query it. More docs about it to be added soon but for now... take a look at other implementations!
 
 * `getChainVolume` from `helpers/getUniSubgraphVolume`
-* `getStartTimestamp` from `helpers/getStartTimestamp`
 * `getDexChainFees` from `helpers/getUniSubgraphFees`
 * `getDexChainBreakdownFees` from `helpers/getUniSubgraphFees`
 
