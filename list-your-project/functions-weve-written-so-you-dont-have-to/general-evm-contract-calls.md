@@ -27,7 +27,7 @@ module.exports = {
 
 module.exports = {
   arbitrum: {
-    tvl: async (_, _1, _2, { api }) => {
+    tvl: async (api) => {
       return sumTokens2({ owner, tokens, api, })
     }
   }

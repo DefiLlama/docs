@@ -33,7 +33,9 @@ module.exports = uniV3Export({
 Example Uni V3 Adapter
 {% endembed %}
 
+
 ### GMX
+
 
 ```javascript
 const { gmxExports } = require('../helper/gmx')
@@ -49,6 +51,7 @@ module.exports = {
 Example GMX Adapter
 {% endembed %}
 
+
 ### Aave
 
 ```javascript
@@ -59,13 +62,13 @@ const { aaveExports } = require("../helper/aave")
 Example Aave Fork Adapter
 {% endembed %}
 
+
+
 ### Compound
 
 ```javascript
-const { compoundExports } = require("../helper/compound");
 const { compoundExports2 } = require("../helper/compound");
 module.exports = {
-  polygon: compoundExports(controller, chain, cETHAddress, '0x0000000000000000000000000000000000000000'),
   polygon: compoundExports2({ 
     comptroller: '0x...',
     cether: '0x...', // optional, needed if gas token is used
@@ -73,40 +76,42 @@ module.exports = {
 };
 ```
 
-{% embed url="https://github.com/DefiLlama/DefiLlama-Adapters/blob/main/projects/huckleberry/index.js" %}
+{% embed url="https://github.com/DefiLlama/DefiLlama-Adapters/blob/main/projects/basilisk/index.js" %}
 Example Compound Fork Adapter
 {% endembed %}
 
-### MasterChefs
 
-For MasterChef's we recommend using masterChefExports, but in some more complicated scenarios you may need to use addFundsInMasterChef.
+
+### Liquity
 
 ```javascript
+const { getLiquityTvl } = require("../helper/liquity.js")
 
-const { masterchefExports } = require("../helper/unknownTokens")
-const { addFundsInMasterChef } = require('../helper/masterchef');
+module.exports = {
+  chainX: {
+    tvl: getLiquityTvl('0x...'),
+  }
+}
 ```
 
-{% embed url="https://github.com/DefiLlama/DefiLlama-Adapters/blob/main/projects/sudoinu/index.js" %}
-Example masterChefExports adapter
+{% embed url="https://github.com/DefiLlama/DefiLlama-Adapters/blob/main/projects/liquidloans-io/index.js" %}
+Example Liquity Fork Adapter
 {% endembed %}
 
-### Olympus DAO
+
+### Balancer V2
 
 ```javascript
-const { ohmTvl } = require("../helper/ohm");
+
+const { onChainTvl } = require('../helper/balancer')
+
+module.exports = {
+  metis: {
+    tvl: onChainTvl('0x...', <startBlock>),
+  }
+}
 ```
 
-{% embed url="https://github.com/DefiLlama/DefiLlama-Adapters/blob/main/projects/snowcatdao/index.js" %}
-Example Olympus DAO Adapter
-{% endembed %}
-
-### tomb
-
-```javascript
-const { unknownTombs } = require("../helper/unknownTokens")
-```
-
-{% embed url="https://github.com/DefiLlama/DefiLlama-Adapters/blob/main/projects/gametheory/index.js" %}
-Example tomb Adapter
+{% embed url="https://github.com/DefiLlama/DefiLlama-Adapters/blob/main/projects/hummus-weighted/index.js" %}
+Example Balancer V2 Fork Adapter
 {% endembed %}
