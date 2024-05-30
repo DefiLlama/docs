@@ -26,6 +26,10 @@
   * [Emission Sections](list-your-project/emissions-dashboard/emission-sections.md)
   * [Testing](list-your-project/emissions-dashboard/testing.md)
 
+## analysts
+
+* [Data Definitions](analysts/data-definitions.md)
+
 ## Chainlist
 
 * [How to change Ethereum's RPC](chainlist/how-to-change-ethereums-rpc.md)
