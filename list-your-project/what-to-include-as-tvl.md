@@ -18,3 +18,4 @@ We separate TVL into different types. This lets users decide what they do and do
 
 * Assets that aren't on the blockchain, such as bonds or fiat currency. We don't consider the dollars stored on Tether's bank account as TVL, for example.
 * We also don't accept assets that your protocol generates and are locked into other protocols, as that's the later protocols TVL, not your project's. See [this](https://github.com/DefiLlama/DefiLlama-Adapters/pull/60#issuecomment-807045050) for rationale.
+* We don't count native token staking. For example, ATOM staking to secure the Cosmos hub isn't counted.

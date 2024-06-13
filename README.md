@@ -14,7 +14,7 @@ Valuing different tokens:
 
 Node validators and other chain-native token staking:
 
-* We don't count native token staking. For example, ATOM staking to secure the Cosmos hub isn't counted. However we do count liquid staking solutions, like Lido and Marinade.
+* We don't count native token staking. For example, ATOM staking to secure the Cosmos hub isn't counted. Liquid staking protocols are tracked but not counted towards chain TVL by default.
 
 Bridges:
 
