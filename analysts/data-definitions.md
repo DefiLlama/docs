@@ -20,6 +20,16 @@ This definition of revenue doesn't match the definition used in traditional fina
 
 Subset of revenue that is distributed to tokenholders by means of buyback and burn, burning fees or direct distribution to stakers.&#x20;
 
+### USD Inflows
+
+A protocol's TVL might go down even if more assets are deposited in the scenario where the prices of assets comprising TVL go down, so just looking at the TVL chart is not the best way to see if a protocol is receiving deposits or money is exiting, as that info gets mixed with price movements.
+
+USD Inflows is a metric that fixes that by representing the net asset inflows into a protocol's TVL.
+
+It's calculated by taking the balance difference for each asset between two consecutive days, multiplying that difference by asset price and then summing that for all assets.
+
+If a protocol has all of it's TVL in ETH and one day ETH price drops 20% while there are no new deposits or withdrawals, TVL will drop by 20% while USD inflows will be 0$.
+
 ### Staked
 
 Value of gov coins that are staked in the protocol's staking system
