@@ -6,7 +6,7 @@ coverY: 0
 
 ### How to list a new protocol or coin
 
-1. Fork this repository
+1. Fork [this repository](https://github.com/DefiLlama/defillama-server/tree/master/coins)
 2. Create a new folder within one of the protocol category folders in \[coins/src/adapters/], with your protocol name. Eg, if you wanted to add an adapter for a yield aggregator called 'yieldAgg', you'd create a folder with the path \[coins/src/adapters/yieldAgg/].
 3. Write an adaptor for your protocol (tutorial below), titled \[index.ts]
 4. Test your adaptor by logging the output of your getTokenPrices() function in the adapter file, and running `ts-node <PATH TO ADAPTER>` (remember to install dependencies with `npm i` first!)
