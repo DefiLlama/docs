@@ -81,3 +81,11 @@ Example: When there's a hack that causes a sudden drop in TVL we add an event at
 ### Median APY
 
 Median APY across DeFi pools tracked by DefiLlama that include a given asset. This is calculated by finding all pools for an asset, then sorting them by APY and finding the median weighted by TVL.
+
+### Contributors
+
+Number of unique github accounts that made at least one commit to a repository in the github organization of a given project.
+
+### Developers
+
+Number of unique github accounts that made at least one commit on three distinct months to a repository in the github organization of a given project.
