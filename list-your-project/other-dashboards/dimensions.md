@@ -4,19 +4,15 @@ In the previous page we have seen how to create the structure of our adapter. In
 
 We call dimension to the attributes returned by the `fetch` function of our adapters. Depending on where would you like to list your project, you should return one of the below dimensions.
 
-All dimensions can be returned in USD value (`string`) or as balance object (`Object<string>`).
+All dimensions should be returned as balance object (`Object<string>`) where keys are the coins and their values are the amount of each coin. Our code will get the price of each coin and calculate the final result.
 
-Examples
+Examples:
 
 ```typescript
-// volume dimension in USD
-{
-    dailyVolume: "465424"
-}
 // volume dimension in tokens object
 {
     dailyVolume: {
-        "ethereum:0x0000000000000000000000000000000000000000": "392.43"
+        "ethereum:0x0000000000000000000000000000000000000000": "3924300000000"
     }
 }
 ```
@@ -39,7 +35,7 @@ Examples
 
 * `dailyFees`: All fees and value collected from all sources, this also includes liquid staking rewards, generated yields and possible mint and burn fees paid by LP (but not transaction or gas fees).
 * `dailyUserFees`: Fees paid by protocol users excluding gas fees. This includes swap fees to open/close positions, borrow fees and all fees user has to pay.
-* `dailyRevenue`: Revenue of the protocol governance, this includes treasury and gov token holders (`dailyHoldersRevenue + dailyProtocolRevenue`)
+* `dailyRevenue`: Revenue that the protocol keeps for itself (usually either goes to the treasury, the developers or to tokenholders as in veCRV), this includes treasury and gov token holders (`dailyHoldersRevenue + dailyProtocolRevenue`)
 * `dailyProtocolRevenue`: Treasury revenue.
 * `dailyHoldersRevenue`: Value going to gov token holders, this includes burned coins.
 * `dailySupplySideRevenue`: Value earned by liquidity providers.
@@ -65,5 +61,5 @@ If you are not sure how to fit the different fees and revenues generated in your
 
 > Some notes:
 >
-> * Protocol governance includes trasury + gov token holders
+> * Protocol governance includes treasury + gov token holders
 > * Revenue = HoldersRevenue + ProtocolRevenue

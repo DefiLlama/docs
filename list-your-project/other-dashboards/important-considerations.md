@@ -21,22 +21,6 @@ const adapter = {
 }
 ```
 
-* In case you wanna list your protocol in different dashboards which share same dimension, for example dexs dashboard (for swaps) and derivatives dashboard (for margin trading) you can use a `BreakdownAdapter`.
-
-```typescript
-// dummy example
-const adapter: BreakdownAdapter = {
-  breakdown: {
-    "swap": {
-      fetch: async () => ({ dailyVolume: "32498" })
-    },
-    "margin": {
-      fetch: async () => ({ dailyVolume: "874562" })
-    }
-  }
-}
-```
-
 #### Methodology
 
 * For fees and revenue adapters please don't forget to include how have you calculated the values in the methodology attribute.
