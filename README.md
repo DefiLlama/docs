@@ -23,3 +23,5 @@ Bridges:
 Smart Wallets:
 
 * We don't count funds in smart contract wallets, such as Argent or Gnosis Safe.
+
+In the case of protocols that move money to different chains, TVL is counted on the chain where the users deposited the money and interacted with the protocol.
