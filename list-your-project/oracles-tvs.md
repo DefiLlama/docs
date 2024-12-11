@@ -171,9 +171,3 @@ When submitting your changes, include answers to the following questions in your
   * The protocol(s) updated.
   * The oracles added and their usage (general or chain-specific).
   * Any relevant references or documentation links.
-
-
-
-*   ### Transparency and Reproducibility
-
-    Our methodology is entirely open-source. To review or contribute to the code, refer to: [DefiLlama Adapters GitHub Discussions](https://github.com/DefiLlama/DefiLlama-Adapters/discussions/6254).
