@@ -22,6 +22,7 @@
   * [Protocol Files](list-your-project/emissions-dashboard/protocol-files.md)
   * [Emission Sections](list-your-project/emissions-dashboard/emission-sections.md)
   * [Testing](list-your-project/emissions-dashboard/testing.md)
+* [Oracles TVS](list-your-project/oracles-tvs.md)
 
 ## analysts
 
