@@ -25,24 +25,7 @@ You should use the field  shortName from [https://chainlist.org/rpcs.json](https
 
 ***
 
-#### 2. **Update RPC URLs in `env.js (Optional)`**
-
-You'll need to add the appropriate RPC endpoint for the new blockchain in the `projects/helper/env.js` file.
-
-**Example Change**:
-
-```js
-const ENV_KEYS = [
-  "OZONE_RPC": "https://node1.ozonechain.io",
-  "ZETA_RPC": "https://zetachain-evm.blockpi.network/v1/rpc/public",
-  "DEFIVERSE_RPC": "https://rpc.defi-verse.org/",
-  "ZKLINK_RPC": "https://rpc.zklink.io",  // Add the RPC URL for your new blockchain
-];
-```
-
-***
-
-#### 3. **Add Token Mappings in `tokenMapping.js`**
+#### 2. **Add Token Mappings in `tokenMapping.js`**
 
 Add the token mappings for the new blockchain to the `projects/helper/tokenMapping.js` file. This file maps token addresses to their respective identifiers for accurate tracking and handling.
 
@@ -63,7 +46,7 @@ This ensures tokens on the new blockchain (`zklink`) are properly recognized, in
 
 ***
 
-#### 4. Submit a Protocol **using your blockchain (e.g.,** projects/savmswap/index.j&#x73;**)**
+#### 3. Submit a Protocol **using your blockchain (e.g.,** projects/savmswap/index.j&#x73;**)**
 
 Lastly, update the project’s configuration file to add your new blockchain as a valid supported chain. If we don´t track any protocol on your blockchain, we can not add it. So make sure to add the new chain under a current project or add a new adapter to track the project on your blockchain
 
