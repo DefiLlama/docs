@@ -2,7 +2,7 @@
 description: >-
   DefiLlama Pro API offers robust tools and insights to enhance your DeFi
   analytics with premium features. Upgrade today to access advanced endpoints,
-  higher API limits, and exclusive features designed
+  and higher API limits.
 ---
 
 # Pro-API
@@ -46,11 +46,6 @@ Unlock the full potential of DefiLlama with the Pro plan, designed for businesse
 * 1000 requests per minute.
 * Up to 1 million API calls per month.
 
-**Payment Options:**
-
-* Pay $300/month using **DAI on the Optimism chain**.
-* **Future Option:** Payment via Stripe will be available soon.
-
 **Docs Page**:
 
 &#x20;[https://defillama.com/pro-api/docs](https://defillama.com/pro-api/docs)
@@ -85,18 +80,18 @@ A budget-friendly option for individuals and contributors, with almost all Pro f
     * `DefiLlama-Adapters`
   * Free access is granted for 3 months.
 
-**Payment Options:**
-
-* Pay $15/month using **DAI on the Optimism chain**.
-* **Future Option:** Payment via Stripe will be available soon.
-
 **Docs Page**:
 
 &#x20;[https://defillama.com/pro-api/docs](https://defillama.com/pro-api/docs)
 
 ***
 
-### **How to Upgrade**
+**Payment Options:**
+
+* Payments using **DAI on the Optimism chain**.
+* **Future Option:** Payment via Stripe will be available soon.
+
+**How to Upgrade**
 
 1. **Select Your Plan:** Choose between **Pro** or **Supporter**.
 2. **Payment:**
