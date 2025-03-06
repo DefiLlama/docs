@@ -19,6 +19,10 @@ Examples:
 
 > In order to be listed your adapter would need to provide a minimum of one **daily** dimension. Providing all of them is not required but recommended in order to have better insights.
 
+{% hint style="info" %}
+All total values like totalVolume, totalFees, totalRevenue... are OPTIONAL
+{% endhint %}
+
 **Dexs, dexs aggregators and derivatives dimensions:**
 
 * `dailyVolume`
