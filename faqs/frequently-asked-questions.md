@@ -20,7 +20,7 @@ description: Answers to the most Frequently Asked Questions
    * Borrows is a metric found in Lending platforms and refers to the amount of value that has been borrowed through the protocol.
 8. **What is doublecount?**
    * Doublecount is a toggle found on the DefiLlama website that gives users the option to count or not count tokens such as receipt tokens or LP tokens received from providing liquidity to a protocol and which have since been deposited to another protocol.
-9. **Why doesn't DefiLlama count ADA/SOL/ETH staked?**
+9. **Why doesn't DefiLlama count ADA/SOL/ETH staked into TVL?**
    * At DefiLlama we don't count chain staked assets for ANY chain. Users use us to track DeFi adoption, and adding Chain Staking would overshadow the TVL from their DeFi protocols, making chain TVL just a proxy of token marketcap, completely removing usage as a metric to track DeFi adoption. We track liquid staking protocols but these are not included by default into chain TVL.
    * Example: As of 2025-03-20, Cardano TVL is 330m$, while 15.84bn$ in ADA are staked. Thus if we included staked ADA into TVL, DeFi would make up only 2% of TVL, and due to the frequent 2-5% daily movements in the price of ADA, users wouldnt be able to tell anything about DeFi from that chart. DeFi adoption could double overnight but if ADA price drops -2.5% the chart would go down.
 10. **How to list your protocol?**
