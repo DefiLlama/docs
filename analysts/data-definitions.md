@@ -89,3 +89,7 @@ Number of unique github accounts that made at least one commit to a repository i
 ### Developers
 
 Number of unique github accounts that made at least one commit on three distinct months to a repository in the github organization of a given project.
+
+### Assets (for CEXs)
+
+This includes all the assets that the CEX has under their custody, excluding any assets that are under a different custodian but are credited inside the CEX for use as collateral.
