@@ -15,7 +15,13 @@ description: Answers to the most Frequently Asked Questions
 5. **What is Pool2 TVL?**
    * Pool2 refers to a type of farm that requires users to take exposure to native tokens issued by the protocol. It is a sort of “secondary pool” to incentivize farmers to continue holding on to the protocol's tokens, or to provide liquidity for these tokens, instead of selling them.
 6. **What is Staking TVL?**
-   * Staking refers to the locking of crypto tokens issued by the protocol itself(i.e. The protocol’s own tokens) into a smart contract in an effort to earn more of those tokens in return.
+   * In many cases, a DeFi protocol will have their core smart contracts with TVL that provides some service, such as a DEX or a lending market, and then separately they'll have a contract where users can stake the protocol's governance token to earn rewards (usually revenue distribution or token inflation). Staking TVL refers to the TVL in these staking contracts, which are independent from the main protocol function.
+   * Examples are CRV locked into veCRV, AAVE locked into stkAAVE, locked CAKE for veCAKE on PancakeSwap...
+   * Staking TVL is never used for staking in Chains (eg ETH PoS staking), it's only for DeFi protocols.
+   * Why we don't include this staking into core TVL by default:\
+     \- To avoid penalizing protocols that don't have a token or a staking program.\
+     \- Because this staking is independent from the core protocol function and so a large staking TVL doesn't mean that protocol has traction, it muddies TVL as a proxy for traction.\
+     \- This staking is largely riskless because if the contracts got hacked the protocol can always cover the loss by minting more governance tokens, and the risk of protocol hack is already baked into the protocol's token. However, for other tokens deposited into the protocol, if the protocol is hacked they would be completely lost. So core TVL provides a signal that the market considers the protocol trustworthy, but staking TVL doesn't provide that signal. Also, staking contracts are independent and simpler than core protocol contracts.
 7. **What are borrows?**
    * Borrows is a metric found in Lending platforms and refers to the amount of value that has been borrowed through the protocol.
 8. **What is doublecount?**
