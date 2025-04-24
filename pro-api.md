@@ -99,6 +99,6 @@ A budget-friendly option for individuals and contributors, with almost all Pro f
    * Ensure you have a compatible wallet and sufficient funds.
    * **Future Option:** Payment via Stripe will be available soon.
 3. **Sign In:**
-   * For the Supporter plan, sign in using your GitHub account to verify eligibility. And connect a wallet
+   * For the Supporter plan, [sign in][https://defillama.com/subscribe] using your GitHub account to verify eligibility. And connect a wallet
 4. **Activate Features:**
    * Upon successful payment, your upgraded features and API limits will be activated.
