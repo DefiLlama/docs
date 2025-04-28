@@ -21,7 +21,6 @@ DefiLlama's dashboards track various metrics (dimensions) for DeFi protocols. Ea
 * **Derivatives dashboard**: Tracks volume from derivatives protocols
 * **Bridge Aggregators dashboard**: Tracks volume from bridge aggregators
 * **Options dashboard**: Tracks notional and premium volume from options DEXs
-* **Incentives dashboard**: Tracks daily incentives distributed by protocols
 
 ## How to List Your Project
 
@@ -49,52 +48,36 @@ POLYGON_RPC="https://..."
 Let's start with a simple, complete example of a fees adapter:
 
 ```typescript
-import { FetchOptions, SimpleAdapter } from "../adapters/types";
-import { CHAIN } from "../helpers/chains";
+import { FetchOptions, SimpleAdapter } from "../../adapters/types";
 
-// This adapter tracks fees for a protocol on Solana by querying Dune Analytics
+const FeeCollectedEvent = "event FeesCollected(address indexed _token, address indexed _integrator, uint256 _integratorFee, uint256 _lifiFee)"
+
+const LIFIFeeCollector = '0xbD6C7B0d2f68c2b7805d88388319cfB6EcB50eA9';
+
 const fetch = async (options: FetchOptions) => {
-  const dailyFees = options.createBalances();
-  const dailyRevenue = options.createBalances();
-
-  // Example Dune SQL query to fetch data
-  const data = await options.queryDuneSql(`
-    SELECT 
-      SUM(fee_amount) as fee_token_amount,
-      token_address
-    FROM solana.transactions
-    WHERE receiver = '9yMwSPk9mrXSN7yDHUuZurAh1sjbJsfpUqjZ7SvVtdco'
-      AND block_time >= FROM_UNIXTIME(${options.startTimestamp})
-      AND block_time < FROM_UNIXTIME(${options.endTimestamp})
-    GROUP BY token_address
-  `);
-  
-  // Add the fees to the balances object
-  if (data && data.length > 0) {
-    data.forEach(row => {
-      dailyFees.add(row.token_address, row.fee_token_amount);
+    const dailyFees = options.createBalances();
+    const data: any[] = await options.getLogs({
+        target: LIFIFeeCollector,
+        topic: '0x28a87b6059180e46de5fb9ab35eb043e8fe00ab45afcc7789e3934ecbbcde3ea',
+        eventAbi: FeeCollectedEvent,
     });
-    
-    // In this example, 20% of fees go to the protocol as revenue
-    dailyRevenue.add(data[0].token_address, data[0].fee_token_amount * 0.2);
-  }
-  
-  return { 
-    dailyFees,
-    dailyRevenue
-  };
+    data.forEach((log: any) => {
+        dailyFees.add(log._token, log._integratorFee);
+    });
+    return { dailyFees, dailyRevenue: dailyFees };
 };
 
-// Export the adapter configuration
-export default {
-  version: 2, // V2 adapter - can handle arbitrary time ranges
-  adapter: {
-    [CHAIN.SOLANA]: {
-      fetch,
-      start: "2024-04-10", // Protocol deployment date
-    },
-  },
+const adapter: SimpleAdapter = {
+    version: 2,
+    adapter:{
+      [CHAIN.ETHEREUM]: {
+          fetch,
+          start: '2023-07-27'
+      }
+    }
 };
+
+export default adapter;
 ```
 
 ### Adapter Structure
@@ -144,13 +127,13 @@ The top-level `version` key specifies the adapter version:
 
 Your `fetch` function should return an object containing properties corresponding to the metrics (dimensions) relevant to the dashboard you are targeting. All dimensions should be returned as balance objects (`Object<string>`) where keys are the token identifiers (e.g., `ethereum:0x...`) and values are the raw amounts (no decimal adjustments).
 
-> In order to be listed, your adapter must provide a minimum of one **daily** dimension (e.g., `dailyVolume`, `dailyFees`). Providing corresponding `total` dimensions is optional but recommended for better insights.
+> **Minimum Requirements:** To be listed, your adapter **must** provide accurate `dailyFees` and `dailyRevenue` dimensions. Other daily dimensions like `dailyHoldersRevenue` are highly encouraged for better insights but are secondary. All `total*` dimensions are entirely optional.
 
 Here are the standard dimensions grouped by dashboard type:
 
 **Dexs, Dex Aggregators, and Derivatives Dimensions:**
 
-*   `dailyVolume`: Trading volume for the period.
+*   `dailyVolume`: (Required for these dashboards) Trading volume for the period.
 *   `totalVolume`: Cumulative trading volume up to the end of the period (Optional).
 
 **Options Dimensions:**
@@ -162,13 +145,13 @@ Here are the standard dimensions grouped by dashboard type:
 
 **Fees Dimensions:**
 
-*   `dailyFees`: All fees and value collected from *all* sources (users, LPs, yield generation, liquid staking rewards, etc.), excluding direct transaction/gas costs paid by users to the network. This represents the total value flow into the protocol's ecosystem due to its operation.
-*   `dailyUserFees`: The portion of `dailyFees` directly paid by end-users (e.g., swap fees, borrow interest, liquidation penalties, marketplace commissions paid by buyers/sellers).
-*   `dailyRevenue`: The portion of `dailyFees` kept by the protocol entity itself, distributed either to the treasury (`dailyProtocolRevenue`) or governance token holders (`dailyHoldersRevenue`).
+*   `dailyFees`: (**Required**) All fees and value collected from *all* sources (users, LPs, yield generation, liquid staking rewards, etc.), excluding direct transaction/gas costs paid by users to the network. This represents the total value flow into the protocol's ecosystem due to its operation.
+*   `dailyUserFees`: (Optional, but helpful) The portion of `dailyFees` directly paid by end-users (e.g., swap fees, borrow interest, liquidation penalties, marketplace commissions paid by buyers/sellers).
+*   `dailyRevenue`: (**Required**) The portion of `dailyFees` kept by the protocol entity itself, distributed either to the treasury (`dailyProtocolRevenue`) or governance token holders (`dailyHoldersRevenue`).
     *   `dailyRevenue = dailyProtocolRevenue + dailyHoldersRevenue`
-*   `dailyProtocolRevenue`: The portion of `dailyRevenue` allocated to the protocol's treasury or core team.
-*   `dailyHoldersRevenue`: The portion of `dailyRevenue` distributed to governance token holders (e.g., via staking rewards, buybacks, burns).
-*   `dailySupplySideRevenue`: The portion of `dailyFees` distributed to liquidity providers, lenders, or other suppliers of capital/resources essential to the protocol's function.
+*   `dailyProtocolRevenue`: (Optional, clarifies revenue split) The portion of `dailyRevenue` allocated to the protocol's treasury or core team.
+*   `dailyHoldersRevenue`: (Optional, but important for protocols distributing to holders) The portion of `dailyRevenue` distributed to governance token holders (e.g., via staking rewards, buybacks, burns).
+*   `dailySupplySideRevenue`: (Optional, but helpful) The portion of `dailyFees` distributed to liquidity providers, lenders, or other suppliers of capital/resources essential to the protocol's function.
     *   `dailyFees = dailyRevenue + dailySupplySideRevenue` (approximately, minor discrepancies possible)
 *   `totalFees`: Cumulative `dailyFees` (Optional).
 *   `totalUserFees`: Cumulative `dailyUserFees` (Optional).
@@ -390,11 +373,14 @@ import BigNumber from "bignumber.js";
 // ... inside fetch function
 const feesInGas = new BigNumber(graphRes["fees"]);
 const ethGasPrice = await getGasPrice(timestamp); // Assuming getGasPrice helper exists
+const dailyFees = options.createBalances(); // Create a Balances object
+
+dailyFees.addGasToken(feesInGas.multipliedBy(ethGasPrice).toString()); 
 
 return {
-  // Example: Converting gas fees to revenue value
-  dailyRevenue: feesInGas.multipliedBy(ethGasPrice).toString() 
-};
+  dailyFees,
+  dailyRevenue: dailyFees
+}; 
 ```
 
 ## Helper Functions Reference
@@ -706,5 +692,4 @@ You can find the full source code for these helper functions in the DeFi Llama G
 - [L2 Fees Helpers](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/l2-fees.ts) - Contains L2FeesFetcher
 - [Graph Helpers](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/graph.ts) - Contains querySubgraph
 - [Uniswap Subgraph Helpers](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/getUniSubgraphVolume.ts) - Contains getGraphDimensions2
-- [General Volume Helpers](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/customBackfill.ts) - Contains customBackfill
 
