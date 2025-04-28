@@ -41,4 +41,4 @@
 ***
 
 * [Coin Prices API](coin-prices-api.md)
-* [Pro-API](pro-api.md)
+* [Pricing](pro-api.md)
