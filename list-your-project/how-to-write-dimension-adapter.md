@@ -632,42 +632,6 @@ Functions for querying external data platforms.
     }
     ```
 
-### Subgraph Helpers
-
-Functions for interacting with The Graph subgraphs.
-
-*   **`getGraphDimensions2`**: Alternative helper (`import { getGraphDimensions2 } from '../helpers/getUniSubgraphVolume'`) for deriving dimensions from Uniswap-like subgraph schemas.
-
-    ```typescript
-    import { getGraphDimensions2 } from '../helpers/getUniSubgraphVolume';
-
-    const adapter = getGraphDimensions2({
-      graphUrls: {
-        [CHAIN.ETHEREUM]: 'https://api.thegraph.com/subgraphs/name/protocol/subgraph',
-      },
-      feesPercent: { // Example fee structure
-          type: "volume", 
-          UserFees: 0.3, 
-          SupplySideRevenue: 0.25, 
-          ProtocolRevenue: 0.05, 
-          Revenue: 0.05, 
-          HoldersRevenue: 0.0 
-        },
-      dailyData: { // Fields to query from the subgraph
-        volumeUSD: "volumeUSD",
-        feesUSD: "feesUSD" // Optional if feesPercent is defined
-      },
-      totalData: { // Cumulative fields
-         volumeUSD: "totalVolumeUSD",
-         feesUSD: "totalFeesUSD" // Optional
-      }
-      // Additional configuration options
-    });
-
-    // export default adapter; // Export the configured adapter
-    ```
-    [Example Implementation - Quickswap](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/quickswap.ts)
-
 ### Chain-Specific Helpers
 
 Helpers tailored for specific chains or L2s.
