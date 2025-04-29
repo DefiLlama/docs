@@ -1,3 +1,7 @@
+{% hint style="info" %}
+**Note (Updated: 2025-05-01):** This page might contain outdated information. For the most up-to-date documentation, please visit the main [Building Dimension Adapters](../how-to-write-dimension-adapter.md) guide.
+{% endhint %}
+
 # Helper Functions
 
 This document provides detailed information about the various helper functions available to simplify the creation of adapters. Each section includes example implementations and links to real adapters using these functions.
@@ -194,40 +198,12 @@ import { uniV3Exports } from '../helpers/uniswap';
 export default uniV3Exports({
   [CHAIN.ETHEREUM]: {
     factory: '0x1F98431c8aD98523631AE4a59f267346ea31F984',
-    fromBlock: 12369621,
     // Optional custom fee handling or additional configurations
   }
 });
 ```
 
 [Example Implementation - 2thick](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/2thick.ts)
-
-### getDexChainFees
-
-Calculates daily fee data for decentralized exchanges by tracking on-chain transactions and applying fee rates to trading volumes.
-
-```typescript
-import { getDexChainFees } from '../helpers/getUniSubgraphFees';
-import volumeAdapter from '../dexs/volumeAdapterFile';
-
-const TOTAL_FEES = 0.003; // 0.3%
-const LP_FEES = 0.0025;   // 0.25%
-const PROTOCOL_FEES = 0.0005; // 0.05%
-
-export default {
-  version: 2,
-  adapter: getDexChainFees({
-    totalFees: TOTAL_FEES,
-    protocolFees: PROTOCOL_FEES,
-    supplySideRevenue: LP_FEES,
-    revenue: PROTOCOL_FEES,
-    userFees: TOTAL_FEES,
-    volumeAdapter
-  })
-};
-```
-
-[Example Implementation - Katana](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/katana.ts)
 
 ## Query Engine Helpers
 
@@ -278,42 +254,6 @@ const fetch = async (options: FetchOptions) => {
 }
 ```
 
-## Subgraph Helpers
-
-### querySubgraph / getGraphDimensions
-
-Queries subgraphs and processes the results for easy integration into adapters.
-
-```typescript
-import { querySubgraph } from '../helpers/graph';
-
-const fetch = async (options: FetchOptions) => {
-  const query = `{
-    feeStats(where: {timestamp_gte: ${options.startTimestamp}, timestamp_lt: ${options.endTimestamp}}) {
-      feeAmount
-      token
-    }
-  }`;
-  
-  const { feeStats } = await querySubgraph(query, options.endpoint);
-  
-  const dailyFees = options.createBalances();
-  feeStats.forEach(stat => {
-    dailyFees.add(stat.token, stat.feeAmount);
-  });
-  
-  return { dailyFees };
-}
-```
-
-[Example Implementation - Curve](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/curve.ts)
-
-[Example Implementation - LlamaLend](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/llamalend.ts)
-
-[Example Implementation - TheGraph](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/thegraph.ts)
-
-[Example Implementation - Dackieswap](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/dackieswap.ts)
-
 ### getGraphDimensions2
 
 Alternative implementation of getGraphDimensions with a simplified approach for newer adapter versions.
@@ -335,34 +275,6 @@ const adapter = getGraphDimensions2({
 
 ## Chain-Specific Helpers
 
-### blockscoutFeeAdapter2
-
-Creates an adapter using Blockscout explorer data to retrieve daily transaction fees.
-
-```typescript
-import { blockscoutFeeAdapter2 } from '../helpers/blockscout';
-
-export default blockscoutFeeAdapter2({
-  chain: CHAIN.XDAI,
-  blockscoutUrl: 'https://blockscout.com/xdai/mainnet',
-  // Additional options
-});
-```
-
-### L2FeesFetcher
-
-Generates an adapter for Layer 2 networks that tracks fees collected by sequencers.
-
-```typescript
-import { L2FeesFetcher } from '../helpers/l2-fees';
-
-export default L2FeesFetcher({
-  chain: CHAIN.ARBITRUM,
-  sequencerAddress: '0x123...abc',
-  // Additional configuration
-});
-```
-
 ### fetchTransactionFees
 
 Retrieves the total transaction fees for a specific blockchain network within a given time range.
@@ -376,47 +288,13 @@ const fetch = async (options: FetchOptions) => {
 }
 ```
 
-### chainAdapter
-
-Builds an adapter for retrieving fee data from Coinmetrics API for various blockchain networks.
-
-```typescript
-import { chainAdapter } from '../helpers/chain';
-
-export default chainAdapter({
-  chain: CHAIN.ETHEREUM,
-  // Additional options
-});
-```
-
-## General Helpers
-
-### Custom Backfill
-
-For situations where the fetch function can only return `totalVolume` and can return it based on a timestamp, you can use the `customBackfill` function found in `volumes/helper/customBackfill`.
-
-```typescript
-import { customBackfill } from "../helpers/customBackfill";
-
-// For adapters that only provide total volume but not daily volume
-const adapter = customBackfill({
-  startTimestamp: 1650000000, // Unix timestamp for when the protocol launched
-  fetchTotalVolume: async () => {
-    // Logic to fetch the total volume goes here
-    return totalVolumeBalances;
-  }
-});
-```
-
 ## Helper Function Reference
 
 You can find the full source code for these helper functions in the DeFi Llama GitHub repository:
 
 - [Token Helpers](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/token.ts) - Contains functions like addTokensReceived, getETHReceived, etc.
 - [Uniswap Helpers](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/uniswap.ts) - Contains uniV2Exports, uniV3Exports
-- [Blockscout Helpers](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/blockscout.ts) - Contains blockscoutFeeAdapter2
 - [Compound Helpers](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/compound.ts) - Contains compoundV2Export
-- [L2 Fees Helpers](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/l2-fees.ts) - Contains L2FeesFetcher
 - [Graph Helpers](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/getUniSubgraphVolume.ts) - Contains getGraphDimensions2
 
 

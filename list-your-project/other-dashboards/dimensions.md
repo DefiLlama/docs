@@ -1,3 +1,7 @@
+{% hint style="info" %}
+**Note (Updated: 2025-05-01):** This page might contain outdated information. For the most up-to-date documentation, please visit the main [Building Dimension Adapters](../how-to-write-dimension-adapter.md) guide.
+{% endhint %}
+
 # Dimensions
 
 In the previous page we have seen how to create the structure of our adapter. In this section we will focus on explaining the different dimensions that our adapters can return.
@@ -25,34 +29,31 @@ All total values like totalVolume, totalFees, totalRevenue... are OPTIONAL
 
 **Dexs, dexs aggregators and derivatives dimensions:**
 
-* `dailyVolume`
-* `totalVolume`
+*   `dailyVolume`: (Required for these dashboards) Trading volume for the period.
 
-**Options dimensions**
+**Options Dimensions:**
 
-* `dailyNotionalVolume`
-* `dailyPremiumVolume`
-* `totalNotionalVolume`
-* `totalPremiumVolume`
+*   `dailyNotionalVolume`: Notional volume of options contracts traded/settled.
+*   `dailyPremiumVolume`: Premium volume collected/paid.
 
-**Fees dimensions**
+**Fees Dimensions:**
 
-* `dailyFees`: All fees and value collected from all sources, this also includes liquid staking rewards, generated yields and possible mint and burn fees paid by LP (but not transaction or gas fees).
-* `dailyUserFees`: Fees paid by protocol users excluding gas fees. This includes swap fees to open/close positions, borrow fees and all fees user has to pay.
-* `dailyRevenue`: Revenue that the protocol keeps for itself (usually either goes to the treasury, the developers or to tokenholders as in veCRV), this includes treasury and gov token holders (`dailyHoldersRevenue + dailyProtocolRevenue`)
-* `dailyProtocolRevenue`: Treasury revenue.
-* `dailyHoldersRevenue`: Value going to gov token holders, this includes burned coins.
-* `dailySupplySideRevenue`: Value earned by liquidity providers.
-* `totalFees` (Cumulative value of dailyFees)
-* `totalUserFees` (Cumulative dailyUserFees)
-* `totalRevenue` (Cumulative value of dailyRevenue)
-* `totalProtocolRevenue` (Cumulative value of dailyProtocolRevenue)
-* `totalSupplySideRevenue` (Cumulative value of dailySupplySideRevenue)
-* `totalDailyHoldersRevenue` (Cumulative value of dailyHoldersRevenue)
+*   `dailyFees`: (**Required**) All fees and value collected from *all* sources (users, LPs, yield generation, liquid staking rewards, etc.), excluding direct transaction/gas costs paid by users to the network. This represents the total value flow into the protocol's ecosystem due to its operation.
+*   `dailyUserFees`: (Optional, but helpful) The portion of `dailyFees` directly paid by end-users (e.g., swap fees, borrow interest, liquidation penalties, marketplace commissions paid by buyers/sellers).
+*   `dailyRevenue`: (**Required**) The portion of `dailyFees` kept by the protocol entity itself, distributed either to the treasury (`dailyProtocolRevenue`) or governance token holders (`dailyHoldersRevenue`).
+    *   `dailyRevenue = dailyProtocolRevenue + dailyHoldersRevenue`
+*   `dailyProtocolRevenue`: The portion of `dailyRevenue` allocated to the protocol's treasury or core team.
+*   `dailyHoldersRevenue`: The portion of `dailyRevenue` distributed to governance token holders (e.g., buybacks, burns).
+*   `dailySupplySideRevenue`: The portion of `dailyFees` distributed to liquidity providers, lenders, or other suppliers of capital/resources essential to the protocol's function.
+*   `dailyBribeRevenue`: Governance token paid as bribe/incentive for token holder action.
+*   `dailyTokenTax`: Fees generated from a tax applied to token transfers.
 
-If you are not sure how to fit the different fees and revenues generated in your protocol, take a look at the following table or ping us on Discord!
+## Fee/Revenue Attribution Examples by Protocol Type
+
+If you are unsure how to classify fees and revenues, refer to this table or ask on Discord:
 
 <figure><img src="../../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+
 
 | Attribute         | DEXs                                        | Lending                                    | Chains                                         | NFT Marketplace                        | Derivatives                      | CDP                        | Liquid Staking                  | Yield                              | Synthetics                       |
 | ----------------- | ------------------------------------------- | ------------------------------------------ | ---------------------------------------------- | -------------------------------------- | -------------------------------- | -------------------------- | ------------------------------- | ---------------------------------- | -------------------------------- |

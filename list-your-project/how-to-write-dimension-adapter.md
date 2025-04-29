@@ -9,7 +9,16 @@ An adapter is some code that:
 1. Collects data on a protocol by calling some endpoints or making blockchain calls
 2. Computes a response and returns it
 
-It's a TypeScript file that exports an async function which takes start and end timestamps (and block numbers) and returns an object with metrics for that time range.
+It's a TypeScript file that exports an async function which takes a FetchOptions object containing:
+- startTimestamp: Unix timestamp for start of period
+- endTimestamp: Unix timestamp for end of period 
+- startBlock: Block number corresponding to start timestamp
+- endBlock: Block number corresponding to end timestamp
+- createBalances: Helper function to track token balances
+- api: Helper for making contract calls
+- getLogs: Helper for fetching event logs
+
+The function returns an object with metrics (like fees, volume, etc.) for that time range.
 
 ## Introduction to Dimension Adapters
 
@@ -58,7 +67,6 @@ const fetch = async (options: FetchOptions) => {
     const dailyFees = options.createBalances();
     const data: any[] = await options.getLogs({
         target: LIFIFeeCollector,
-        topic: '0x28a87b6059180e46de5fb9ab35eb043e8fe00ab45afcc7789e3934ecbbcde3ea',
         eventAbi: FeeCollectedEvent,
     });
     data.forEach((log: any) => {
@@ -127,21 +135,18 @@ The top-level `version` key specifies the adapter version:
 
 Your `fetch` function should return an object containing properties corresponding to the metrics (dimensions) relevant to the dashboard you are targeting. All dimensions should be returned as balance objects (`Object<string>`) where keys are the token identifiers (e.g., `ethereum:0x...`) and values are the raw amounts (no decimal adjustments).
 
-> **Minimum Requirements:** To be listed, your adapter **must** provide accurate `dailyFees` and `dailyRevenue` dimensions. Other daily dimensions like `dailyHoldersRevenue` are highly encouraged for better insights but are secondary. All `total*` dimensions are entirely optional.
+> **Minimum Requirements:** To be listed, your adapter **must** provide accurate `dailyFees` and `dailyRevenue` dimensions. Other daily dimensions like `dailyHoldersRevenue` are highly encouraged for better insights but are secondary. Cumulative `total*` dimensions are deprecated and should not be used.
 
 Here are the standard dimensions grouped by dashboard type:
 
 **Dexs, Dex Aggregators, and Derivatives Dimensions:**
 
 *   `dailyVolume`: (Required for these dashboards) Trading volume for the period.
-*   `totalVolume`: Cumulative trading volume up to the end of the period (Optional).
 
 **Options Dimensions:**
 
 *   `dailyNotionalVolume`: Notional volume of options contracts traded/settled.
 *   `dailyPremiumVolume`: Premium volume collected/paid.
-*   `totalNotionalVolume`: Cumulative notional volume (Optional).
-*   `totalPremiumVolume`: Cumulative premium volume (Optional).
 
 **Fees Dimensions:**
 
@@ -152,13 +157,8 @@ Here are the standard dimensions grouped by dashboard type:
 *   `dailyProtocolRevenue`: (Optional, clarifies revenue split) The portion of `dailyRevenue` allocated to the protocol's treasury or core team.
 *   `dailyHoldersRevenue`: (Optional, but important for protocols distributing to holders) The portion of `dailyRevenue` distributed to governance token holders (e.g., via staking rewards, buybacks, burns).
 *   `dailySupplySideRevenue`: (Optional, but helpful) The portion of `dailyFees` distributed to liquidity providers, lenders, or other suppliers of capital/resources essential to the protocol's function.
-    *   `dailyFees = dailyRevenue + dailySupplySideRevenue` (approximately, minor discrepancies possible)
-*   `totalFees`: Cumulative `dailyFees` (Optional).
-*   `totalUserFees`: Cumulative `dailyUserFees` (Optional).
-*   `totalRevenue`: Cumulative `dailyRevenue` (Optional).
-*   `totalProtocolRevenue`: Cumulative `dailyProtocolRevenue` (Optional).
-*   `totalSupplySideRevenue`: Cumulative `dailySupplySideRevenue` (Optional).
-*   `totalDailyHoldersRevenue`: Cumulative `dailyHoldersRevenue` (Optional).
+*   `dailyBribeRevenue`: (Optional, specific use case) Governance token paid as bribe/incentive for token holder action.
+*   `dailyTokenTax`: (Optional, specific use case) Fees generated from a tax applied to token transfers.
 
 **Fee/Revenue Attribution Examples by Protocol Type:**
 
@@ -313,15 +313,13 @@ const fetch = async (options: FetchOptions) => {
   // Use multiCall for efficiency when making multiple similar calls
   const bribes = await options.api.multiCall({
     abi: "function getBribe() returns (address)",
-    calls: plugins.map((plugin) => ({ target: plugin })),
+    calls: plugins
   });
   
   // Example: Collect fee data from events emitted by bribe contracts
   for (const bribe of bribes) {
     const logs = await options.getLogs({
       target: bribe,
-      fromBlock: await options.getFromBlock(),
-      toBlock: await options.getToBlock(),
       eventAbi: "event Bribe__RewardNotified(address indexed rewardToken, uint256 reward)",
     });
     
@@ -424,7 +422,6 @@ These helpers provide high-level abstractions for common DeFi protocol archetype
     export default uniV3Exports({
       [CHAIN.SCROLL]: { 
         factory: '0xAAA32926fcE6bE95ea2c51cB4Fcb60836D320C42',
-        fromBlock: 12369621 // Optional: specify block to start indexing from
         // Optional custom fee handling or additional configurations
       }
       // Other chains...
@@ -622,30 +619,6 @@ Functions for querying external data platforms.
 
 Helpers tailored for specific chains or L2s.
 
-*   **`blockscoutFeeAdapter2`**: Creates an adapter using Blockscout explorer data for chain transaction fees.
-
-    ```typescript
-    import { blockscoutFeeAdapter2 } from '../helpers/blockscout';
-
-    export default blockscoutFeeAdapter2({
-      chain: CHAIN.XDAI,
-      blockscoutUrl: 'https://blockscout.com/xdai/mainnet',
-      // Additional options
-    });
-    ```
-
-*   **`L2FeesFetcher`**: Generates an adapter for L2 networks tracking sequencer fees.
-
-    ```typescript
-    import { L2FeesFetcher } from '../helpers/l2-fees';
-
-    export default L2FeesFetcher({
-      chain: CHAIN.ARBITRUM,
-      sequencerAddress: '0x123...abc', // Address receiving L2 fees
-      // Additional configuration
-    });
-    ```
-
 *   **`fetchTransactionFees`** (Available via `options.fetchTransactionFees`): Retrieves total native token transaction fees burned/collected by the network.
 
     ```typescript
@@ -656,16 +629,6 @@ Helpers tailored for specific chains or L2s.
     }
     ```
 
-*   **`chainAdapter`**: Builds an adapter for retrieving chain fee data from Coinmetrics API.
-
-    ```typescript
-    import { chainAdapter } from '../helpers/chain';
-
-    export default chainAdapter({
-      chain: CHAIN.ETHEREUM,
-      // Additional options
-    });
-    ```
 
 ### General Helpers
 
@@ -687,9 +650,7 @@ You can find the full source code for these helper functions in the DeFi Llama G
 
 - [Token Helpers](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/token.ts) - Contains functions like addTokensReceived, getETHReceived, etc.
 - [Uniswap Helpers](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/uniswap.ts) - Contains uniV2Exports, uniV3Exports
-- [Blockscout Helpers](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/blockscout.ts) - Contains blockscoutFeeAdapter2
 - [Compound Helpers](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/compound.ts) - Contains compoundV2Export
-- [L2 Fees Helpers](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/l2-fees.ts) - Contains L2FeesFetcher
 - [Graph Helpers](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/graph.ts) - Contains querySubgraph
 - [Uniswap Subgraph Helpers](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/getUniSubgraphVolume.ts) - Contains getGraphDimensions2
 
