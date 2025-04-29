@@ -4,7 +4,7 @@ hidden: true
 
 # Dimensions
 
-{% hint style="info" %}
+{% hint style="warning" %}
 **Note (Updated: 2025-05-01):** This page might contain outdated information. For the most up-to-date documentation, please visit the main [Building Dimension Adapters](./) guide.
 {% endhint %}
 
