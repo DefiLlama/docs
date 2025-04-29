@@ -1,8 +1,14 @@
+---
+hidden: true
+---
+
+# Listing your project
+
 {% hint style="info" %}
 **Note (Updated: 2025-05-01):** This page might contain outdated information. For the most up-to-date documentation, please visit the main [Building Dimension Adapters](../how-to-write-dimension-adapter.md) guide.
 {% endhint %}
 
-# Listing your project
+## Listing your project
 
 Same as TVL adapters, the majority of adapters for the dashboards under this section are contributed and maintained by their respective communities, with all changes being coordinated through the [`DefiLlama/dimension-adapters` github repo](https://github.com/DefiLlama/dimension-adapters).
 

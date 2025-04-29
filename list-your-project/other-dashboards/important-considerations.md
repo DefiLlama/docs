@@ -1,10 +1,16 @@
+---
+hidden: true
+---
+
+# Important considerations
+
 {% hint style="info" %}
 **Note (Updated: 2025-05-01):** This page might contain outdated information. For the most up-to-date documentation, please visit the main [Building Dimension Adapters](../how-to-write-dimension-adapter.md) guide.
 {% endhint %}
 
-# Important considerations
+## Important considerations
 
-#### Multiple adapters, same protocol
+**Multiple adapters, same protocol**
 
 * If you want to list your protocol in different dashboards you can return in the same adapters dimensions of different dashboards. See the following example:
 
@@ -25,7 +31,7 @@ const adapter = {
 }
 ```
 
-#### Methodology
+**Methodology**
 
 * For fees and revenue adapters please don't forget to include how have you calculated the values in the methodology attribute.
 
@@ -49,7 +55,7 @@ const adapter = {
 }
 ```
 
-#### Incomplete data
+**Incomplete data**
 
 * If the adapter is not able to provide data for all dimensions, let's say for example you can only provide data for `dailyVolume` but not for `totalVolume`, please keep the dimension as `undefined`, don't assign an arbitrary value or set to it `"0"`.
 
@@ -77,7 +83,7 @@ const adapter = {
 }
 ```
 
-#### Precision
+**Precision**
 
 Please, consider using the _BigNumber_ library when doing mathematical operations that might result or include a value with a magnitude outside the range of safe values to use in JavaScript.
 

@@ -1,8 +1,14 @@
+---
+hidden: true
+---
+
+# How to build an adapter
+
 {% hint style="info" %}
 **Note (Updated: 2025-05-01):** This page might contain outdated information. For the most up-to-date documentation, please visit the main [Building Dimension Adapters](../how-to-write-dimension-adapter.md) guide.
 {% endhint %}
 
-# How to build an adapter
+## How to build an adapter
 
 And adapter is just some code that:
 
@@ -43,13 +49,13 @@ export default {
 
 The above adapter is for a protocol that is deployed on `solana`, and will return the daily fees and revenue for the time period between startTimestamp and endTimestamp. Depends on which dashboard the adapter is aiming for, it should return different attributes. We call those attributes dimensions. In the next page you will find a detailed list of all supported dimensions.
 
-### BaseAdapter
+#### BaseAdapter
 
 In the above example, the object under the key `solana` is what we call a `BaseAdapter` and it contains all the methods and information needed to list, collect data and enable your project.
 
 The attribute `fetch` is the most important part of the BaseAdapter but not the only attribute needed to list your project. Other important attributes needed for an optimal listing are:
 
-* `fetch`: Promise that returns different dimensions of a protocol. The dimensions returned depends on which adapter you would like to list your project (e.g. \`dailyVolume\`  for the [dexs dashboard](https://defillama.com/dexs)).
+* `fetch`: Promise that returns different dimensions of a protocol. The dimensions returned depends on which adapter you would like to list your project (e.g. \`dailyVolume\` for the [dexs dashboard](https://defillama.com/dexs)).
 * `start`: The earliest timestamp we can pass to the fetch function. This tells our servers how far can we get historical data.
 * `runAtCurrTime`: Boolean that flags if the adapter takes into account the timestamp and block passed to the fetch function (`runAtCurrTime: false`) or if it can only return the latest data, for example there are some adapters that are only able to return the volume of the past 24h from the moment the adapter is executed (`runAtCurrTime: true`).
 * `meta`: Object that contains metadata of the BaseAdapter. The possible attributes are:
@@ -58,7 +64,7 @@ The attribute `fetch` is the most important part of the BaseAdapter but not the 
 
 Besides these, you'll find the `version` key, this should always be `2` except in the case where the adapter can only run for time ranges that start at 0:00 and end at 0:00 of the next day, in that case version must be `1`. Typically this happens with APIs that return volume for each day and don't allow more precise time periods.
 
-### Some other examples
+#### Some other examples
 
 You can use getLogs() to get all event logs in the timeframe between the two timestamps automatically, in the following case we use it to get the logs emitted by the friendtech contract on every trade, which is then used to calculate fees and revenue (in this case fees is twice the value of revenue, since on every trade, 50% of the fee goes to the protocol and 50% to the room creator).
 

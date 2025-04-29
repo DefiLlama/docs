@@ -1,8 +1,14 @@
+---
+hidden: true
+---
+
+# Dimensions
+
 {% hint style="info" %}
 **Note (Updated: 2025-05-01):** This page might contain outdated information. For the most up-to-date documentation, please visit the main [Building Dimension Adapters](../how-to-write-dimension-adapter.md) guide.
 {% endhint %}
 
-# Dimensions
+## Dimensions
 
 In the previous page we have seen how to create the structure of our adapter. In this section we will focus on explaining the different dimensions that our adapters can return.
 
@@ -29,31 +35,30 @@ All total values like totalVolume, totalFees, totalRevenue... are OPTIONAL
 
 **Dexs, dexs aggregators and derivatives dimensions:**
 
-*   `dailyVolume`: (Required for these dashboards) Trading volume for the period.
+* `dailyVolume`: (Required for these dashboards) Trading volume for the period.
 
 **Options Dimensions:**
 
-*   `dailyNotionalVolume`: Notional volume of options contracts traded/settled.
-*   `dailyPremiumVolume`: Premium volume collected/paid.
+* `dailyNotionalVolume`: Notional volume of options contracts traded/settled.
+* `dailyPremiumVolume`: Premium volume collected/paid.
 
 **Fees Dimensions:**
 
-*   `dailyFees`: (**Required**) All fees and value collected from *all* sources (users, LPs, yield generation, liquid staking rewards, etc.), excluding direct transaction/gas costs paid by users to the network. This represents the total value flow into the protocol's ecosystem due to its operation.
-*   `dailyUserFees`: (Optional, but helpful) The portion of `dailyFees` directly paid by end-users (e.g., swap fees, borrow interest, liquidation penalties, marketplace commissions paid by buyers/sellers).
-*   `dailyRevenue`: (**Required**) The portion of `dailyFees` kept by the protocol entity itself, distributed either to the treasury (`dailyProtocolRevenue`) or governance token holders (`dailyHoldersRevenue`).
-    *   `dailyRevenue = dailyProtocolRevenue + dailyHoldersRevenue`
-*   `dailyProtocolRevenue`: The portion of `dailyRevenue` allocated to the protocol's treasury or core team.
-*   `dailyHoldersRevenue`: The portion of `dailyRevenue` distributed to governance token holders (e.g., buybacks, burns).
-*   `dailySupplySideRevenue`: The portion of `dailyFees` distributed to liquidity providers, lenders, or other suppliers of capital/resources essential to the protocol's function.
-*   `dailyBribeRevenue`: Governance token paid as bribe/incentive for token holder action.
-*   `dailyTokenTax`: Fees generated from a tax applied to token transfers.
+* `dailyFees`: (**Required**) All fees and value collected from _all_ sources (users, LPs, yield generation, liquid staking rewards, etc.), excluding direct transaction/gas costs paid by users to the network. This represents the total value flow into the protocol's ecosystem due to its operation.
+* `dailyUserFees`: (Optional, but helpful) The portion of `dailyFees` directly paid by end-users (e.g., swap fees, borrow interest, liquidation penalties, marketplace commissions paid by buyers/sellers).
+* `dailyRevenue`: (**Required**) The portion of `dailyFees` kept by the protocol entity itself, distributed either to the treasury (`dailyProtocolRevenue`) or governance token holders (`dailyHoldersRevenue`).
+  * `dailyRevenue = dailyProtocolRevenue + dailyHoldersRevenue`
+* `dailyProtocolRevenue`: The portion of `dailyRevenue` allocated to the protocol's treasury or core team.
+* `dailyHoldersRevenue`: The portion of `dailyRevenue` distributed to governance token holders (e.g., buybacks, burns).
+* `dailySupplySideRevenue`: The portion of `dailyFees` distributed to liquidity providers, lenders, or other suppliers of capital/resources essential to the protocol's function.
+* `dailyBribeRevenue`: Governance token paid as bribe/incentive for token holder action.
+* `dailyTokenTax`: Fees generated from a tax applied to token transfers.
 
-## Fee/Revenue Attribution Examples by Protocol Type
+### Fee/Revenue Attribution Examples by Protocol Type
 
 If you are unsure how to classify fees and revenues, refer to this table or ask on Discord:
 
 <figure><img src="../../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
-
 
 | Attribute         | DEXs                                        | Lending                                    | Chains                                         | NFT Marketplace                        | Derivatives                      | CDP                        | Liquid Staking                  | Yield                              | Synthetics                       |
 | ----------------- | ------------------------------------------- | ------------------------------------------ | ---------------------------------------------- | -------------------------------------- | -------------------------------- | -------------------------- | ------------------------------- | ---------------------------------- | -------------------------------- |
