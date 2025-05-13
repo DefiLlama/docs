@@ -28,6 +28,7 @@
 ## analysts
 
 * [Data Definitions](analysts/data-definitions.md)
+* [Custom columns](analysts/custom-columns.md)
 
 ## Chainlist
 
