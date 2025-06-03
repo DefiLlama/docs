@@ -163,7 +163,7 @@ When submitting your changes, include answers to the following questions in your
 * **Oracle Provider(s)**: Specify the oracle(s) used (e.g., Chainlink, Band, API3, TWAP, etc.).
 * **Implementation Details**: Briefly describe how the oracle is integrated into your project.
 * **Documentation/Proof**: Provide links to documentation or other resources that verify the oracle's usage.
-* **Failure Scenario & Loss Quantification _(for non-price oracles)_**:  Describe a realistic scenario in which your oracle provides incorrect, stale, or manipulated non-price data. How would such a malfunction lead to on-chain asset loss or protocol malfunction, and what is the estimated TVL at risk under that scenario?
+* **Failure Scenario & Loss Quantification** _(for non-price oracles)_: Describe a realistic scenario in which your oracle provides incorrect, stale, or manipulated non-price data. How would such a malfunction lead to on-chain asset loss or protocol malfunction, and what is the estimated TVL at risk under that scenario?
 
 #### 5. **Submit a Pull Request**
 
