@@ -6,7 +6,7 @@ description: >-
 
 # Oracles TVS
 
-**Total Value Secured (TVS)** is a metric used to calculate the value secured by each oracle. It estimates the potential financial loss in case an oracle malfunctions or reports incorrect data. The TVS for an oracle is determined by summing the Total Value Locked (TVL) of all protocols dependent on that oracle for price feeds, which would be susceptible to loss if the oracle fails.
+**Total Value Secured (TVS)** is a metric used to calculate the value secured by each oracle. It estimates the potential financial loss in case an oracle malfunctions or reports incorrect data. The TVS for an oracle is determined by summing the Total Value Locked (TVL) of all protocols dependent on that oracle, which would be susceptible to loss if the oracle fails.
 
 ## Methodology
 
@@ -163,6 +163,7 @@ When submitting your changes, include answers to the following questions in your
 * **Oracle Provider(s)**: Specify the oracle(s) used (e.g., Chainlink, Band, API3, TWAP, etc.).
 * **Implementation Details**: Briefly describe how the oracle is integrated into your project.
 * **Documentation/Proof**: Provide links to documentation or other resources that verify the oracle's usage.
+* **Failure Scenario & Loss Quantification** _(for non-price oracles)_: Describe a realistic scenario in which your oracle provides incorrect, stale, or manipulated non-price data. How would such a malfunction lead to on-chain asset loss or protocol malfunction, and what is the estimated TVL at risk under that scenario?
 
 #### 5. **Submit a Pull Request**
 
