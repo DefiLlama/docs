@@ -31,7 +31,7 @@ You should use the field  shortName from [https://chainlist.org/rpcs.json](https
 
 #### 3. **Add Token Mappings in `tokenMapping.js`**
 
-Add the token mappings for the new blockchain to the `projects/helper/tokenMapping.js` file. This file maps token addresses to their respective identifiers for accurate tracking and handling.
+Add the token mappings for the new blockchain to the [`projects/helper/tokenMapping.js` file](https://github.com/DefiLlama/DefiLlama-Adapters/blob/main/projects/helper/tokenMapping.js#L41). This file maps token addresses to their respective identifiers for accurate tracking and handling.
 
 **Example Change**:
 
