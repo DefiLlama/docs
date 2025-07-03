@@ -675,9 +675,7 @@ You can find the full source code for these helper functions in the DeFi Llama G
 
 ### How can I report data issues or provide feedback?
 
-You can report issues or provide feedback through:
-- **Email**: support@defillama.com
-- **GitHub**: Submit issues or contribute improvements to our repositories
+You can report issues or provide feedback by sending an email to support@defillama.com
 
 Llamas regularly review feedback and implement necessary fixes to maintain the highest data quality standards across all adapters.
 
