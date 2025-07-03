@@ -72,7 +72,7 @@ const fetch = async (options: FetchOptions) => {
     data.forEach((log: any) => {
         dailyFees.add(log._token, log._integratorFee);
     });
-    return { dailyFees, dailyRevenue: dailyFees };
+    return { dailyFees, dailyRevenue: dailyFees, dailyProtocolRevenue: dailyFees };
 };
 
 const adapter: SimpleAdapter = {
@@ -80,7 +80,14 @@ const adapter: SimpleAdapter = {
     adapter:{
       [CHAIN.ETHEREUM]: {
           fetch,
-          start: '2023-07-27'
+          start: '2023-07-27',
+          meta: {
+            methodology: {
+              Fees: 'All fees paid by users for swap and bridge tokens via LI.FI.',
+              Revenue: 'Fees are distributed to LI.FI.',
+              ProtocolRevenue: 'Fees are distributed to LI.FI.',
+            }
+          }
       }
     }
 };
@@ -162,7 +169,7 @@ Here are the standard dimensions grouped by dashboard type:
 
 **Fee/Revenue Attribution Examples by Protocol Type:**
 
-If you are unsure how to classify fees and revenues, refer to this table or ask on Discord:
+If you are unsure how to classify fees and revenues, refer to this table or contact us at support@defillama.com or ask on Discord:
 
 <figure><img src="../../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
 
@@ -231,8 +238,8 @@ const fetch = async (options: FetchOptions) => {
   });
 
   // Example: Assuming all received tokens are fees and revenue
-  return { dailyFees, dailyRevenue: dailyFees }; 
-};
+  return { dailyFees, dailyRevenue: dailyFees }
+}
 ```
 Example: [Synthetix](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/synthetix.ts)
 
@@ -350,17 +357,6 @@ meta: {
 ```
 
 ## Important Considerations
-
-### Incomplete Data
-If your adapter cannot reliably calculate a specific dimension (e.g., `totalVolume` is unavailable), omit that key from the returned object in your `fetch` function. Do **not** return it with a value of `0` or `undefined` if the data is truly missing or unknown.
-
-```typescript
-// Correct
-return {
-  dailyFees: "2144"
-  // totalFees is omitted, not set to "0"
-};
-```
 
 ### Precision
 Use the `BigNumber` library (available via `options.createBalances()` or direct import) for mathematical operations involving token amounts, especially when dealing with different decimals or potentially large/small numbers, to avoid JavaScript precision issues.
@@ -653,4 +649,33 @@ You can find the full source code for these helper functions in the DeFi Llama G
 - [Compound Helpers](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/compound.ts) - Contains compoundV2Export
 - [Graph Helpers](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/graph.ts) - Contains querySubgraph
 - [Uniswap Subgraph Helpers](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/getUniSubgraphVolume.ts) - Contains getGraphDimensions2
+
+
+## Frequently Asked Questions
+
+### How does DeFiLlama ensure data quality and accuracy?
+
+**Code Review Process**: Each protocol adapter undergoes peer review by llamas through GitHub pull requests. This ensures code quality, data accuracy, and that a consistent methodology is applied to all protocols for the same metrics before any adapter goes live.
+
+**Methodology Consistency**: We maintain a uniform methodology across all protocol adapters and chains. Whenever the methodology evolves, our team propagates the update to every relevant adapter to ensure figures remain fully comparable across protocols.
+
+**Monitoring Systems**: We maintain internal alert systems that detect unusual data spikes, broken adapters, and anomalies across both TVL and dimension adapters (fees/revenue/volume). This allows the team to quickly identify and fix issues.
+
+**Historical Data Integrity**: When protocols add new components (like treasury wallets, new contracts, etc.), we backfill historical data to maintain completeness and accuracy. This ensures users have access to accurate historical insights.
+
+### How we handle data integrity and keep data organic?
+
+**Wash Trading Detection**: We actively identify and remove wash trading volumes to prevent them from undermining legitimate trading data.
+
+**TVL Percentage Rules**: For pools with very low fee percentages (like 0.01%) that enable wash trading, we apply minimum TVL percentage rules. Only volume from pools meeting these thresholds is counted, effectively filtering out wash trading while preserving legitimate activity.
+
+**Chain-Specific Considerations**: 
+- **Solana**: Due to lower transaction fees that make wash trading more viable, we apply TVL percentage filters to major Solana DEXs while maintaining legitimate volumes
+- **BSC**: During farming campaigns that create wash trading incentives for low-liquidity pairs, we remove affected pairs to maintain data integrity
+
+### How can I report data issues or provide feedback?
+
+You can report issues or provide feedback by sending an email to support@defillama.com
+
+Llamas regularly review feedback and implement necessary fixes to maintain the highest data quality standards across all adapters.
 
