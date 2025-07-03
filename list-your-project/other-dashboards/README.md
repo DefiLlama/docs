@@ -655,7 +655,7 @@ You can find the full source code for these helper functions in the DeFi Llama G
 
 ### How does DeFiLlama ensure data quality and accuracy?
 
-**Code Review Process**: Each protocol adapter undergoes peer review by llamas through GitHub pull requests. This ensures code quality and data accuracy before any adapter goes live.
+**Code Review Process**: Each protocol adapter undergoes peer review by llamas through GitHub pull requests. This ensures code quality, data accuracy, and that a consistent methodology is applied to all protocols for the same metrics before any adapter goes live.
 
 **Methodology Consistency**: We maintain a uniform methodology across all protocol adapters and chains. Whenever the methodology evolves, our team propagates the update to every relevant adapter to ensure figures remain fully comparable across protocols.
 
