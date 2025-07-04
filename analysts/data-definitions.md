@@ -34,7 +34,7 @@ USD Inflows is a metric that fixes that by representing the net asset inflows in
 
 It's calculated by taking the balance difference for each asset between two consecutive days, multiplying that difference by asset price and then summing that for all assets.
 
-If a protocol has all of it's TVL in ETH and one day ETH price drops 20% while there are no new deposits or withdrawals, TVL will drop by 20% while USD inflows will be 0$.
+If a protocol has all of its TVL in ETH and one day ETH price drops 20% while there are no new deposits or withdrawals, TVL will drop by 20% while USD inflows will be 0$.
 
 ### Staked
 
