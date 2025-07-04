@@ -20,7 +20,7 @@ Step 3. If you need to add an audit link
 
 Step 4. If you need to update the logo
 
-    - make sure that you have defillama-app repo also
+    - make sure that you also have defillama-app repo
     - check the name for the logo on the listing (it should be the same as the protocol name) 
     - upload the new logo with the same name to defillama-server/defi/icons
     - commit your changes and submit the pull request
