@@ -42,7 +42,7 @@ Value of governance coins that are staked in the protocol's staking system.
 
 ### Annual Operational Expenses
 
-Operational costs for salaries, audits... througout the year. We collect this data mainly from annual protocol reports on their forums, so it's always referencing old data and likely to be outdated up till 1 year.
+Operational costs for salaries, audits... throughout the year. We collect this data mainly from annual protocol reports on their forums, so it's always referencing old data and likely to be outdated up till 1 year.
 
 ### Total Raised
 
