@@ -21,7 +21,7 @@ An adapter is just a javascript file that exports an async function that returns
     PK: "asset#ethereum:0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", // unique identifier showing the chain and address of the token
     SK: 0, // 10 digit unix timestamp, or 0 for current timestamp
     price: 1.45632, 
-    adapter: 'aave', // unique adapters identifier, used for tracability inside the database 
+    adapter: 'aave', // unique adapters identifier, used for traceability inside the database 
     symbol: "USDT", // symbol of the token
     condfidence: 0.7, // number 0-1 desribing the reliablility of the price data (more information below) 
     redirect: 'coingecko#ethereum', // some coins will in theory always have the same price as another token in the DB. In this case a 'redirect' can be used instead of a 'price'. This will usually be undefined
