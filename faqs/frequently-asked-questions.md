@@ -72,7 +72,7 @@ Yes. Our API is an open API and it free to use. Citing DefiLlama as the source i
 
 #### How can I download DefiLlama data?
 
-DefiLlama data is available to download in csv format. You can find a “download” .csv button on various areas of the website: protocol page, chains page, overview and the bottom of the side menu bar. The amount of data retrieved depends on where the button is used, using it on the protocol page retrieves data for the specific protocol, using it on the chains page retrieves info by chain, the others retrieve all TVL data on the website.
+DefiLlama data is available to download in CSV format. You can find a “download” .csv button on various areas of the website: protocol page, chains page, overview and the bottom of the side menu bar. The amount of data retrieved depends on where the button is used, using it on the protocol page retrieves data for the specific protocol, using it on the chains page retrieves info by chain, the others retrieve all TVL data on the website.
 
 #### Why don't we include assets in other custodian under a CEX's assets?
 
