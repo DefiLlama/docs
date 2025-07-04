@@ -29,7 +29,7 @@ The formula engine supports curated set of powerful operations, giving you flexi
 *   `category` (String, e.g., "DEX", "Lending")
 
 {% hint style="info" %}
-Not every fields is available in all protocols, for example volume is only available to protocol with DEXs category, if a protocol lacks a field your formula depends on, the result will be skipped for that row
+Not every field is available in all protocols, for example volume is only available to protocol with DEXs category, if a protocol lacks a field your formula depends on, the result will be skipped for that row
 {% endhint %}
 
 **Operators**
@@ -62,7 +62,7 @@ Create formulas that evaluate to `true` or `false`. Ideal for flagging protocols
 ### Use-Case examples
 1. High Growth Alert
 * Formula: `change_7d > 0.15 and fees_7d > (fees_30d / 30 * 7 * 1.2)`
-* This will show you protocols that has >15% gain in the last 7 days and recent 7d fees significantly above prior run rate.
+* This will show you protocols that have >15% gain in the last 7 days and recent 7d fees significantly above prior run rate.
 
 2. Revenue per TVL
 * Formula: `revenue_30d / tvl`

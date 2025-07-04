@@ -23,7 +23,7 @@ Just like for TVL adapters, if you'd like to add an emissions schedule to DefiLl
 1. Fork the [emissions-adapters repo](https://github.com/DefiLlama/emissions-adapters) (button towards the top right of the repo page).
 2. Add a new [protocol file ](protocol-files.md)to protocols/ .
 3. Make a Pull Request with the changes on your fork, to the main DefiLlama emissions-adapters repo, with a brief explanation of what you changed.
-4. Wait for someone to either comment on or merge your Pull Request. There is no need to ask for someone to check your PR as there a monitored regularly.
+4. Wait for someone to either comment on or merge your Pull Request. There is no need to ask for someone to check your PR as they are monitored regularly.
 5. Once your PR has been merged, **please give 24 hours** for the team to load your listing onto the UI.
 
 ![prayge](https://cdn.discordapp.com/emojis/1011049613186318376.webp?size=48\&quality=lossless)

@@ -18,7 +18,7 @@ Each project that is listed has an adapter/code that returns its TVL. Preference
 
 #### How is DefiLlama funded?
 
-Previously DefiLlama was funded by self-funding, donations and grants. Currently defillama is mainly funded by kickbacks from aggregators used on LlamaSwap and subscriptions.
+Previously DefiLlama was funded by self-funding, donations and grants. Currently DefiLlama is mainly funded by kickbacks from aggregators used on LlamaSwap and subscriptions.
 
 #### At what frequency is data updated on DefiLlama?
 
@@ -56,7 +56,7 @@ Doublecount is a toggle found on the DefiLlama website that gives users the opti
 #### Why doesn't DefiLlama count ADA/SOL/ETH staked into TVL?
 
 * At DefiLlama we don't count chain staked assets for ANY chain. Users use us to track DeFi adoption, and adding Chain Staking would overshadow the TVL from their DeFi protocols, making chain TVL just a proxy of token marketcap, completely removing usage as a metric to track DeFi adoption. We track liquid staking protocols but these are not included by default into chain TVL.
-* Example: As of 2025-03-20, Cardano TVL is 330m$, while 15.84bn$ in ADA are staked. Thus if we included staked ADA into TVL, DeFi would make up only 2% of TVL, and due to the frequent 2-5% daily movements in the price of ADA, users wouldnt be able to tell anything about DeFi from that chart. DeFi adoption could double overnight but if ADA price drops -2.5% the chart would go down.
+* Example: As of 2025-03-20, Cardano TVL is 330m$, while 15.84bn$ in ADA are staked. Thus if we included staked ADA into TVL, DeFi would make up only 2% of TVL, and due to the frequent 2-5% daily movements in the price of ADA, users wouldn't be able to tell anything about DeFi from that chart. DeFi adoption could double overnight but if ADA price drops -2.5% the chart would go down.
 
 #### How to list your protocol?
 
@@ -72,7 +72,7 @@ Yes. Our API is an open API and it free to use. Citing DefiLlama as the source i
 
 #### How can I download DefiLlama data?
 
-DefiLlama data is available to download in csv format. You can find a “download” .csv button on various areas of the website: protocol page, chains page, overview and the bottom of the side menu bar. The amount of data retrieved depends on where the button is used, using it on the protocol page retrieves data for the specific protocol, using it on the chains page retrieves info by chain, the others retrieve all TVL data on the website.
+DefiLlama data is available to download in CSV format. You can find a “download” .csv button on various areas of the website: protocol page, chains page, overview and the bottom of the side menu bar. The amount of data retrieved depends on where the button is used, using it on the protocol page retrieves data for the specific protocol, using it on the chains page retrieves info by chain, the others retrieve all TVL data on the website.
 
 #### Why don't we include assets in other custodian under a CEX's assets?
 

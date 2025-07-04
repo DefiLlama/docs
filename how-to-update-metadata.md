@@ -1,10 +1,10 @@
 How to update metadata
 
-Step 1. fork defillama-server
+Step 1. Fork defillama-server
 
 Step 2. Check data.ts or data2.ts to find your project listing
 
-    - find the part you would like to update(i.e. name, token address or symbol, description, twitter handle, etc..)
+    - find the part you would like to update (i.e. name, token address or symbol, description, twitter handle, etc..)
     - commit your changes on your branch and submit a PR
 
 Step 3. If you need to add an audit link
