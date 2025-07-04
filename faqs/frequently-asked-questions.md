@@ -18,7 +18,7 @@ Each project that is listed has an adapter/code that returns its TVL. Preference
 
 #### How is DefiLlama funded?
 
-Previously DefiLlama was funded by self-funding, donations and grants. Currently defillama is mainly funded by kickbacks from aggregators used on LlamaSwap and subscriptions.
+Previously DefiLlama was funded by self-funding, donations and grants. Currently DefiLlama is mainly funded by kickbacks from aggregators used on LlamaSwap and subscriptions.
 
 #### At what frequency is data updated on DefiLlama?
 
