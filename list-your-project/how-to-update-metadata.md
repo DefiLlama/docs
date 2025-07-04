@@ -1,6 +1,6 @@
 How to update metadata
 
-Step 1. fork defillama-server
+Step 1. Fork defillama-server
 
 Step 2. Check data.ts or data2.ts to find your project listing
 
