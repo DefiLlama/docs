@@ -25,7 +25,7 @@ You need to add the name of the blockchain in the `projects/helper/chains.json` 
 ]
 ```
 
-You should use the field  shortName from [https://chainlist.org/rpcs.json](https://chainlist.org/rpcs.json)
+You should use the field shortName from [https://chainlist.org/rpcs.json](https://chainlist.org/rpcs.json)
 
 ***
 
