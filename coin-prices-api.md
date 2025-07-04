@@ -33,7 +33,7 @@ Some notes:
 
 1. The PK may look complicated, but this can be formed for you using the addToDBWritesList() function.
 2. All adapters must make a timestamp as input, therefore no effort is required to export timestamp.
-3. In some cases confidence scores can be hardcoded as a value depending on the reliability of a protocol. In other cases (eg where prices are determined by pool weights in uniswap V2) confidence scores should be:
+3. In some cases, confidence scores can be hardcoded as a value depending on the reliability of a protocol. In other cases (eg where prices are determined by pool weights in Uniswap V2) confidence scores should be:
 
 'a value between 0 and 1, proportional to the cost of manipulating the token's price'
 
