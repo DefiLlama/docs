@@ -22,8 +22,8 @@ Step 4. If you need to update the logo
 
     - make sure that you also have defillama-app repo
     - check the name for the logo on the listing (it should be the same as the protocol name) 
-    - upload the new logo with the same name to defillama-server/defi/icons
+    - upload the new logo, with the same name, to defillama-server/defi/icons
     - commit your changes and submit the pull request
-    - also upload a smaller logo 24x24 pixel & .jpg format to defillama-app/public/icons
+    - also upload a smaller logo (24x24 pixel, .jpg format) to defillama-app/public/icons
     - commit your changes and submit the pull request
 
