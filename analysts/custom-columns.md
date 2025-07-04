@@ -29,7 +29,7 @@ The formula engine supports curated set of powerful operations, giving you flexi
 *   `category` (String, e.g., "DEX", "Lending")
 
 {% hint style="info" %}
-Not every fields is available in all protocols, for example volume is only available to protocol with DEXs category, if a protocol lacks a field your formula depends on, the result will be skipped for that row
+Not every field is available in all protocols, for example volume is only available to protocol with DEXs category, if a protocol lacks a field your formula depends on, the result will be skipped for that row
 {% endhint %}
 
 **Operators**
