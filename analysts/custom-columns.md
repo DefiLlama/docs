@@ -62,7 +62,7 @@ Create formulas that evaluate to `true` or `false`. Ideal for flagging protocols
 ### Use-Case examples
 1. High Growth Alert
 * Formula: `change_7d > 0.15 and fees_7d > (fees_30d / 30 * 7 * 1.2)`
-* This will show you protocols that has >15% gain in the last 7 days and recent 7d fees significantly above prior run rate.
+* This will show you protocols that have >15% gain in the last 7 days and recent 7d fees significantly above prior run rate.
 
 2. Revenue per TVL
 * Formula: `revenue_30d / tvl`
