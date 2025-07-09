@@ -17,4 +17,4 @@ LLAMA_RPC: "https://rpc1.llama.defi,https://rpc2.llama.defi"
 ``` 
 
 
-**NOTE:** Adding new chain config doesnt automatically list it in Defillama, one would still need to add an adapter for defi app on given chain for it to show up
+**NOTE:** Adding new chain config doesn't automatically list it in DefiLlama, one would still need to add an adapter for defi app on given chain for it to show up

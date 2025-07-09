@@ -6,7 +6,7 @@ An adapter is just some code that takes in a UNIX timestamp and chain block heig
 
 ### Basic adapter
 
-Below, you can see the one we use for Mint Club on Binance Smart Chain (BSC). Let's walk through it to get a better understanding of how it works.
+Below, you can see the adapter we use for Mint Club on Binance Smart Chain (BSC). Let's walk through it to get a better understanding of how it works.
 
 {% code title="projects/mint-club/index.js" %}
 ```javascript

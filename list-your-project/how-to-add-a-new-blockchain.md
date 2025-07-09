@@ -25,7 +25,7 @@ You need to add the name of the blockchain in the `projects/helper/chains.json` 
 ]
 ```
 
-You should use the field  shortName from [https://chainlist.org/rpcs.json](https://chainlist.org/rpcs.json)
+You should use the field shortName from [https://chainlist.org/rpcs.json](https://chainlist.org/rpcs.json)
 
 ***
 
@@ -52,7 +52,7 @@ This ensures tokens on the new blockchain (`zklink`) are properly recognized, in
 
 #### 4. Submit a Protocol **using your blockchain (e.g.,** projects/savmswap/index.j&#x73;**)**
 
-Lastly, update the project’s configuration file to add your new blockchain as a valid supported chain. If we don´t track any protocol on your blockchain, we can not add it. So make sure to add the new chain under a current project or add a new adapter to track the project on your blockchain
+Lastly, update the project’s configuration file to add your new blockchain as a valid supported chain. If we don't track any protocol on your blockchain, we can not add it. So make sure to add the new chain under a current project or add a new adapter to track the project on your blockchain
 
 **Example Change**:
 
