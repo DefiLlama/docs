@@ -102,11 +102,12 @@ To add a new oracle to DefiLlama, follow these steps:
 
 #### 3. **Include the Following in Your Pull Request**
 
-* Answer the following in your PR description:
-  * **Oracle Provider(s)**: List the oracle(s) used (e.g., Chainlink, Pyth, API3).
-  * **Implementation Details**: How is the oracle used/integrated within the protocol?
-  * **Proof**: Provide links to documentation, source code, audits or other resources that show the oracle usage.
-  * **Failure Scenario** _(for non-price oracles)_: Describe how a malfunction would impact the protocol and quantify TVL at risk.
+When submitting your changes, include answers to the following questions in your pull request description:
+
+* **Oracle Provider(s)**: Specify the oracle(s) used (e.g., Chainlink, Band, API3, TWAP, etc.).
+* **Implementation Details**: Briefly describe how the oracle is integrated into your project.
+* **Documentation/Proof**: Provide links to documentation or other resources that verify the oracle's usage.
+* **Failure Scenario & Loss Quantification** _(for non-price oracles)_: Describe a realistic scenario in which your oracle provides incorrect, stale, or manipulated non-price data. How would such a malfunction lead to on-chain asset loss or protocol malfunction, and what is the estimated TVL at risk under that scenario?
 
 #### 4. **Submit a Pull Request**
 
