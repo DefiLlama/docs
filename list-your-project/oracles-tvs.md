@@ -82,9 +82,11 @@ oraclesBreakdown: [
 * `proof`: At least one link (docs, code, or audit) showing the oracle integration.
 
 **Optional fields:**
-* `startDate` / `endDate`: Use these to indicate the active period (format: YYYY-MM-DD).
-* `chains`: List of chain slugs from [`normalizeChain.ts`](https://github.com/DefiLlama/defillama-server/blob/master/defi/src/utils/normalizeChain.ts), with optional start/end dates per chain.
-
+**Optional fields:**
+* `startDate` / `endDate`: Use these to indicate the active period (format: YYYY-MM-DD).  
+  If `startDate` is not provided, we assume the oracle has been active since the protocol's launch.
+* `chains`: List of chain slugs from [`normalizeChain.ts`](https://github.com/DefiLlama/defillama-server/blob/master/defi/src/utils/normalizeChain.ts), with optional start/end dates per chain.  
+  If `chains` is not specified, we assume the oracle is used on **all chains** where the protocol is live.
 This structured format ensures accurate attribution of TVL to oracles based on actual usage and risk exposure.
 
 ## How to Add a New Oracle to DefiLlama
