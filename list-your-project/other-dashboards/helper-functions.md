@@ -293,7 +293,7 @@ const fetch = async (options: FetchOptions) => {
 
 ### Helper Function Reference
 
-You can find the full source code for these helper functions in the DeFi Llama GitHub repository:
+You can find the full source code for these helper functions in the DefiLlama GitHub repository:
 
 * [Token Helpers](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/token.ts) - Contains functions like addTokensReceived, getETHReceived, etc.
 * [Uniswap Helpers](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/uniswap.ts) - Contains uniV2Exports, uniV3Exports
