@@ -544,7 +544,7 @@ Functions for querying EVM logs and indexers.
     ```
     [Example Implementation - Ostium](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/ostium/index.ts)
 
-*   **`queryIndexer`**: Executes queries against DeFi Llama's indexers (transfers, events, etc.).
+*   **`queryIndexer`**: Executes queries against DefiLlama's indexers (transfers, events, etc.).
 
     ```typescript
     import { queryIndexer } from '../../helpers/indexer';
@@ -642,7 +642,7 @@ Utility functions for common adapter patterns.
     ```
 
 ### Helper Source Code Reference
-You can find the full source code for these helper functions in the DeFi Llama GitHub repository:
+You can find the full source code for these helper functions in the DefiLlama GitHub repository:
 
 - [Token Helpers](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/token.ts) - Contains functions like addTokensReceived, getETHReceived, etc.
 - [Uniswap Helpers](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/uniswap.ts) - Contains uniV2Exports, uniV3Exports
