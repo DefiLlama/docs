@@ -98,32 +98,15 @@ export default adapter;
 
 The object exported by your adapter file defines its behavior. The main configuration object holds a `version` key and supports two different structures:
 
-**Recommended Structure (Root-level fetch)**: For protocols with the same fetch logic across all chains, you can use the simplified structure with `fetch`, `chains`, `start`, and `methodology` at the root level. This reduces code repetition.
-
-**Legacy Structure (Chain-specific configurations)**: For protocols that require custom fetch logic, start dates, or methodology per chain, you can still use the `adapter` object with chain-specific configurations, keyed by `CHAIN.<ChainName>`. Each chain configuration is a `BaseAdapter` object.
+**Recommended Structure**: For protocols with the same fetch logic across all chains, you can use the simplified structure with `fetch`, `chains`, `start`, and `methodology` at the root level.
 
 ### SimpleAdapter Properties
-
-#### Root-level Properties (Recommended)
-
-For protocols with consistent logic across chains, use these root-level properties:
 
 * **fetch**: The core async function that returns different dimensions of a protocol. The dimensions returned depend on which dashboard you're targeting (e.g., `dailyVolume` for the dexs dashboard, `dailyFees` for the fees dashboard). See "Core Dimensions" below.
 * **chains**: Array of chain constants (e.g., `[CHAIN.ETHEREUM, CHAIN.POLYGON]`) indicating which chains this adapter supports.
 * **start**: The earliest timestamp (as YYYY-MM-DD or unix timestamp) we can pass to the fetch function. This tells our servers how far back we can get historical data.
 * **methodology**: (Optional) Object describing how different dimensions are calculated. See "Metadata and Methodology" below.
 * **runAtCurrTime**: (Optional, defaults to `false`) Boolean flag. Set to `true` if the adapter can only return the latest data (e.g., last 24h) and cannot reliably use the `startTimestamp` and `endTimestamp` passed to `fetch`.
-
-#### Legacy Chain-specific Properties (BaseAdapter)
-
-For protocols requiring custom configuration per chain, use the `adapter` object with `BaseAdapter` configurations:
-
-* **fetch**: The core async function that returns different dimensions of a protocol.
-* **start**: The earliest timestamp (as YYYY-MM-DD or unix timestamp) we can pass to the fetch function.
-* **runAtCurrTime**: (Optional, defaults to `false`) Boolean flag.
-* **meta**: (Optional) Object containing metadata about the adapter, including:
-  * **methodology**: Object describing how different dimensions are calculated.
-  * **hallmarks**: Set of events that significantly affected protocol data (displayed on the chart).
 
 #### Example of Multi-chain Root-level Structure
 
@@ -145,35 +128,6 @@ const adapter: SimpleAdapter = {
 }
 ```
 
-#### Example of Legacy Structure
-
-```typescript
-const adapter: SimpleAdapter = {
-  version: 2,
-  adapter: {
-    [CHAIN.ETHEREUM]: {
-      fetch: ethereumFetch,
-      start: '2023-01-01',
-      meta: {
-        methodology: {
-          Fees: 'Ethereum-specific fee calculation...',
-          Revenue: 'Ethereum-specific revenue calculation...',
-        }
-      }
-    },
-    [CHAIN.POLYGON]: {
-      fetch: polygonFetch,
-      start: '2023-06-01',
-      meta: {
-        methodology: {
-          Fees: 'Polygon-specific fee calculation...',
-          Revenue: 'Polygon-specific revenue calculation...',
-        }
-      }
-    }
-  }
-};
-```
 
 ## Testing Your Adapter
 
@@ -216,7 +170,7 @@ Here are the standard dimensions grouped by dashboard type:
 **Derivatives and Aggregators-Derivatives Dimensions:**
 
 *   `dailyVolume`: (**Required**) Perpetual trading volume for the period.
-*   `openInterestAtEnd`: (**Required**) Open interest at the end of the period.
+*   `openInterestAtEnd`: (Optional) Open interest at the end of the period.
 *   `longOpenInterestAtEnd`: (Optional) Long open interest at the end of the period.
 *   `shortOpenInterestAtEnd`: (Optional) Short open interest at the end of the period.
 
@@ -421,7 +375,6 @@ Example: [Beradrome](https://github.com/DefiLlama/dimension-adapters/blob/master
 
 Always include a `methodology` object to explain how your metrics are calculated. This is crucial for transparency.
 
-**For Root-level Structure (Recommended):**
 ```typescript
 const methodology = {
   Fees: "Describes how total fees are calculated (e.g., Users pay 0.3% on each swap).",
@@ -439,18 +392,6 @@ const adapter: SimpleAdapter = {
 }
 ```
 
-**For Legacy Chain-specific Structure:**
-```typescript
-// Inside the BaseAdapter config for a specific chain
-meta: {
-  methodology: {
-    Fees: "Describes how total fees are calculated (e.g., Users pay 0.3% on each swap).",
-    Revenue: "Describes how protocol revenue is calculated (e.g., Protocol keeps 0.05% of each swap).",
-    SupplySideRevenue: "Describes how revenue distributed to LPs/suppliers is calculated (e.g., LPs receive 0.25% of each swap)."
-    // Add methodology for other dimensions like Volume, PremiumVolume etc. as applicable
-  }
-}
-```
 
 ## Important Considerations
 
@@ -745,6 +686,7 @@ You can find the full source code for these helper functions in the DefiLlama Gi
 - [Token Helpers](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/token.ts) - Contains functions like addTokensReceived, getETHReceived, getSolanaReceived, etc.
 - [Uniswap Helpers](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/uniswap.ts) - Contains uniV2Exports, uniV3Exports
 - [Compound Helpers](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/compoundV2.ts) - Contains compoundV2Export
+- [Aave Helpers](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/aave/index.ts) - Contains aaveExports
 
 
 ## Frequently Asked Questions
