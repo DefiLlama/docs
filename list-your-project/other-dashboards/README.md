@@ -28,6 +28,7 @@ DefiLlama's dashboards track various metrics (dimensions) for DeFi protocols. Ea
 * **Fees dashboard**: Tracks fees and revenue from all types of protocols
 * **Aggregators dashboard**: Tracks volume from DEX aggregators
 * **Derivatives dashboard**: Tracks volume from derivatives protocols
+* **Aggregator-Derivatives dashboard**: Tracks volume from aggregator-derivatives protocols
 * **Bridge Aggregators dashboard**: Tracks volume from bridge aggregators
 * **Options dashboard**: Tracks notional and premium volume from options DEXs
 
@@ -58,59 +59,75 @@ Let's start with a simple, complete example of a fees adapter:
 
 ```typescript
 import { FetchOptions, SimpleAdapter } from "../../adapters/types";
+import { CHAIN } from "../../helpers/chains";
 
 const FeeCollectedEvent = "event FeesCollected(address indexed _token, address indexed _integrator, uint256 _integratorFee, uint256 _lifiFee)"
 
 const LIFIFeeCollector = '0xbD6C7B0d2f68c2b7805d88388319cfB6EcB50eA9';
 
 const fetch = async (options: FetchOptions) => {
-    const dailyFees = options.createBalances();
-    const data: any[] = await options.getLogs({
-        target: LIFIFeeCollector,
-        eventAbi: FeeCollectedEvent,
-    });
-    data.forEach((log: any) => {
-        dailyFees.add(log._token, log._integratorFee);
-    });
-    return { dailyFees, dailyRevenue: dailyFees, dailyProtocolRevenue: dailyFees };
+  const dailyFees = options.createBalances();
+  const data: any[] = await options.getLogs({
+    target: LIFIFeeCollector,
+    eventAbi: FeeCollectedEvent,
+  });
+  data.forEach((log: any) => {
+    dailyFees.add(log._token, log._integratorFee);
+  });
+  return { dailyFees, dailyRevenue: dailyFees, dailyProtocolRevenue: dailyFees };
 };
 
+const methodology = {
+  Fees: 'All fees paid by users for swap and bridge tokens via LI.FI.',
+  Revenue: 'Fees are distributed to LI.FI.',
+  ProtocolRevenue: 'Fees are distributed to LI.FI.',
+}
+
 const adapter: SimpleAdapter = {
-    version: 2,
-    adapter:{
-      [CHAIN.ETHEREUM]: {
-          fetch,
-          start: '2023-07-27',
-          meta: {
-            methodology: {
-              Fees: 'All fees paid by users for swap and bridge tokens via LI.FI.',
-              Revenue: 'Fees are distributed to LI.FI.',
-              ProtocolRevenue: 'Fees are distributed to LI.FI.',
-            }
-          }
-      }
-    }
-};
+  version: 2,
+  fetch,
+  chains: [CHAIN.ETHEREUM],
+  start: '2023-07-27',
+  methodology
+}
 
 export default adapter;
 ```
 
 ### Adapter Structure
 
-The object exported by your adapter file defines its behavior. The main configuration object holds a `version` key and an `adapter` key.
+The object exported by your adapter file defines its behavior. The main configuration object holds a `version` key and supports two different structures:
 
-The `adapter` object contains chain-specific configurations, keyed by `CHAIN.<ChainName>`. Each chain configuration is a `BaseAdapter` object.
+**Recommended Structure**: For protocols with the same fetch logic across all chains, you can use the simplified structure with `fetch`, `chains`, `start`, and `methodology` at the root level.
 
-### BaseAdapter Properties
-
-The `BaseAdapter` includes several important properties:
+### SimpleAdapter Properties
 
 * **fetch**: The core async function that returns different dimensions of a protocol. The dimensions returned depend on which dashboard you're targeting (e.g., `dailyVolume` for the dexs dashboard, `dailyFees` for the fees dashboard). See "Core Dimensions" below.
+* **chains**: Array of chain constants (e.g., `[CHAIN.ETHEREUM, CHAIN.POLYGON]`) indicating which chains this adapter supports.
 * **start**: The earliest timestamp (as YYYY-MM-DD or unix timestamp) we can pass to the fetch function. This tells our servers how far back we can get historical data.
+* **methodology**: (Optional) Object describing how different dimensions are calculated. See "Metadata and Methodology" below.
 * **runAtCurrTime**: (Optional, defaults to `false`) Boolean flag. Set to `true` if the adapter can only return the latest data (e.g., last 24h) and cannot reliably use the `startTimestamp` and `endTimestamp` passed to `fetch`.
-* **meta**: (Optional) Object containing metadata about the adapter, including:
-  * **methodology**: Object describing how different dimensions are calculated. See "Metadata and Methodology" below.
-  * **hallmarks**: Set of events that significantly affected protocol data (displayed on the chart).
+
+#### Example of Multi-chain Root-level Structure
+
+```typescript
+import { CHAIN } from "../../helpers/chains";
+
+const methodology = {
+  Fees: 'All fees paid by users for protocol operations.',
+  Revenue: 'Fees distributed to the protocol.',
+  ProtocolRevenue: 'Fees distributed to the protocol treasury.',
+}
+
+const adapter: SimpleAdapter = {
+  version: 2,
+  fetch,
+  chains: [CHAIN.ETHEREUM, CHAIN.POLYGON, CHAIN.ARBITRUM],
+  start: '2023-01-01',
+  methodology
+}
+```
+
 
 ## Testing Your Adapter
 
@@ -146,14 +163,28 @@ Your `fetch` function should return an object containing properties correspondin
 
 Here are the standard dimensions grouped by dashboard type:
 
-**Dexs, Dex Aggregators, and Derivatives Dimensions:**
+**Dexs and Dex Aggregators Dimensions:**
 
-*   `dailyVolume`: (Required for these dashboards) Trading volume for the period.
+*   `dailyVolume`: (**Required**) Trading volume for the period.
+
+**Derivatives and Aggregators-Derivatives Dimensions:**
+
+*   `dailyVolume`: (**Required**) Perpetual trading volume for the period.
+*   `openInterestAtEnd`: (Optional) Open interest at the end of the period.
+*   `longOpenInterestAtEnd`: (Optional) Long open interest at the end of the period.
+*   `shortOpenInterestAtEnd`: (Optional) Short open interest at the end of the period.
+
+**Bridge Aggregators Dimensions:**
+
+*   `dailyBridgeVolume`: (**Required**) Bridge volume for the period.
 
 **Options Dimensions:**
 
-*   `dailyNotionalVolume`: Notional volume of options contracts traded/settled.
-*   `dailyPremiumVolume`: Premium volume collected/paid.
+*   `dailyNotionalVolume`: (**Required**) Notional volume of options contracts traded/settled.
+*   `dailyPremiumVolume`: (**Required**) Premium volume collected/paid.
+*   `openInterestAtEnd`: (Optional) Open interest at the end of the period.
+*   `longOpenInterestAtEnd`: (Optional) Long open interest at the end of the period.
+*   `shortOpenInterestAtEnd`: (Optional) Short open interest at the end of the period.
 
 **Fees Dimensions:**
 
@@ -192,8 +223,8 @@ If you are unsure how to classify fees and revenues, refer to this table or cont
 
 Building the `fetch` function is the core task. Here's a breakdown:
 
-1. **Identify Supported Chains**: Determine which blockchains your protocol runs on by referencing the [chains.ts](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/chains.ts) file. You'll need a `BaseAdapter` entry for each chain.
-2. **Define Start Dates**: For each chain, find your protocol's deployment date to set the `start` property. This enables proper data backfilling.
+1. **Identify Supported Chains**: Determine which blockchains your protocol runs on by referencing the [chains.ts](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/chains.ts) file. For the recommended root-level structure, add these to the `chains` array. For chain-specific configurations, you'll need a `BaseAdapter` entry for each chain.
+2. **Define Start Dates**: Find your protocol's deployment date to set the `start` property (root-level for consistent dates, or per-chain for different deployment dates). This enables proper data backfilling.
 3. **Choose Data Source(s)**: Select the appropriate method(s) to retrieve the necessary data for calculating dimensions. Common approaches are detailed below.
 
 ## Data Source Examples
@@ -342,19 +373,25 @@ Example: [Beradrome](https://github.com/DefiLlama/dimension-adapters/blob/master
 
 ## Metadata and Methodology
 
-Always include a `methodology` object within the `meta` property of your `BaseAdapter` to explain how your metrics are calculated. This is crucial for transparency.
+Always include a `methodology` object to explain how your metrics are calculated. This is crucial for transparency.
 
 ```typescript
-// Inside the BaseAdapter config for a specific chain
-meta: {
-  methodology: {
-    Fees: "Describes how total fees are calculated (e.g., Users pay 0.3% on each swap).",
-    Revenue: "Describes how protocol revenue is calculated (e.g., Protocol keeps 0.05% of each swap).",
-    SupplySideRevenue: "Describes how revenue distributed to LPs/suppliers is calculated (e.g., LPs receive 0.25% of each swap)."
-    // Add methodology for other dimensions like Volume, PremiumVolume etc. as applicable
-  }
+const methodology = {
+  Fees: "Describes how total fees are calculated (e.g., Users pay 0.3% on each swap).",
+  Revenue: "Describes how protocol revenue is calculated (e.g., Protocol keeps 0.05% of each swap).",
+  SupplySideRevenue: "Describes how revenue distributed to LPs/suppliers is calculated (e.g., LPs receive 0.25% of each swap)."
+  // Add methodology for other dimensions like Volume, PremiumVolume etc. as applicable
+}
+
+const adapter: SimpleAdapter = {
+  version: 2,
+  fetch,
+  chains: [CHAIN.ETHEREUM],
+  start: '2023-01-01',
+  methodology
 }
 ```
+
 
 ## Important Considerations
 
@@ -467,7 +504,8 @@ Functions for tracking native and ERC20 token movements.
       return { dailyFees, dailyRevenue: dailyFees }
     }
     ```
-    [Example Implementation - Synthetix](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/synthetix.ts)
+    Example:
+    - [Synthetix](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/synthetix.ts)
 
 *   **`addGasTokensReceived`**: Tracks native token transfers (like ETH) received by specified multisig addresses.
 
@@ -519,7 +557,8 @@ Functions for tracking native and ERC20 token movements.
       return { dailyFees, dailyRevenue: dailyFees };
     }
     ```
-    [Example Implementation - Jito](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/jito.ts)
+    Example:
+    - [Axiom](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/axiom.ts)
 
 ### EVM Data Helpers
 
@@ -644,11 +683,10 @@ Utility functions for common adapter patterns.
 ### Helper Source Code Reference
 You can find the full source code for these helper functions in the DefiLlama GitHub repository:
 
-- [Token Helpers](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/token.ts) - Contains functions like addTokensReceived, getETHReceived, etc.
+- [Token Helpers](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/token.ts) - Contains functions like addTokensReceived, getETHReceived, getSolanaReceived, etc.
 - [Uniswap Helpers](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/uniswap.ts) - Contains uniV2Exports, uniV3Exports
-- [Compound Helpers](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/compound.ts) - Contains compoundV2Export
-- [Graph Helpers](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/graph.ts) - Contains querySubgraph
-- [Uniswap Subgraph Helpers](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/getUniSubgraphVolume.ts) - Contains getGraphDimensions2
+- [Compound Helpers](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/compoundV2.ts) - Contains compoundV2Export
+- [Aave Helpers](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/aave/index.ts) - Contains aaveExports
 
 
 ## Frequently Asked Questions
