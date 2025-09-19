@@ -75,7 +75,7 @@ oraclesBreakdown: [
 * **"Fallback"**: Not used under normal conditions; used only if primary/secondary fails.
 * **"Aggregator"**: Used alongside other oracles in a combined feed (e.g., median across 3 sources). Failure alone does not cause TVL loss.
 * **"RNG"**: Used for randomness only (e.g., in games or lottery apps). No TVL is at risk.
-* **"Reference"**: Used as a reference price for comparison or validation purposes. Not directly used for critical protocol operations that would result in TVL loss if the oracle fails.
+* **"Reference"**: Used for price display or off-chain quoting. Not directly used for critical protocol operations that would result in TVL loss if the oracle fails.
 
 **Required fields:**
 * `name`: Name of the oracle provider (e.g., Chainlink, Pyth).
