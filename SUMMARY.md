@@ -25,6 +25,12 @@
   * [Testing](list-your-project/emissions-dashboard/testing.md)
 * [Oracles TVS](list-your-project/oracles-tvs.md)
 
+## Spreadsheet Functions
+
+* [Overview](spreadsheet-functions/README.md)
+* [Function Reference](spreadsheet-functions/function-reference.md)
+<!-- * [Examples & Use Cases](spreadsheet-functions/examples.md) -->
+
 ## analysts
 
 * [Data Definitions](analysts/data-definitions.md)
