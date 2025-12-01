@@ -29,12 +29,12 @@
 
 * [Overview](spreadsheet-functions/README.md)
 * [Function Reference](spreadsheet-functions/function-reference.md)
-<!-- * [Examples & Use Cases](spreadsheet-functions/examples.md) -->
 
 ## analysts
 
 * [Data Definitions](analysts/data-definitions.md)
 * [Custom columns](analysts/custom-columns.md)
+* [DAT Methodology](analysts/dat-methodology.md)
 
 ## Chainlist
 
