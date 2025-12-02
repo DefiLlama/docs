@@ -22,7 +22,7 @@ To help investors avoid falling into this pitfall, and to provide more accurate 
 
 * **Realized mNAV**: The ratio of marketcap to crypto treasury value where marketcap = share price \* currently issued shares.
 * **Realistic mNAV**: The ratio of marketcap to crypto treasury value where the marketcap is calculated by multiplying the share price by the realistic share count, which is calculated by taking realized share count (outstanding shares) and adding dilution that is unavoidable under GAAP, such as diluted EPS share count, prefunded warrants, triggered convertibles, earnouts, and mandatory conversions.
-* **Maximum mNAV**: The ratio of marketcap to crypto treasury value where the marketcap is calculated by multiplying the share price by the the maximum share count, which simulates the max dilution if we assume that every single outstanding option, warrant and other contracts that can lead to share dilution gets executed. Covers the case of the maximum number of shares that could be minted based on the current active contracts.
+* **Maximum mNAV**: The ratio of marketcap to crypto treasury value where the marketcap is calculated by multiplying the share price by the maximum share count, which simulates the max dilution if we assume that every single outstanding option, warrant and other contracts that can lead to share dilution gets executed. Covers the case of the maximum number of shares that could be minted based on the current active contracts.
 
 ### Definitions
 
