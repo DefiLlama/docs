@@ -33,8 +33,6 @@ While we are not placing blame on any team or chain, there may be instances wher
 
 There are common cases to be considered:
 
-Liquidity pools with a few providers and no trading activities.
-
 * Liquidity pools with a few providers and no trading activities.
 * Assets deposited into lending pools with a few lenders and no borrowers.
 * Assets deposited into yield/staking pools from a few depositors only to earn points or rewards.
