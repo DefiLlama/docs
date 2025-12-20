@@ -1,4 +1,4 @@
-# Building Dimension Adapters
+# How to write dimensions adapters
 
 This guide will help you create adapters for DefiLlama's various dashboards, including [fees](https://defillama.com/fees), [volumes](https://defillama.com/dexs), [aggregators](https://defillama.com/aggregators), [derivatives](https://defillama.com/derivatives), [Bridge Aggregators](https://defillama.com/bridge-aggregators), [Options](https://defillama.com/options), and others.
 
@@ -10,13 +10,14 @@ An adapter is some code that:
 2. Computes a response and returns it
 
 It's a TypeScript file that exports an async function which takes a FetchOptions object containing:
-- startTimestamp: Unix timestamp for start of period
-- endTimestamp: Unix timestamp for end of period 
-- startBlock: Block number corresponding to start timestamp
-- endBlock: Block number corresponding to end timestamp
-- createBalances: Helper function to track token balances
-- api: Helper for making contract calls
-- getLogs: Helper for fetching event logs
+
+* startTimestamp: Unix timestamp for start of period
+* endTimestamp: Unix timestamp for end of period
+* startBlock: Block number corresponding to start timestamp
+* endBlock: Block number corresponding to end timestamp
+* createBalances: Helper function to track token balances
+* api: Helper for making contract calls
+* getLogs: Helper for fetching event logs
 
 The function returns an object with metrics (like fees, volume, etc.) for that time range.
 
@@ -45,12 +46,7 @@ To add your protocol to any dashboard, follow these steps:
 5. Submit a PR! A llama will review it and merge it. Once merged, it can take up to 24h to be available in the dashboard
 
 {% hint style="info" %}
-Seeing issues getting logs or with calls at historical blocks?
-You can replace the RPC being used by creating a .env file and filling it with rows like this:
-ETHEREUM_RPC="https://..."
-BSC_RPC="https://..."
-POLYGON_RPC="https://..."
-...
+Seeing issues getting logs or with calls at historical blocks? You can replace the RPC being used by creating a .env file and filling it with rows like this: ETHEREUM\_RPC="https://..." BSC\_RPC="https://..." POLYGON\_RPC="https://..." ...
 {% endhint %}
 
 ## Basic Example
@@ -128,7 +124,6 @@ const adapter: SimpleAdapter = {
 }
 ```
 
-
 ## Testing Your Adapter
 
 Test your adapter locally before submitting a PR:
@@ -137,10 +132,13 @@ Test your adapter locally before submitting a PR:
 > npm test [dashboard] [protocolSlug]
 > npm test [dashboard] [protocolSlug] [timestamp]
 ```
+
 ```
 npm test fees katana
 ```
+
 To test at specific day (unix format or yyyy-mm-dd):
+
 ```
 npm test fees katana 1662110960
 npm test dexs katana 2025-04-10
@@ -165,45 +163,44 @@ Here are the standard dimensions grouped by dashboard type:
 
 **Dexs and Dex Aggregators Dimensions:**
 
-*   `dailyVolume`: (**Required**) Trading volume for the period.
+* `dailyVolume`: (**Required**) Trading volume for the period.
 
 **Derivatives and Aggregators-Derivatives Dimensions:**
 
-*   `dailyVolume`: (**Required**) Perpetual trading volume for the period.
-*   `openInterestAtEnd`: (Optional) Open interest at the end of the period.
-*   `longOpenInterestAtEnd`: (Optional) Long open interest at the end of the period.
-*   `shortOpenInterestAtEnd`: (Optional) Short open interest at the end of the period.
+* `dailyVolume`: (**Required**) Perpetual trading volume for the period.
+* `openInterestAtEnd`: (Optional) Open interest at the end of the period.
+* `longOpenInterestAtEnd`: (Optional) Long open interest at the end of the period.
+* `shortOpenInterestAtEnd`: (Optional) Short open interest at the end of the period.
 
 **Bridge Aggregators Dimensions:**
 
-*   `dailyBridgeVolume`: (**Required**) Bridge volume for the period.
+* `dailyBridgeVolume`: (**Required**) Bridge volume for the period.
 
 **Options Dimensions:**
 
-*   `dailyNotionalVolume`: (**Required**) Notional volume of options contracts traded/settled.
-*   `dailyPremiumVolume`: (**Required**) Premium volume collected/paid.
-*   `openInterestAtEnd`: (Optional) Open interest at the end of the period.
-*   `longOpenInterestAtEnd`: (Optional) Long open interest at the end of the period.
-*   `shortOpenInterestAtEnd`: (Optional) Short open interest at the end of the period.
+* `dailyNotionalVolume`: (**Required**) Notional volume of options contracts traded/settled.
+* `dailyPremiumVolume`: (**Required**) Premium volume collected/paid.
+* `openInterestAtEnd`: (Optional) Open interest at the end of the period.
+* `longOpenInterestAtEnd`: (Optional) Long open interest at the end of the period.
+* `shortOpenInterestAtEnd`: (Optional) Short open interest at the end of the period.
 
 **Fees Dimensions:**
 
-*   `dailyFees`: (**Required**) All fees and value collected from *all* sources (users, LPs, yield generation, liquid staking rewards, etc.), excluding direct transaction/gas costs paid by users to the network. This represents the total value flow into the protocol's ecosystem due to its operation.
-*   `dailyUserFees`: (Optional, but helpful) The portion of `dailyFees` directly paid by end-users (e.g., swap fees, borrow interest, liquidation penalties, marketplace commissions paid by buyers/sellers).
-*   `dailyRevenue`: (**Required**) The portion of `dailyFees` kept by the protocol entity itself, distributed either to the treasury (`dailyProtocolRevenue`) or governance token holders (`dailyHoldersRevenue`).
-    *   `dailyRevenue = dailyProtocolRevenue + dailyHoldersRevenue`
-*   `dailyProtocolRevenue`: (Optional, clarifies revenue split) The portion of `dailyRevenue` allocated to the protocol's treasury or core team.
-*   `dailyHoldersRevenue`: (Optional, but important for protocols distributing to holders) The portion of `dailyRevenue` distributed to governance token holders (e.g., via staking rewards, buybacks, burns).
-*   `dailySupplySideRevenue`: (Optional, but helpful) The portion of `dailyFees` distributed to liquidity providers, lenders, or other suppliers of capital/resources essential to the protocol's function.
-*   `dailyBribeRevenue`: (Optional, specific use case) Governance token paid as bribe/incentive for token holder action.
-*   `dailyTokenTax`: (Optional, specific use case) Fees generated from a tax applied to token transfers.
+* `dailyFees`: (**Required**) All fees and value collected from _all_ sources (users, LPs, yield generation, liquid staking rewards, etc.), excluding direct transaction/gas costs paid by users to the network. This represents the total value flow into the protocol's ecosystem due to its operation.
+* `dailyUserFees`: (Optional, but helpful) The portion of `dailyFees` directly paid by end-users (e.g., swap fees, borrow interest, liquidation penalties, marketplace commissions paid by buyers/sellers).
+* `dailyRevenue`: (**Required**) The portion of `dailyFees` kept by the protocol entity itself, distributed either to the treasury (`dailyProtocolRevenue`) or governance token holders (`dailyHoldersRevenue`).
+  * `dailyRevenue = dailyProtocolRevenue + dailyHoldersRevenue`
+* `dailyProtocolRevenue`: (Optional, clarifies revenue split) The portion of `dailyRevenue` allocated to the protocol's treasury or core team.
+* `dailyHoldersRevenue`: (Optional, but important for protocols distributing to holders) The portion of `dailyRevenue` distributed to governance token holders (e.g., via staking rewards, buybacks, burns).
+* `dailySupplySideRevenue`: (Optional, but helpful) The portion of `dailyFees` distributed to liquidity providers, lenders, or other suppliers of capital/resources essential to the protocol's function.
+* `dailyBribeRevenue`: (Optional, specific use case) Governance token paid as bribe/incentive for token holder action.
+* `dailyTokenTax`: (Optional, specific use case) Fees generated from a tax applied to token transfers.
 
 **Fee/Revenue Attribution Examples by Protocol Type:**
 
 If you are unsure how to classify fees and revenues, refer to this table or contact us at support@defillama.com or ask on Discord:
 
 <figure><img src="../../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
-
 
 | Attribute         | DEXs                                        | Lending                                    | Chains                                         | NFT Marketplace                        | Derivatives                      | CDP                        | Liquid Staking                  | Yield                              | Synthetics                       |
 | ----------------- | ------------------------------------------- | ------------------------------------------ | ---------------------------------------------- | -------------------------------------- | -------------------------------- | -------------------------- | ------------------------------- | ---------------------------------- | -------------------------------- |
@@ -215,6 +212,7 @@ If you are unsure how to classify fees and revenues, refer to this table or cont
 | SupplySideRevenue | LPs revenue                                 | Interest paid to lenders                   | \*                                             | \*                                     | LP revenue                       | \*                         | Revenue earned by stETH holders | Yield excluding protocol fees      | LPs revenue                      |
 
 > **Notes:**
+>
 > * Protocol governance includes treasury + gov token holders.
 > * `Revenue = HoldersRevenue + ProtocolRevenue`.
 > * Asterisk (\*) indicates typically not applicable or zero for that category.
@@ -232,6 +230,7 @@ Building the `fetch` function is the core task. Here's a breakdown:
 Choose the appropriate data source based on your protocol's architecture. The `fetch` function receives an `options` object containing helper utilities like `createBalances`, `getLogs`, `api` (for contract calls), `queryDuneSql`, etc.
 
 ### On-Chain Event Logs
+
 Ideal for tracking specific events that generate fees or volume:
 
 ```typescript
@@ -252,9 +251,11 @@ const fetch = async ({ getLogs, createBalances }) => {
   return { dailyFees, dailyRevenue };
 };
 ```
+
 Example: [Ostium](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/ostium/index.ts)
 
 ### Token Transfer Tracking
+
 Track tokens received by protocol treasury/fee addresses:
 
 ```typescript
@@ -272,9 +273,11 @@ const fetch = async (options: FetchOptions) => {
   return { dailyFees, dailyRevenue: dailyFees }
 }
 ```
+
 Example: [Synthetix](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/synthetix.ts)
 
 ### Subgraphs
+
 Fast queries for protocols with well-maintained subgraphs:
 
 ```typescript
@@ -300,13 +303,16 @@ const fetch = async (options: FetchOptions) => {
   return { dailyVolume };
 };
 ```
-Examples: 
-- [Curve](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/curve.ts)
-- [LlamaLend](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/llamalend.ts)
-- [TheGraph](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/thegraph.ts)
-- [Dackieswap](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/dackieswap.ts)
+
+Examples:
+
+* [Curve](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/curve.ts)
+* [LlamaLend](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/llamalend.ts)
+* [TheGraph](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/thegraph.ts)
+* [Dackieswap](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/dackieswap.ts)
 
 ### Query Engines (Dune, Flipside, Allium)
+
 For complex queries or when direct blockchain access is too expensive:
 
 ```typescript
@@ -333,9 +339,11 @@ const fetch = async (options: FetchOptions) => {
   return { dailyFees };
 };
 ```
+
 Example: [Pumpswap](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/pump-swap/index.ts)
 
 ### Contract Calls
+
 For protocols where data is accessible through view functions or requires multiple contract interactions:
 
 ```typescript
@@ -369,6 +377,7 @@ const fetch = async (options: FetchOptions) => {
   return { dailyFees };
 };
 ```
+
 Example: [Beradrome](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/beradrome/index.ts)
 
 ## Metadata and Methodology
@@ -392,10 +401,67 @@ const adapter: SimpleAdapter = {
 }
 ```
 
+## Breakdown Labels & Income Statement
+
+
+
+Our adapter allow to break data multiple subparts, you may want to use breakdown labels when:
+
+* Adapter has multiple sourcess of fees
+* Adapter has multiple destinations to distribute fees
+
+#### Add breakdown labels
+
+```
+// instead add all fees into dailyFees
+dailyFees.add('0x0000000000000000000000000000000000000000', 1e18)
+
+// you can break fees into subparts - for Lido
+dailyFees.add('0x0000000000000000000000000000000000000000', 5e17, 'Staking Rewards')
+dailyFees.add('0x0000000000000000000000000000000000000000', 5e17, 'MEV Rewards')
+
+// you can break fees into subparts - for Aave
+dailyFees.add('0x0000000000000000000000000000000000000000', 6e17, 'Borrow Interest')
+dailyFees.add('0x0000000000000000000000000000000000000000', 2e17, 'GHO Borrow Interest')
+dailyFees.add('0x0000000000000000000000000000000000000000', 2e17, 'Liquidation Fees')
+
+// you can break fees into subparts - for Euler
+dailyFees.add('0x0000000000000000000000000000000000000000', 6e17, 'Borrow Interest')
+dailyFees.add('0x0000000000000000000000000000000000000000', 2e17, 'Protocol Fees')
+dailyFees.add('0x0000000000000000000000000000000000000000', 2e17, 'Curators Fees')
+```
+
+Because label is a string, you can put anything into it, please check your redefine labels and use them except your adapter has specific labels. [https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/metrics.ts](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/metrics.ts)
+
+#### Describe your labels
+
+If you add labels to adapter, always include a `breakdownMethodology` object to explain how your labels are calculated.
+
+```
+const breakdownMethodology = {
+  Fees: {
+      "Staking Rewards": "ETH validators rewards.",
+      "MEV Rewards": "MEV rewards from ETH execution layer.",
+  },
+  Revenue: "Lido takes 10% all validators and NEV rewards.",
+}
+
+const adapter: SimpleAdapter = {
+  version: 2,
+  fetch,
+  chains: [CHAIN.ETHEREUM],
+  start: '2023-01-01',
+  methodology, // explain common metrics
+  breakdownMethodology, // explain breakdown labels
+}
+```
+
+Example: [Lido](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/lido.ts)
 
 ## Important Considerations
 
 ### Precision
+
 Use the `BigNumber` library (available via `options.createBalances()` or direct import) for mathematical operations involving token amounts, especially when dealing with different decimals or potentially large/small numbers, to avoid JavaScript precision issues.
 
 ```typescript
@@ -441,11 +507,12 @@ These helpers provide high-level abstractions for common DeFi protocol archetype
       // Other chains...
     });
     ```
-    Examples:
-    - [Nile Exchange V1](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/nile-exchange-v1/index.ts) (V2-style)
-    - [Hydrometer](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/hydrometer/index.ts)
-    - [ABCDEFX](https://github.com/DefiLlama/dimension-adapters/blob/master/dexs/abcdefx/index.ts)
 
+    Examples:
+
+    * [Nile Exchange V1](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/nile-exchange-v1/index.ts) (V2-style)
+    * [Hydrometer](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/hydrometer/index.ts)
+    * [ABCDEFX](https://github.com/DefiLlama/dimension-adapters/blob/master/dexs/abcdefx/index.ts)
 *   **`uniV3Exports`**: Creates adapters for Uniswap V3-style DEXes, supporting variable fees and multiple pools.
 
     ```typescript
@@ -460,8 +527,10 @@ These helpers provide high-level abstractions for common DeFi protocol archetype
       // Other chains...
     })
     ```
+
     Example:
-    - [2thick](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/2thick.ts) (V3-style)
+
+    * [2thick](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/2thick.ts) (V3-style)
 
 #### Compound V2-like Protocols
 
@@ -482,8 +551,10 @@ These helpers provide high-level abstractions for common DeFi protocol archetype
       }
     });
     ```
+
     Example:
-    - [Strike](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/strike/index.ts)
+
+    * [Strike](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/strike/index.ts)
 
 ### Token Tracking Helpers
 
@@ -504,9 +575,10 @@ Functions for tracking native and ERC20 token movements.
       return { dailyFees, dailyRevenue: dailyFees }
     }
     ```
-    Example:
-    - [Synthetix](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/synthetix.ts)
 
+    Example:
+
+    * [Synthetix](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/synthetix.ts)
 *   **`addGasTokensReceived`**: Tracks native token transfers (like ETH) received by specified multisig addresses.
 
     ```typescript
@@ -521,7 +593,6 @@ Functions for tracking native and ERC20 token movements.
       return { dailyFees, dailyRevenue: dailyFees };
     }
     ```
-
 *   **`getETHReceived`**: Tracks native token transfers on EVM chains via Allium DB queries.
 
     ```typescript
@@ -538,8 +609,8 @@ Functions for tracking native and ERC20 token movements.
       return { dailyFees: balances, dailyRevenue: balances };
     }
     ```
-    [Example Implementation - DexTools](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/dextools.ts)
 
+    [Example Implementation - DexTools](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/dextools.ts)
 *   **`getSolanaReceived`**: Fetches token transfers to specified Solana addresses, allows blacklisting senders/signers.
 
     ```typescript
@@ -557,8 +628,10 @@ Functions for tracking native and ERC20 token movements.
       return { dailyFees, dailyRevenue: dailyFees };
     }
     ```
+
     Example:
-    - [Axiom](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/axiom.ts)
+
+    * [Axiom](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/axiom.ts)
 
 ### EVM Data Helpers
 
@@ -581,8 +654,8 @@ Functions for querying EVM logs and indexers.
       return { dailyFees };
     }
     ```
-    [Example Implementation - Ostium](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/ostium/index.ts)
 
+    [Example Implementation - Ostium](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/ostium/index.ts)
 *   **`queryIndexer`**: Executes queries against DefiLlama's indexers (transfers, events, etc.).
 
     ```typescript
@@ -603,6 +676,7 @@ Functions for querying EVM logs and indexers.
       return { dailyFees };
     }
     ```
+
     [Example Implementation - Sudoswap V2](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/sudoswap-v2.ts)
 
 ### Query Engine Helpers
@@ -628,8 +702,8 @@ Functions for querying external data platforms.
       return { dailyFees };
     }
     ```
-    [Example Implementation - Pumpswap](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/pump-swap/index.ts)
 
+    [Example Implementation - Pumpswap](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/pump-swap/index.ts)
 *   **`queryAllium`** (Available via `options.queryAllium`): Queries the Allium database.
 
     ```typescript
@@ -664,7 +738,6 @@ Helpers tailored for specific chains or L2s.
     }
     ```
 
-
 ### General Helpers
 
 Utility functions for common adapter patterns.
@@ -681,13 +754,13 @@ Utility functions for common adapter patterns.
     ```
 
 ### Helper Source Code Reference
+
 You can find the full source code for these helper functions in the DefiLlama GitHub repository:
 
-- [Token Helpers](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/token.ts) - Contains functions like addTokensReceived, getETHReceived, getSolanaReceived, etc.
-- [Uniswap Helpers](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/uniswap.ts) - Contains uniV2Exports, uniV3Exports
-- [Compound Helpers](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/compoundV2.ts) - Contains compoundV2Export
-- [Aave Helpers](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/aave/index.ts) - Contains aaveExports
-
+* [Token Helpers](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/token.ts) - Contains functions like addTokensReceived, getETHReceived, getSolanaReceived, etc.
+* [Uniswap Helpers](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/uniswap.ts) - Contains uniV2Exports, uniV3Exports
+* [Compound Helpers](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/compoundV2.ts) - Contains compoundV2Export
+* [Aave Helpers](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/aave/index.ts) - Contains aaveExports
 
 ## Frequently Asked Questions
 
@@ -707,13 +780,13 @@ You can find the full source code for these helper functions in the DefiLlama Gi
 
 **TVL Percentage Rules**: For pools with very low fee percentages (like 0.01%) that enable wash trading, we apply minimum TVL percentage rules. Only volume from pools meeting these thresholds is counted, effectively filtering out wash trading while preserving legitimate activity.
 
-**Chain-Specific Considerations**: 
-- **Solana**: Due to lower transaction fees that make wash trading more viable, we apply TVL percentage filters to major Solana DEXs while maintaining legitimate volumes
-- **BSC**: During farming campaigns that create wash trading incentives for low-liquidity pairs, we remove affected pairs to maintain data integrity
+**Chain-Specific Considerations**:
+
+* **Solana**: Due to lower transaction fees that make wash trading more viable, we apply TVL percentage filters to major Solana DEXs while maintaining legitimate volumes
+* **BSC**: During farming campaigns that create wash trading incentives for low-liquidity pairs, we remove affected pairs to maintain data integrity
 
 ### How can I report data issues or provide feedback?
 
 You can report issues or provide feedback by sending an email to support@defillama.com
 
 Llamas regularly review feedback and implement necessary fixes to maintain the highest data quality standards across all adapters.
-
