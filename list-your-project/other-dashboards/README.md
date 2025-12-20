@@ -403,9 +403,9 @@ const adapter: SimpleAdapter = {
 
 ## Breakdown Labels & Income Statement
 
-Our adapter allow to break data multiple subparts, you may want to use breakdown labels when:
+Our adapter allows to break data into multiple sub-parts, you may want to use breakdown labels when:
 
-* Adapter has multiple sourcess of fees
+* Adapter has multiple sources of fees
 * Adapter has multiple destinations to distribute fees
 
 #### Add breakdown labels
