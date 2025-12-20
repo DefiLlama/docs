@@ -429,7 +429,7 @@ dailyFees.add('0x0000000000000000000000000000000000000000', 2e17, 'Protocol Fees
 dailyFees.add('0x0000000000000000000000000000000000000000', 2e17, 'Curators Fees')
 ```
 
-Because label is a string, you can put anything into it, please check your redefine labels and use them except your adapter has specific labels. [https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/metrics.ts](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/metrics.ts)
+Because label is a string, you can put anything into it, please check our redefine labels and use them except your adapter has specific labels. [https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/metrics.ts](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/metrics.ts)
 
 #### Describe your labels
 
