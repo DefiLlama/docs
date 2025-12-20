@@ -403,8 +403,6 @@ const adapter: SimpleAdapter = {
 
 ## Breakdown Labels & Income Statement
 
-
-
 Our adapter allow to break data multiple subparts, you may want to use breakdown labels when:
 
 * Adapter has multiple sourcess of fees
@@ -412,7 +410,7 @@ Our adapter allow to break data multiple subparts, you may want to use breakdown
 
 #### Add breakdown labels
 
-```
+```js
 // instead add all fees into dailyFees
 dailyFees.add('0x0000000000000000000000000000000000000000', 1e18)
 
@@ -437,7 +435,7 @@ Because label is a string, you can put anything into it, please check your redef
 
 If you add labels to adapter, always include a `breakdownMethodology` object to explain how your labels are calculated.
 
-```
+```js
 const breakdownMethodology = {
   Fees: {
       "Staking Rewards": "ETH validators rewards.",
