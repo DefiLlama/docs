@@ -77,7 +77,7 @@ if any of these tokens are LP tokens, set `resolveLP: true` to resolve them into
 Example adapter
 {% endembed %}
 
-{% embed url="https://github.com/DefiLlama/DefiLlama-Adapters/blob/main/projects/aevo/index.js" %}
+{% embed url="https://github.com/DefiLlama/DefiLlama-Adapters/blob/main/projects/aevo-xyz/index.js" %}
 Example adapter
 {% endembed %}
 
@@ -125,4 +125,3 @@ block = await getBlock(timestamp, chain, chainBlocks);
 {% embed url="https://github.com/DefiLlama/DefiLlama-Adapters/blob/main/projects/atlendis/index.js" %}
 Example Get Block Adapter
 {% endembed %}
-
