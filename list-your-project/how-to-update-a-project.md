@@ -23,7 +23,7 @@ If you'd like to update or add an **Event** to a DeFi project listed on DefiLlam
 
 If you'd like to update the metadata (name, description, adding an audit, etc) of a project already listed on DefiLlama:
 
-1. This information can be updated from the [data.ts](https://github.com/DefiLlama/defillama-server/blob/master/defi/src/protocols/data.ts), [data2.ts](https://github.com/DefiLlama/defillama-server/blob/master/defi/src/protocols/data2.ts), data3.ts and data4.ts files.
+1. This information can be updated from the [data1.ts](https://github.com/DefiLlama/defillama-server/blob/master/defi/src/protocols/data1.ts), [data2.ts](https://github.com/DefiLlama/defillama-server/blob/master/defi/src/protocols/data2.ts), [data3.ts](https://github.com/DefiLlama/defillama-server/blob/master/defi/src/protocols/data3.ts), [data4.ts](https://github.com/DefiLlama/defillama-server/blob/master/defi/src/protocols/data4.ts), and [data5.ts](https://github.com/DefiLlama/defillama-server/blob/master/defi/src/protocols/data5.ts) files.
 2. Fork the [defillama-server repo](https://github.com/DefiLlama/defillama-server) (button towards the top right of the repo page).
 3. Find your protocol and make your changes to the fork (generally easiest by cloning your new fork into a desktop IDE).
 4. Make a Pull Request from your fork, to the main defiLlama-server repo, with a brief explanation of what you changed.
@@ -37,4 +37,3 @@ To update the logo:
 2. Add your icon to the public [icons](https://github.com/DefiLlama/defillama-app/tree/main/public/icons) file as a 240px x 240px .jpg \*\*Please save the file under the very same name as the protocol.
 3. Make a Pull Request from your fork
 4. Wait for someone to either comment on or merge your Pull Request.&#x20;
-
