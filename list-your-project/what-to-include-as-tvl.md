@@ -211,15 +211,9 @@ We removed TVL from unproductive assets in vaults that have a few deposit addres
 
 Ethereum - ctDeltaWeETH vault, there is only one depositor [https://etherscan.io/tx/0xce658f57edc490798ddc55e3f67169e3190fe23afe50a4ce4ca411d0714edada](https://etherscan.io/tx/0xce658f57edc490798ddc55e3f67169e3190fe23afe50a4ce4ca411d0714edada)
 
-<br>
+#### RollX
 
-<br>
+We removed TVL from unproductive assets in vaults that have a few deposit addresses
 
-<br>
-
-<br>
-
-<br>
-
-<br>
+Base - bfBTC vault, there is only a few depositors [https://etherscan.io/tx/0xce658f57edc490798ddc55e3f67169e3190fe23afe50a4ce4ca411d0714edada](https://basescan.org/address/0x623F2774d9f27B59bc6b954544487532CE79d9DF)
 
