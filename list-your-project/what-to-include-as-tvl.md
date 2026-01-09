@@ -170,12 +170,6 @@ We removed TVL from unproductive assets in liquidity pools that have no users tr
 
 * BTCvc-vBTCvc - 0x90811fd5409c14d29ec40f59bf7158c52dffa20bc11eb33873670addbf149aa2
 
-#### Magma Finance
-
-We removed TVL from unproductive assets in liquidity pools that have no users trading activities
-
-* enzoBTC/xBTC - 0x478394dd654b698d295eec67a7ea95bcb8d560e2949cbbbcb162f3d524d4ca8e
-
 #### Pell Network
 
 We removed TVL from unproductive assets in vaults that have a few deposit addresses
@@ -204,12 +198,6 @@ We removed TVL from unproductive liquidity pools that have no trading activities
 
 * SolvBTC.BNB/SolvBTC - 0x24619368bad314d1635a54027c5231b9b83c4a7e
 * brBTC-uniBTC = 0xe9703de93406cc31441a57ce5d08272ed545d32b
-
-#### Concrete
-
-We removed TVL from unproductive assets in vaults that have a few deposit addresses
-
-Ethereum - ctDeltaWeETH vault, there is only one depositor [https://etherscan.io/tx/0xce658f57edc490798ddc55e3f67169e3190fe23afe50a4ce4ca411d0714edada](https://etherscan.io/tx/0xce658f57edc490798ddc55e3f67169e3190fe23afe50a4ce4ca411d0714edada)
 
 #### RollX
 
