@@ -205,3 +205,15 @@ We removed TVL from unproductive assets in vaults that have a few deposit addres
 
 Base - bfBTC vault, there is only a few depositors [https://etherscan.io/tx/0xce658f57edc490798ddc55e3f67169e3190fe23afe50a4ce4ca411d0714edada](https://basescan.org/address/0x623F2774d9f27B59bc6b954544487532CE79d9DF)
 
+#### Tea-REX
+
+We removed TVL from unproductive assets in vaults that have a few deposit addresses
+
+Sei - bfBTC vault, there is only a whale deposit [https://seiscan.io/address/0xea82a5508A016239B523dE82c58278b749Bd557c](https://seiscan.io/address/0xea82a5508A016239B523dE82c58278b749Bd557c)
+
+#### Sailor Finance
+
+We removed TVL from unproductive liquidity pools that have no trading activities
+
+* SolvBTC/xSolvBTC - 0x877704326c9b8fe08eb5c92f6b0a75fcc3287ff6
+
