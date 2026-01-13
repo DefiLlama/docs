@@ -76,6 +76,7 @@ oraclesBreakdown: [
 * **"Aggregator"**: Used alongside other oracles in a combined feed (e.g., median across 3 sources). Failure alone does not cause TVL loss.
 * **"RNG"**: Used for randomness only (e.g., in games or lottery apps). No TVL is at risk.
 * **"Reference"**: Used for price display or off-chain quoting. Not directly used for critical protocol operations that would result in TVL loss if the oracle fails.
+* **"PoR"**: Proof of Reserve oracle, used to prove the protocol has the reserves to back the TVL
 
 **Required fields:**
 * `name`: Name of the oracle provider (e.g., Chainlink, Pyth).
