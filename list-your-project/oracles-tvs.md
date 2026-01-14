@@ -100,7 +100,7 @@ To add a new oracle to DefiLlama, follow these steps:
 
 #### 2. **Edit the Appropriate File**
 
-* Locate the appropriate `data.ts`, `data1.ts`, `data2.ts`, `data3.ts` or `data4.ts` file in the [DefiLlama Server repository](https://github.com/DefiLlama/defillama-server/blob/master/defi/src/protocols/).
+* Locate the appropriate `data1.ts`, `data2.ts`, `data3.ts`, `data4.ts` or `data5.ts` file in the [DefiLlama Server repository](https://github.com/DefiLlama/defillama-server/blob/master/defi/src/protocols/).
 * Add or update the protocol entry using the `oraclesBreakdown` format.
 
 #### 3. **Include the Following in Your Pull Request**
