@@ -1,8 +1,8 @@
 ---
 description: >-
-  DefiLlama Pro API offers robust tools and insights to enhance your DeFi
-  analytics with premium features. Upgrade today to access advanced endpoints,
-  and higher API limits.
+  DefiLlama offers Pro and API subscriptions to enhance your DeFi analytics with
+  premium features. Upgrade today to access advanced tools, custom dashboards,
+  LlamaAI, excel/google sheets integrations and higher API limits.
 ---
 
 # Pricing
@@ -11,52 +11,79 @@ description: >-
 
 #### **Open** (Free)
 
-The Open plan provides essential access to DefiLlama’s comprehensive DeFi data.
+The Open plan provides essential access to DefiLlama's comprehensive DeFi data.
 
 **Features:**
 
-* Access to TVL (Total Value Locked), revenue/fees, and prices.
-* Access to **LlamaFeed** for real-time updates.
-* Support via public Discord channel.
+- Access to TVL (Total Value Locked), revenue/fees, and prices.
+- Access to **LlamaFeed** for real-time updates.
+- Support via Email and public Discord channel.
 
-**API Limits:**
+---
 
-* 10 to 200 requests per minute.
+#### **Pro** ($49/month or $490/year) **Free 7-day trial available**
 
-**Docs Page**:
-
-[https://defillama.com/docs/api](https://defillama.com/docs/api)
-
-***
-
-#### **Pro** ($300/month)
-
-Unlock the full potential of DefiLlama with the Pro plan, designed for businesses and developers requiring high-performance API access.
+Unlock premium DefiLlama features designed for power users and researchers.
 
 **Features:**
 
-* All features of the Open plan.
-* Access to all data categories, including unlocks, active users, and token liquidity.
-* Priority support for technical assistance.
-* Enhanced API performance with Pro API limits.
+- **LlamaAI** – conversational analysis of DefiLlama data
+  - Deep research: 5 questions/day (3 questions during trial)
+- **DefiLlama Pro Dashboards** – build custom dashboards
+- **CSV Downloads** – export any dataset (disabled during trial)
+- **Custom Columns** – personalized analysis
+- **LlamaFeed** – real-time premium insights
+- **DefiLlama Sheets** – access blockchain data in google sheets or excel
+- Access to upcoming DefiLlama products
+
+**Note:** API access is not included in the Pro plan.
+
+---
+
+#### **API** ($300/month or $3,000/year)
+
+Designed for developers requiring additional API endpoints and higher limits.
+
+**Features:**
+
+- All features included in the Pro tier
+- Access to TVL, revenue/fees, and prices API endpoints
+- Access to all data categories (unlocks, active users, token liquidity, and more)
+- Priority support
 
 **API Limits:**
 
-* 1000 requests per minute.
-* Up to 1 million API calls per month.
+- 1,000 requests per minute
+- 1 million API calls per month
+- $0.60 per 1,000 additional calls after the 1M limit
 
-**Docs Page**:
+**API docs page**:
 
-[https://defillama.com/pro-api/docs](https://defillama.com/pro-api/docs)
+[https://api-docs.defillama.com/](https://api-docs.defillama.com/)
 
-***
+---
 
-***
+#### **Enterprise plan**
+
+**Features:**
+
+- All features included in Pro and API tiers
+- Direct raw access to our database
+- Custom bespoke solutions that fit your needs
+- Hourly data
+- Access to non-public data, such as TVL breakdowns by token address
+- Custom data licensing agreements
+
+To request an enterprise plan, please contact us at [sales@defillama.com](mailto:sales@defillama.com)
+
+---
 
 **Payment Options:**
 
-* Stablecoins
-* Credit card through Stripe
+- Crypto
+- Credit card
+
+Both monthly and yearly billing options available.
 
 **How to Upgrade**
 
