@@ -24,6 +24,7 @@
   * [Emission Sections](list-your-project/emissions-dashboard/emission-sections.md)
   * [Testing](list-your-project/emissions-dashboard/testing.md)
 * [Oracles TVS](list-your-project/oracles-tvs.md)
+* [Token Rights](list-your-project/token-rights.md)
 
 ## Spreadsheet Functions
 
