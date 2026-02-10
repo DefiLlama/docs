@@ -217,3 +217,17 @@ We removed TVL from unproductive liquidity pools that have no trading activities
 
 * SolvBTC/xSolvBTC - 0x877704326c9b8fe08eb5c92f6b0a75fcc3287ff6
 
+#### Takara
+
+We removed TVL from unproductive assets with very low usage and no borrowing activity.
+
+* **enzoBTC**\
+  Single depositor, no borrowing\
+  `0x7F3C2A5bCA48150c7Ce07DcEAb9B73336a7e592a`
+* **M-BTC**\
+  Few deposits, no borrowing\
+  `0x963Db326b734FD58a9396C020BBb52C14acaFb02`
+* **uBTC**\
+  Few deposits, no borrowing\
+  `0xabFb7A392a6DaaC50f99c5D14B5f27EFfd08Fe03`
+
