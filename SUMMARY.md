@@ -46,6 +46,12 @@
 
 * [Frequently Asked Questions](faqs/frequently-asked-questions.md)
 
+## Real World Assets
+
+* [Overview](real-world-assets/README.md)
+  * [Methodology & Metrics](real-world-assets/methodology-and-metrics.md)
+  * [Definitions & Taxonomy](real-world-assets/definitions-and-taxonomy.md)
+
 ***
 
 * [Coin Prices API](coin-prices-api.md)
