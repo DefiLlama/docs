@@ -64,6 +64,6 @@ Open the extension page on [Google Workspace Marketplace](https://workspace.goog
 
 ## Next Steps
 
-- [Function Reference](./function-reference.md) - Complete parameter documentation
-- [Templates](./templates.md) - Templates for common use cases
+- [Function Reference](function-reference.md) - Complete parameter documentation
+- [Templates](templates.md) - Templates for common use cases
 - [Support](mailto:support@defillama.com) - In case of any issues, questions or feedback
