@@ -1,4 +1,6 @@
-# Helpful templates to get you started
+# Templates
+
+Helpful templates to get you started with your analysis.
 
 ### **Stablecoin Yield Finder**
 
