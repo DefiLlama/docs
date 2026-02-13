@@ -30,6 +30,7 @@
 
 * [Overview](spreadsheet-functions/README.md)
 * [Function Reference](spreadsheet-functions/function-reference.md)
+* [Templates](spreadsheet-functions/templates.md)
 
 ## analysts
 
