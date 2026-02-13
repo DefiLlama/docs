@@ -1,33 +1,9 @@
 # Getting Started
 
-<!-- ## Excel
-
-### Installation
-1. Open Excel
-2. **Insert** → **Get Add-ins**
-3. Search "DefiLlama"
-4. Click **Add**
-
-### Setup
-1. Click **DefiLlama** tab → **Show Task Pane**
-2. Click **Sign In**
-3. Authenticate with your account
-
-### Test
-```excel
-=DEFILLAMA("tvl", "Ethereum")
-```
-
-### Troubleshooting
-- **#NAME? error**: Restart Excel, ensure add-in is enabled
-- **Auth issues**: Sign out and sign in again via task pane
----
- -->
-
 ## Google Sheets
 
 ### Installation
-Open the listing on [Google Workspace Marketplace](https://workspace.google.com/marketplace/app/defillama_sheets/571407189628) to install the add-on.
+Open the extension page on [Google Workspace Marketplace](https://workspace.google.com/marketplace/app/defillama_sheets/571407189628) to install the add-on.
 
 
 ### Setup
@@ -39,6 +15,31 @@ Open the listing on [Google Workspace Marketplace](https://workspace.google.com/
 ```excel
 =DEFILLAMA("price", "Bitcoin")
 ```
+---
+
+## Excel
+
+### Installation
+1. Open Excel
+2. **Insert** → **Add-ins** -> **More Add-ins**
+3. Search "DefiLlama"
+4. Click **Add**
+
+### Setup
+1. Click **DefiLlama Sheets**
+2. Click **Sign In**
+3. Authenticate with your account
+
+### Test
+```excel
+=DEFILLAMA("tvl", "Ethereum")
+```
+
+### Troubleshooting
+- **#NAME? error**: Restart Excel, ensure add-in is enabled
+- **Auth issues**: Sign out and sign in again via task pane
+
+### In case of any issues, questions or feedback, please contact us at [support@defillama.com](mailto:support@defillama.com)
 ---
 
 ## Quick Examples
@@ -64,3 +65,5 @@ Open the listing on [Google Workspace Marketplace](https://workspace.google.com/
 ## Next Steps
 
 - [Function Reference](./function-reference.md) - Complete parameter documentation
+- [Templates](./templates.md) - Templates for common use cases
+- [Support](mailto:support@defillama.com) - In case of any issues, questions or feedback
