@@ -19,26 +19,10 @@ If you'd like to update or add an **Event** to a DeFi project listed on DefiLlam
 4. Hallmarks is not for adding any product development but instead its meant to explain changes in TVL. Only add events that had an impact on the TVL of a project.
 5. Wait for someone to either comment on or merge your Pull Request. There is no need to ask for someone to check your PR.
 
-### Update metadata (name, description...)
+### Update project metadata (name, description, logo...)
 
-If you'd like to update the metadata (name, description, adding an audit, etc) of a project already listed on DefiLlama:
+Open a ticket in [https://defillama.com/support](https://defillama.com/support) requesting a metadata update, along with the info to change and proof that the request is legitimate.
 
-1. This information can be updated from the [data1.ts](https://github.com/DefiLlama/defillama-server/blob/master/defi/src/protocols/data1.ts), [data2.ts](https://github.com/DefiLlama/defillama-server/blob/master/defi/src/protocols/data2.ts), [data3.ts](https://github.com/DefiLlama/defillama-server/blob/master/defi/src/protocols/data3.ts), [data4.ts](https://github.com/DefiLlama/defillama-server/blob/master/defi/src/protocols/data4.ts), and [data5.ts](https://github.com/DefiLlama/defillama-server/blob/master/defi/src/protocols/data5.ts) files.
-2. Fork the [defillama-server repo](https://github.com/DefiLlama/defillama-server) (button towards the top right of the repo page).
-3. Find your protocol and make your changes to the fork (generally easiest by cloning your new fork into a desktop IDE).
-4. Make a Pull Request from your fork, to the main defiLlama-server repo, with a brief explanation of what you changed.
-5. Wait for someone to either comment on or merge your Pull Request.
-6. If you use a new name, please use the field previousName\[] with the old name
+Proof should be a link to a source that's verified (domain or twitter that we currently track for the project) that explicitly lists the new values that should be changed.
 
-### Update logo
-
-To update the logo:
-
-1. Fork the [icons repo](https://github.com/DefiLlama/icons) (button towards the top right of the repo page).
-2. Add your icon to the public [icons](https://github.com/DefiLlama/defillama-app/tree/main/public/icons) file as a 240px x 240px .jpg \*\*Please save the file under the very same name as the protocol.
-3. Make a Pull Request from your fork
-4. Wait for someone to either comment on or merge your Pull Request.
-
-### I cant use Github
-
-Please submit the request to change/add/modify the data here [https://defillama.com/support](https://defillama.com/support)
+For example, for a domain/URL update this proof should be the previous domain having a banner explaining the migration and listing the new domain, for other updates we accept a tweet from the official handle or a blogpost on the main domain explaining the rebrand.
