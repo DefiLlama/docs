@@ -52,6 +52,7 @@
 * [Overview](real-world-assets/README.md)
   * [Methodology & Metrics](real-world-assets/methodology-and-metrics.md)
   * [Definitions & Taxonomy](real-world-assets/definitions-and-taxonomy.md)
+  * [RWA Field Definitions](real-world-assets/real-world-assets/rwa-field-definitions.md)
 
 ***
 
