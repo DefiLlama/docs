@@ -364,3 +364,11 @@ Technical or legal documentation explaining token structure.
 Issuer or team contact email.
 
 **Answer:**
+
+## 10. **Redemption Process**
+
+**Definition:** How and where holders can redeem tokens, including any requirements or limitations.&#x20;
+
+_**What to provide**_**:** Platform or URL where redemption occurs Minimum redemption amount (if any) Settlement timeline Any additional requirements (KYC, whitelisting, etc.)
+
+&#x20;Example: Holders redeem via app.ondo.finance with a $5,000 minimum. Settlement takes T+1 to a linked bank account. KYC required. If not redeemable: Write N/A
