@@ -2,11 +2,13 @@
 
 ## What this Framework Does
 
-The Token Rights Framework helps investors understand what they actually own when they buy a token. It provides a systematic way to evaluate and compare token rights across DeFi protocols by collecting and organizing data about governance power, economic benefits, and legal ownership.
+Understanding what a token represents requires substantial effort. Does it grant governance rights? Does it capture protocol revenue? Who owns the brand and IP? The answers exist, but they're often scattered across documentation, governance forums and entity structures. Each token is different, and finding these differences can be difficult and time-consuming.
+
+The Token Rights Framework puts the most important information in one place, with sources available to dive deeper. It provides a systematic way to evaluate and compare token rights across DeFi protocols by collecting and organizing data about governance power, economic benefits, and legal ownership.
 
 ### The Three Core Questions
 
-&#x20;Every token holder should be able to answer these questions::
+&#x20;Every token holder should be able to answer these questions:
 
 1. **Governance**: What decisions can token holders vote on?
 2. **Economic**: How does the token capture value from a protocol?
@@ -36,7 +38,7 @@ The framework organizes all data collection around these three categories.
 
     Protocols can have multiple entities (DAO, Foundation, Labs, equity-funded company, etc). The brand name, domain, IP, and development resources may be owned by a company, not by token holders.
 
-    Understanding the entity structure helps token holders identify what might be included in an acquisition or corporate restructuring..
+    Understanding the entity structure helps token holders identify what might be included in an acquisition or corporate restructuring.
 
 ### Data Definitions&#x20;
 
@@ -45,22 +47,20 @@ The framework organizes all data collection around these three categories.
 #### **Governance Decisions**
 
 * Whether token holders can vote on governance proposals (Token / None / Unknown)
-* Why we track it: Base level governance right - can you vote at all?
-
-#### **Governance Details**
-
 * Detailed explanation of governance scope and mechanics
-* Why we track it: The specifics matter. Can holders vote on everything? Are there restrictions? Do they need to stake? Is there a token threshold to create proposals?
+* Why we track it: Base level governance right - can holders vote at all? Can holders vote on everything? Are there restrictions? Do they need to stake? Is there a token threshold to create proposals?
 
 #### **Treasury Decisions**
 
 * Whether token holders can vote on treasury allocation (Token / None / Unknown)
+* Detailed explanation of treasury governance mechanics and constraints 
 * Why we track it: Treasury control is a key governance right - it determines if holders can direct what happens with a protocol’s treasury
 
 #### **Revenue Decisions**
 
 * Whether token holders can vote on revenue allocation (Token / None / Unknown)
-* Why we track it: This determines if holders can activate fee switches or change how protocol revenue is used
+* Detailed explanation of revenue governance mechanics and allocation options
+* Why we track it: This determines if holders can activate fee switches or change how protocol revenue is used. Can holders vote to redirect revenue streams? Are there limitations on how revenue can be allocated? What percentage of revenue is within governance scope versus automatically distributed to other stakeholders?
 
 #### **Fee Switch Status**
 
@@ -70,24 +70,24 @@ The framework organizes all data collection around these three categories.
 #### **Fee Switch Details**
 
 * Explanation of fee switch mechanics and history
-* Why we track it: Details matter for valuation. How much revenue goes to token holders? What's the governance process to turn it on? Has it been attempted before?
+* Why we track it: Details are important for valuation. How much revenue goes to token holders? What's the governance process to turn it on? Has it been attempted before?
 
 ### Economic Rights
 
 #### **Buybacks**
 
-* Whether the protocol uses revenue to buy back tokens (ACTIVE / INACTIVE / NONE / UNKNOWN)
+* Whether the protocol uses revenue to buy back tokens
 * Why we track it: Buybacks reduce circulating supply and are a form of value return to holders
-
-#### **Burns**
-
-* Whether tokens are burned (permanently removed from supply) (ACTIVE / INACTIVE / NONE / UNKNOWN)
-* Why we track it: Burns directly reduce token supply, creating deflationary pressure
 
 #### **Dividends / Revenue Share**
 
-* Whether token holders receive direct payments from protocol revenue (ACTIVE / INACTIVE / NONE / UNKNOWN)
-* Why we track it: Revenue sharing is a direct economic right granted to token holders
+* Whether token holders receive direct distributions from protocol revenue
+* Why we track it: Revenue sharing is a direct economic right granted to token holders, similar to equity dividends
+
+#### **Burns**
+
+* Whether tokens are burned (permanently removed from supply)
+* Why we track it: Burns directly reduce token supply, creating deflationary pressure
 
 #### **Value Accrual**
 
@@ -109,22 +109,17 @@ The framework organizes all data collection around these three categories.
 #### **IP & Brand**
 
 * Who owns the intellectual property and brand/trademark (Entity name / DAO / Unknown)
-* Why we track it: IP ownership determines who can monetize the protocol name and who benefits in an acquisition
+* Why we track it: IP ownership determines who can monetize the protocol name and who benefits in a potential acquisition
 
 #### **Domain**
 
 * Who owns the primary domain name (Entity name / DAO / Unknown)
 * Why we track it: Domain ownership controls user access and can be used to capture value independently of token holders
 
-#### **Fundraising**
+#### **Raise History**
 
-* Whether the protocol raised equity or token funding (EQUITY / TOKEN / NONE / UNKNOWN)
-* Why we track it: Equity raises create a separate class of stakeholders with potentially different incentives than token holders
-
-#### **Raise Details**
-
-* Details and links about fundraising rounds
-* Why we track it: Transparency about who invested, how much, and at what valuation helps identify potential conflicts
+* Whether the protocol raised funds through equity or token sales, including details and links
+* Why we track it: Equity raises create a separate class of stakeholders with potentially different incentives than token holders. Transparency about who invested, how much, and at what valuation helps identify potential conflicts
 
 #### **Equity Revenue Capture**
 
@@ -168,7 +163,7 @@ This tracks whether equity holders (VC investors, team) receive protocol revenue
 
 #### Why track both "Buybacks" and "Burns"?
 
-They're different mechanisms. Buybacks use protocol funds to purchase tokens from the market (reducing circulating supply, potentially supporting price). Burns permanently destroy tokens (reducing total supply). A protocol might do one, both, or neither.
+They're different mechanisms. Buybacks use protocol funds to purchase tokens from the market (reducing circulating supply, potentially creating buy pressure). Burns permanently destroy tokens (reducing total supply). A protocol might do one, both, or neither.
 
 #### What if the protocol says "Fee Switch: OFF" but plans to turn it on later?
 
@@ -184,7 +179,7 @@ Utility means functional benefits from holding the token beyond governance and s
 
 #### How do we verify this data?
 
-We ask protocols to provide documentation, links to governance proposals, onchain addresses, and official reports. Everything is cross-checked against public information. When data is unavailable or unclear, we mark it as "Unknown" rather than guessing.
+We ask protocols to provide documentation, links to governance proposals, onchain addresses, and official reports. Everything is cross-checked against public information. When data is unavailable or unclear, we mark it as "Unknown". Any protocol wishing to have their token rights added can fill out the form at the bottom of this page.
 
 #### Why not create risk scores or ratings?
 
@@ -198,8 +193,8 @@ We track each token separately since they often have different rights. A protoco
 
 * Token holders trying to understand what they own
 * Prospective investors comparing protocols before buying
-* Protocols looking to benchmark their tokenomics against peers
-* Researchers analyzing token design trends
+* Protocols looking to benchmark their tokenomics
+* Researchers analyzing token design
 
 #### How is this different from existing token classification frameworks?
 
