@@ -2,6 +2,32 @@
 
 We pride ourselves in producing inclusive, non-biased, and community driven statistics for the decentralised finance industry. We do our best to treat all projects equally with regards to what is and isn't included in TVL, how long it takes to list or update a project's TVL, and everything else.
 
+## All Metrics We Track
+
+DefiLlama tracks a wide range of metrics across DeFi. Each metric has its own open-source adapter repository where anyone can contribute. If you want to list your project, find the relevant metric below and submit a PR to the corresponding repo.
+
+| Metric | Description | Repository | Guide |
+| --- | --- | --- | --- |
+| **TVL** | Total Value Locked in protocol smart contracts | [DefiLlama-Adapters](https://github.com/DefiLlama/DefiLlama-Adapters) | [Guide](list-your-project/how-to-write-an-sdk-adapter.md) |
+| **Fees & Revenue** | Protocol fees, revenue, and income statement breakdown | [dimension-adapters](https://github.com/DefiLlama/dimension-adapters) (`fees/`) | [Guide](list-your-project/other-dashboards/) |
+| **DEX/Perp Volume** | Spot/swap and perpetual trading volume on decentralized exchanges | [dimension-adapters](https://github.com/DefiLlama/dimension-adapters) (`dexs/`) | [Guide](list-your-project/other-dashboards/) |
+| **Options Volume** | Notional and premium volume from options DEXs | [dimension-adapters](https://github.com/DefiLlama/dimension-adapters) (`options/`) | [Guide](list-your-project/other-dashboards/) |
+| **Aggregator Volume** | Trading volume routed through DEX aggregators | [dimension-adapters](https://github.com/DefiLlama/dimension-adapters) (`aggregators/`) | [Guide](list-your-project/other-dashboards/) |
+| **Bridge Aggregator Volume** | Volume routed through bridge aggregators | [dimension-adapters](https://github.com/DefiLlama/dimension-adapters) (`bridge-aggregators/`) | [Guide](list-your-project/other-dashboards/) |
+| **Yields** | APY and yield data across DeFi pools | [yield-server](https://github.com/DefiLlama/yield-server) | [Guide](https://github.com/DefiLlama/yield-server/blob/master/README.md) |
+| **Stablecoins** | Circulating supply and peg data for stablecoins | [peggedassets-server](https://github.com/DefiLlama/peggedassets-server) | [Guide](https://github.com/DefiLlama/peggedassets-server/blob/master/README.md) |
+| **Emissions** | Token emission and unlock schedules | [emissions-adapters](https://github.com/DefiLlama/emissions-adapters) | [Guide](list-your-project/emissions-dashboard/) |
+| **Oracles TVS** | Total Value Secured by oracle providers | [defillama-server](https://github.com/DefiLlama/defillama-server) | [Guide](list-your-project/oracles-tvs.md) |
+| **Coin Prices** | Token price adapters for unlisted coins | [coins](https://github.com/DefiLlama/defillama-server/tree/master/coins) | [Guide](coin-prices-api.md) |
+| **Bridges** | Bridge TVL and cross-chain transfer tracking | [bridges-server](https://github.com/DefiLlama/bridges-server) | — |
+| **Token Rights** | Governance, economic, and ownership rights | [Submit form](https://token-rights-teams.llama.fi/) | [Guide](list-your-project/token-rights.md) |
+
+{% hint style="info" %}
+All adapters are community-contributed and open-source. To list your project, fork the relevant repo, write an adapter, and submit a PR. Most adapters can be written with help from AI tools if pointed to the right repository and guide.
+{% endhint %}
+
+---
+
 ### Our Methodology
 
 At DefiLlama we consider the value of any tokens locked in the contracts of a protocol / platform as TVL. Below are some notes about how our calculations work.
