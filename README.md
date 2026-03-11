@@ -22,10 +22,6 @@ DefiLlama tracks a wide range of metrics across DeFi. Each metric has its own op
 | **Bridges** | Bridge TVL and cross-chain transfer tracking | [bridges-server](https://github.com/DefiLlama/bridges-server) | [Guide](https://github.com/DefiLlama/bridges-server/blob/master/README.md) |
 | **Token Rights** | Governance, economic, and ownership rights | [Submit form](https://token-rights-teams.llama.fi/) | [Guide](list-your-project/token-rights.md) |
 
-{% hint style="info" %}
-All adapters are community-contributed and open-source. To list your project, fork the relevant repo, write an adapter, and submit a PR. Most adapters can be written with help from AI tools if pointed to the right repository and guide.
-{% endhint %}
-
 ---
 
 ### Our Methodology
