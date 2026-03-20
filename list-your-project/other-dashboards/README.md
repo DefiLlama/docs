@@ -191,7 +191,17 @@ Our fees dimensions follow an income statement model inspired by GAAP accounting
 
 * `dailyFees`: (**Required**) All fees and value collected from _all_ sources (users, LPs, yield generation, liquid staking rewards, etc.), representing the total value flow into the protocol's ecosystem. This maps to **Gross Protocol Revenue** on the income statement — everything the protocol could theoretically keep if it took 100%. For a DEX this is total swap fees, for lending this is all borrow interest, for liquid staking this is all staking rewards from staked ETH. Block rewards are **not** fees — they are incentives. For chain adapters, track only transaction fees paid by users (not perp DEX fees built on top).
 * `dailyUserFees`: (Optional, but helpful) The portion of `dailyFees` directly paid by end-users (e.g., swap fees, borrow interest, liquidation penalties, marketplace commissions paid by buyers/sellers).
-* `dailySupplySideRevenue`: (**Required when applicable**) The portion of `dailyFees` distributed to liquidity providers, lenders, stakers, or other suppliers of capital/resources. This maps to **Cost of Revenue** on the income statement. Examples: LP fees on a DEX, interest paid to lenders, staking rewards passed through to stETH holders, blob fees to mainnet for rollups, validator commissions, trading rebates.
+* `dailySupplySideRevenue`: (**Required when applicable**) The portion of `dailyFees` distributed to liquidity providers, lenders, stakers, or other suppliers of capital/resources — as well as fees paid out to integrators, referrers, partners, and creators. This maps to **Cost of Revenue** on the income statement. Examples: LP fees on a DEX, interest paid to lenders, staking rewards passed through to stETH holders, blob fees to mainnet for rollups, validator commissions, trading rebates, integrator/referral fees, partner revenue shares, creator royalties.
+
+  **Real-world supply side examples from [`dimension-adapters`](https://github.com/DefiLlama/dimension-adapters):**
+
+  * **Creator / Referral platform** ([Zora](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/zora-sofi.ts)): Creator rewards + trade referrer + platform referrer fees all flow to `dailySupplySideRevenue`. Protocol rewards = `dailyRevenue`.
+  * **DEX LP fees** ([e3](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/e3.ts)): LP fees from trading = `dailySupplySideRevenue`, token buybacks = `dailyHoldersRevenue`.
+  * **Perp LP + rebates** ([GMX](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/gmx.ts)): 70% of swap/margin/mint-redeem fees to GLP holders = `dailySupplySideRevenue`, 30% to GMX stakers = `dailyHoldersRevenue`.
+  * **Creator royalties** ([BasePaint](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/basepaint.ts)): 90% of mint fees to artists (`METRIC.CREATOR_FEES`) = `dailySupplySideRevenue`, 10% to protocol.
+  * **Lending interest** ([Aave](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/aave-v3.ts)): Interest distributed to lenders = `dailySupplySideRevenue`. Also includes Paraswap partner fees as a supply side cost.
+  * **Liquid staking** ([Lido](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/lido.ts)): 90% of staking + MEV rewards passed to stETH holders = `dailySupplySideRevenue`.
+  * **Savings/DSR costs** ([MakerDAO](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/makerdao.ts)): DSR interest paid to depositors + USDS staking rewards = `dailySupplySideRevenue` (uses `allowNegativeValue: true`).
 * `dailyRevenue`: (**Required**) The portion of `dailyFees` kept by the protocol entity itself. This maps to **Gross Profit** on the income statement. `dailyRevenue = dailyFees - dailySupplySideRevenue`.
 * `dailyProtocolRevenue`: (Optional, clarifies revenue split) The portion of `dailyRevenue` allocated to the protocol's treasury or core team.
 * `dailyHoldersRevenue`: (Optional, but important for protocols distributing to holders) All value flowing to governance token holders. This maps to **Tokenholder Income** on the income statement. Includes buybacks, token burns, direct distributions, AND income from external sources (airdrops from other protocols, bribes from other protocols, etc.).
@@ -422,7 +432,7 @@ We moved to a system inspired by **GAAP** accounting standards. The goal is:
 
 ### Income Statement Template
 
-This template shows the most common revenue streams and costs, and where each belongs:
+This template is a **reference for deciding which dimension and breakdown label to use** when writing your adapter. For each revenue stream or cost in your protocol, find it in the template below to determine whether it belongs in `dailyFees`, `dailySupplySideRevenue`, `dailyRevenue`, `dailyHoldersRevenue`, etc. Then use the corresponding label in your `.add()` calls and `breakdownMethodology` object (see the code examples further below).
 
 **Gross Protocol Revenue** (`dailyFees`):
 * \+ Swap Fees
@@ -440,25 +450,11 @@ This template shows the most common revenue streams and costs, and where each be
 * \- Blob fees to mainnet (for rollups)
 * \- Validator Commissions
 * \- Trading Rebates (including those funded by token emissions)
+* \- Integrator / Referral Fees (paid to partners, integrators, or referrers)
+* \- Creator Royalties / Fees
 
 **Gross Profit** (`dailyRevenue`) = Gross Protocol Revenue - Cost of Funds
 
-**Operating Expenses:**
-* \- Offchain expenses such as salaries (difficult to track, ignore if not possible)
-* \- Token Emissions (liquidity mining, staking rewards)
-* \- Airdrops (user acquisition / retroactive rewards, ideally amortize over length of points program)
-* \- DAO Grants
-
-**Operating Income** = Gross Profit - Operating Expenses
-
-**Other Income:**
-* \+ Treasury interest income (excluding from own token)
-* \+ Treasury investment income
-* \+ Protocol owned liquidity income
-* \+ Grant revenue
-* \+ Third party liquidity incentives
-
-**Net Income** = Operating Income + Other Income
 
 ---
 
@@ -475,9 +471,83 @@ This template shows the most common revenue streams and costs, and where each be
 
 **Tokenholder Income** = Capital Allocations + Other Tokenholder Flows
 
-*Other Incentives (OFF STATEMENT):*
-* \+ Third party liquidity incentives
-* \+ Points programs
+### How to Implement This in Your Adapter
+
+The income statement above maps directly to your `.add()` calls and `breakdownMethodology`. Here are compact examples from real adapters showing different protocol types:
+
+#### Creator / Referral Platform (Zora)
+
+```typescript
+// fees/zora-sofi.ts — creators, referrers, and protocol each get a share
+dailyFees.addUSDValue(creatorRewards, 'Creator Rewards')
+dailyFees.addUSDValue(tradeReferrer, 'Trade Referrer')
+dailyFees.addUSDValue(platformReferrer, 'Platform Referrer')
+dailyFees.addUSDValue(protocolRewards, 'Protocol Rewards')
+
+// Creators + referrers = supply side (they are "suppliers" of content/traffic)
+dailySupplySideRevenue.addUSDValue(creatorRewards, 'Creator Rewards')
+dailySupplySideRevenue.addUSDValue(tradeReferrer, 'Trade Referrer')
+dailySupplySideRevenue.addUSDValue(platformReferrer, 'Platform Referrer')
+
+// Protocol keeps the rest
+dailyRevenue.addUSDValue(protocolRewards, 'Protocol Rewards')
+
+const breakdownMethodology = {
+  Fees: {
+    'Creator Rewards': 'Rewards distributed to content creators.',
+    'Trade Referrer': 'Fees paid to the address that referred the trade.',
+    'Platform Referrer': 'Fees paid to the platform that referred the user.',
+    'Protocol Rewards': 'Fees retained by the Zora protocol.',
+  },
+  SupplySideRevenue: {
+    'Creator Rewards': 'Creator rewards are supply side costs.',
+    'Trade Referrer': 'Trade referral fees are supply side costs.',
+    'Platform Referrer': 'Platform referral fees are supply side costs.',
+  },
+  Revenue: {
+    'Protocol Rewards': 'Protocol rewards retained by Zora.',
+  },
+}
+```
+
+#### Perp DEX with LP Split (GMX)
+
+```typescript
+// fees/gmx.ts — 70% to GLP holders, 30% to GMX stakers
+import { METRIC } from '../../helpers/metrics';
+
+dailyFees.add(token, mintFees, METRIC.MINT_REDEEM_FEES)
+dailyFees.add(token, marginFees, METRIC.MARGIN_FEES)
+dailyFees.add(token, swapFees, METRIC.SWAP_FEES)
+
+// 70% of all fees → supply side (GLP holders)
+dailySupplySideRevenue.add(token, mintFees * 0.7, 'Mint/Redeem Fees To GLP')
+dailySupplySideRevenue.add(token, marginFees * 0.7, 'Margin Fees To GLP')
+dailySupplySideRevenue.add(token, swapFees * 0.7, 'Swap Fees To GLP')
+
+// 30% → holders revenue (GMX stakers)
+dailyHoldersRevenue.add(token, mintFees * 0.3, 'Mint/Redeem Fees To GMX Stakers')
+dailyHoldersRevenue.add(token, marginFees * 0.3, 'Margin Fees To GMX Stakers')
+dailyHoldersRevenue.add(token, swapFees * 0.3, 'Swap Fees To GMX Stakers')
+```
+
+#### Liquid Staking (Lido)
+
+```typescript
+// fees/lido.ts — 90% to stakers, 10% protocol fee
+import { METRIC } from '../../helpers/metrics';
+
+dailyFees.add(token, stakingRewards, METRIC.STAKING_REWARDS)
+dailyFees.add(token, mevRewards, METRIC.MEV_REWARDS)
+
+// 90% passed through to stETH holders
+dailySupplySideRevenue.add(token, stakingRewards * 0.9, 'Staking Rewards To Stakers')
+dailySupplySideRevenue.add(token, mevRewards * 0.9, 'MEV Rewards To Stakers')
+
+// 10% kept by protocol
+dailyRevenue.add(token, stakingRewards * 0.1, 'Staking Rewards Fee')
+dailyRevenue.add(token, mevRewards * 0.1, 'MEV Rewards Fee')
+```
 
 ### When to Use Breakdown Labels
 
@@ -760,10 +830,16 @@ const adapter: SimpleAdapter = {
 ### Real-World Examples
 
 Browse these adapters for complete implementations:
-* [Aave](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/aave-v3.ts) — Multi-market lending with GHO breakdown
+* [Aave](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/aave-v3.ts) — Multi-market lending with GHO breakdown and Paraswap partner fees
 * [Fluid](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/fluid/index.ts) — Lending with treasury/lender split and buybacks
 * [Liquity](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/liquity.ts) — CDP with borrow, redemption, and liquidation fees
 * [Hyperliquid](https://github.com/DefiLlama/dimension-adapters/blob/master/dexs/hyperliquid-spot/index.ts) — DEX with unit markets and HYPE buybacks
+* [GMX](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/gmx.ts) — Perp DEX with 70/30 LP/staker split
+* [Lido](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/lido.ts) — Liquid staking with staking + MEV reward breakdown
+* [Zora](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/zora-sofi.ts) — Creator/referral platform with integrator fees as supply side
+* [BasePaint](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/basepaint.ts) — Creator royalties (90% to artists)
+* [MakerDAO](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/makerdao.ts) — CDP with DSR costs and stability fees
+* [Ethereum](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/ethereum/index.ts) — Chain adapter with base/priority fee breakdown
 
 For full income statement examples showing how major protocols in each category break down their financials, see the [examples folder](./examples/).
 
