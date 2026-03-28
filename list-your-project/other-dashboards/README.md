@@ -149,10 +149,86 @@ This checks if your adapter correctly returns data for the requested time period
 
 ### Adapter Version
 
-The top-level `version` key specifies the adapter version:
+The top-level `version` key specifies which fetch signature the adapter uses and how it is scheduled.
 
-* **Version 2 (Recommended)**: `version: 2`. These adapters accept arbitrary start and end timestamps as input to `fetch`, allowing for flexible time ranges.
-* **Version 1**: `version: 1`. Use this only if your `fetch` function can run for fixed time periods only (00:00 to 23:59 of a given day), typically because the underlying data source only provides daily data.
+#### Version 2 (Recommended)
+
+Use version 2 whenever your data source can return data for an arbitrary time range. The `fetch` function receives a `FetchOptions` object with `startTimestamp`, `endTimestamp`, and all the helpers (`createBalances`, `getLogs`, `api`, etc.).
+
+Version 2 is the only version that supports `pullHourly: true`, which lets the system call your adapter in hourly increments for more granular data and avoids recomputing the same period.
+
+```typescript
+import { FetchOptions, SimpleAdapter } from "../../adapters/types";
+import { CHAIN } from "../../helpers/chains";
+
+const fetch = async (options: FetchOptions) => {
+  const dailyFees = options.createBalances();
+  const logs = await options.getLogs({
+    target: "0x1234...abcd",
+    eventAbi: "event FeeCollected(address token, uint256 amount)",
+  });
+  logs.forEach(log => dailyFees.add(log.token, log.amount, 'Trading Fees'));
+  return { dailyFees, dailyRevenue: dailyFees };
+};
+
+const adapter: SimpleAdapter = {
+  version: 2,
+  pullHourly: true,  // optional, enables hourly granularity
+  fetch,
+  chains: [CHAIN.ETHEREUM],
+  start: '2024-01-01',
+  methodology: {
+    Fees: "Trading fees collected from swaps.",
+    Revenue: "All fees are kept by the protocol.",
+  },
+};
+
+export default adapter;
+```
+
+#### Version 1
+
+Use version 1 **only** when your data source provides daily data that cannot be split into arbitrary time ranges — for example, an external API that returns one value per calendar day, or a Dune query that only makes sense at day boundaries. The `fetch` function receives `(timestamp, chainBlocks, options)` where `timestamp` is the start-of-day unix timestamp.
+
+Version 1 does **not** support `pullHourly`.
+
+```typescript
+import { FetchOptions, SimpleAdapter } from "../../adapters/types";
+import { CHAIN } from "../../helpers/chains";
+import { httpGet } from "../../utils/fetchURL";
+
+const fetch = async (_a: any, _b: any, options: FetchOptions) => {
+  const dateStr = new Date(options.startOfDay * 1000).toISOString().split('T')[0];
+  const data = await httpGet(`https://api.example.com/daily-fees?date=${dateStr}`);
+  return {
+    dailyFees: data.fees,
+    dailyRevenue: data.revenue,
+  };
+};
+
+const adapter: SimpleAdapter = {
+  version: 1,
+  fetch,
+  chains: [CHAIN.SOLANA],
+  start: '2024-06-01',
+  methodology: {
+    Fees: "Daily fees fetched from external API.",
+    Revenue: "All fees are protocol revenue.",
+  },
+};
+
+export default adapter;
+```
+
+#### When to Use Which
+
+| | Version 2 | Version 1 |
+| --- | --- | --- |
+| **Use when** | On-chain logs, contract calls, subgraphs, Dune queries with timestamp filters | External API that only returns daily aggregates |
+| **Fetch signature** | `(options: FetchOptions)` | `(timestamp, chainBlocks, options)` |
+| **Time range** | Arbitrary start/end timestamps | Fixed day (00:00–23:59 UTC) |
+| **`pullHourly`** | Supported | Not supported |
+| **Preference** | Always prefer this | Use only when v2 is not possible |
 
 ### Core Dimensions
 
