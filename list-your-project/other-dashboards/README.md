@@ -848,7 +848,7 @@ For full income statement examples showing how major protocols in each category 
 Follow these rules when writing adapters:
 
 * **Prefer on-chain data**: Use on-chain event logs and contract calls where possible. We are stricter about this for chains where we maintain our own indexer, or where there is significant volume/fees, or where you suspect wash trading.
-* **Use `pullHourly: true`**: This avoids recomputing data for the same time period repeatedly, and provides more granular hourly data.
+* **Use `pullHourly: true`** (version 2 adapters only): This avoids recomputing data for the same time period repeatedly, and provides more granular hourly data.
 * **Never swallow errors**: It's better to fail than to return incorrect data. If a small chain with $10K volume fails, it shouldn't break an adapter that tracks $100M daily on other chains — return 0 for the failing chain.
 * **Use/add helper code**: When multiple adapters use similar logic, extract it into shared helpers.
 * **No npm dependencies**: Do not add npm packages. This leads to bloat.
