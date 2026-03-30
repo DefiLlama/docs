@@ -3,12 +3,7 @@
 The majority of adapters on DefiLlama are contributed and maintained by their respective communities, with all changes being coordinated through the [DefiLlama/DefiLlama-Adapters](https://github.com/DefiLlama/DefiLlama-Adapters) github repo.
 
 {% hint style="info" %}
-Do you want to list a project on our yields or stablecoin dashboard? Check the following guides then:
-
-* [Yields](https://github.com/DefiLlama/yield-server/blob/master/README.md)
-* [Stablecoin](https://github.com/DefiLlama/peggedassets-server/blob/master/README.md)
-* [Liquidations](https://github.com/DefiLlama/DefiLlama-Adapters/blob/main/liquidations/README.md)
-* [Volume and fees dashboards](other-dashboards/)
+This page covers listing a **TVL adapter**. For other metrics (fees, volume, yields, stablecoins, emissions, etc.), see the [full list of all metrics we track](../README.md#all-metrics-we-track) with links to each repo and guide.
 {% endhint %}
 
 If you'd like to list a DeFi project on DefiLlama:

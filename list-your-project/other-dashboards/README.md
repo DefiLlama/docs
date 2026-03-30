@@ -75,8 +75,8 @@ const fetch = async (options: FetchOptions) => {
 
 const methodology = {
   Fees: 'All fees paid by users for swap and bridge tokens via LI.FI.',
-  Revenue: 'Fees are distributed to LI.FI.',
-  ProtocolRevenue: 'Fees are distributed to LI.FI.',
+  Revenue: 'All fees are kept by LI.FI as protocol revenue.',
+  ProtocolRevenue: 'All fees are distributed to LI.FI treasury.',
 }
 
 const adapter: SimpleAdapter = {
@@ -111,8 +111,9 @@ import { CHAIN } from "../../helpers/chains";
 
 const methodology = {
   Fees: 'All fees paid by users for protocol operations.',
-  Revenue: 'Fees distributed to the protocol.',
-  ProtocolRevenue: 'Fees distributed to the protocol treasury.',
+  Revenue: 'Portion of fees kept by the protocol after paying suppliers.',
+  SupplySideRevenue: 'Portion of fees distributed to liquidity providers.',
+  ProtocolRevenue: 'Portion of gross profit allocated to protocol treasury.',
 }
 
 const adapter: SimpleAdapter = {
@@ -148,16 +149,92 @@ This checks if your adapter correctly returns data for the requested time period
 
 ### Adapter Version
 
-The top-level `version` key specifies the adapter version:
+The top-level `version` key specifies which fetch signature the adapter uses and how it is scheduled.
 
-* **Version 2 (Recommended)**: `version: 2`. These adapters accept arbitrary start and end timestamps as input to `fetch`, allowing for flexible time ranges.
-* **Version 1**: `version: 1`. Use this only if your `fetch` function can run for fixed time periods only (00:00 to 23:59 of a given day), typically because the underlying data source only provides daily data.
+#### Version 2 (Recommended)
+
+Use version 2 whenever your data source can return data for an arbitrary time range. The `fetch` function receives a `FetchOptions` object with `startTimestamp`, `endTimestamp`, and all the helpers (`createBalances`, `getLogs`, `api`, etc.).
+
+Version 2 is the only version that supports `pullHourly: true`, which lets the system call your adapter in hourly increments for more granular data and avoids recomputing the same period.
+
+```typescript
+import { FetchOptions, SimpleAdapter } from "../../adapters/types";
+import { CHAIN } from "../../helpers/chains";
+
+const fetch = async (options: FetchOptions) => {
+  const dailyFees = options.createBalances();
+  const logs = await options.getLogs({
+    target: "0x1234...abcd",
+    eventAbi: "event FeeCollected(address token, uint256 amount)",
+  });
+  logs.forEach(log => dailyFees.add(log.token, log.amount, 'Trading Fees'));
+  return { dailyFees, dailyRevenue: dailyFees };
+};
+
+const adapter: SimpleAdapter = {
+  version: 2,
+  pullHourly: true,  // optional, enables hourly granularity
+  fetch,
+  chains: [CHAIN.ETHEREUM],
+  start: '2024-01-01',
+  methodology: {
+    Fees: "Trading fees collected from swaps.",
+    Revenue: "All fees are kept by the protocol.",
+  },
+};
+
+export default adapter;
+```
+
+#### Version 1
+
+Use version 1 **only** when your data source provides daily data that cannot be split into arbitrary time ranges — for example, an external API that returns one value per calendar day, or a Dune query that only makes sense at day boundaries. The `fetch` function receives `(timestamp, chainBlocks, options)` where `timestamp` is the start-of-day unix timestamp.
+
+Version 1 does **not** support `pullHourly`.
+
+```typescript
+import { FetchOptions, SimpleAdapter } from "../../adapters/types";
+import { CHAIN } from "../../helpers/chains";
+import { httpGet } from "../../utils/fetchURL";
+
+const fetch = async (_a: any, _b: any, options: FetchOptions) => {
+  const dateStr = new Date(options.startOfDay * 1000).toISOString().split('T')[0];
+  const data = await httpGet(`https://api.example.com/daily-fees?date=${dateStr}`);
+  return {
+    dailyFees: data.fees,
+    dailyRevenue: data.revenue,
+  };
+};
+
+const adapter: SimpleAdapter = {
+  version: 1,
+  fetch,
+  chains: [CHAIN.SOLANA],
+  start: '2024-06-01',
+  methodology: {
+    Fees: "Daily fees fetched from external API.",
+    Revenue: "All fees are protocol revenue.",
+  },
+};
+
+export default adapter;
+```
+
+#### When to Use Which
+
+| | Version 2 | Version 1 |
+| --- | --- | --- |
+| **Use when** | On-chain logs, contract calls, subgraphs, Dune queries with timestamp filters | External API that only returns daily aggregates |
+| **Fetch signature** | `(options: FetchOptions)` | `(timestamp, chainBlocks, options)` |
+| **Time range** | Arbitrary start/end timestamps | Fixed day (00:00–23:59 UTC) |
+| **`pullHourly`** | Supported | Not supported |
+| **Preference** | Always prefer this | Use only when v2 is not possible |
 
 ### Core Dimensions
 
 Your `fetch` function should return an object containing properties corresponding to the metrics (dimensions) relevant to the dashboard you are targeting. All dimensions should be returned as balance objects (`Object<string>`) where keys are the token identifiers (e.g., `ethereum:0x...`) and values are the raw amounts (no decimal adjustments).
 
-> **Minimum Requirements:** To be listed, your adapter **must** provide accurate `dailyFees` and `dailyRevenue` dimensions. Other daily dimensions like `dailyHoldersRevenue` are highly encouraged for better insights but are secondary. Cumulative `total*` dimensions are deprecated and should not be used.
+> **Minimum Requirements:** To be listed, your adapter **must** provide accurate `dailyFees` and `dailyRevenue` dimensions. `dailySupplySideRevenue` is strongly encouraged whenever the protocol has supply-side costs. `dailyHoldersRevenue` should be included for protocols that distribute value to tokenholders. Always include breakdown labels and `breakdownMethodology`. Cumulative `total*` dimensions are deprecated and should not be used.
 
 Here are the standard dimensions grouped by dashboard type:
 
@@ -186,15 +263,26 @@ Here are the standard dimensions grouped by dashboard type:
 
 **Fees Dimensions:**
 
-* `dailyFees`: (**Required**) All fees and value collected from _all_ sources (users, LPs, yield generation, liquid staking rewards, etc.), excluding direct transaction/gas costs paid by users to the network. This represents the total value flow into the protocol's ecosystem due to its operation.
+Our fees dimensions follow an income statement model inspired by GAAP accounting standards. See the "Breakdown Labels & Income Statement" section below for the full methodology and rationale.
+
+* `dailyFees`: (**Required**) All fees and value collected from _all_ sources (users, LPs, yield generation, liquid staking rewards, etc.), representing the total value flow into the protocol's ecosystem. This maps to **Gross Protocol Revenue** on the income statement — everything the protocol could theoretically keep if it took 100%. For a DEX this is total swap fees, for lending this is all borrow interest, for liquid staking this is all staking rewards from staked ETH. Block rewards are **not** fees — they are incentives. For chain adapters, track only transaction fees paid by users (not perp DEX fees built on top).
 * `dailyUserFees`: (Optional, but helpful) The portion of `dailyFees` directly paid by end-users (e.g., swap fees, borrow interest, liquidation penalties, marketplace commissions paid by buyers/sellers).
-* `dailyRevenue`: (**Required**) The portion of `dailyFees` kept by the protocol entity itself, distributed either to the treasury (`dailyProtocolRevenue`) or governance token holders (`dailyHoldersRevenue`).
-  * `dailyRevenue = dailyProtocolRevenue + dailyHoldersRevenue`
+* `dailySupplySideRevenue`: (**Required when applicable**) The portion of `dailyFees` distributed to liquidity providers, lenders, stakers, or other suppliers of capital/resources — as well as fees paid out to integrators, referrers, partners, and creators. This maps to **Cost of Revenue** on the income statement. Examples: LP fees on a DEX, interest paid to lenders, staking rewards passed through to stETH holders, blob fees to mainnet for rollups, validator commissions, trading rebates, integrator/referral fees, partner revenue shares, creator royalties.
+
+  **Real-world supply side examples from [`dimension-adapters`](https://github.com/DefiLlama/dimension-adapters):**
+
+  * **Creator / Referral platform** ([Zora](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/zora-sofi.ts)): Creator rewards + trade referrer + platform referrer fees all flow to `dailySupplySideRevenue`. Protocol rewards = `dailyRevenue`.
+  * **DEX LP fees** ([e3](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/e3.ts)): LP fees from trading = `dailySupplySideRevenue`, token buybacks = `dailyHoldersRevenue`.
+  * **Perp LP + rebates** ([GMX](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/gmx.ts)): 70% of swap/margin/mint-redeem fees to GLP holders = `dailySupplySideRevenue`, 30% to GMX stakers = `dailyHoldersRevenue`.
+  * **Creator royalties** ([BasePaint](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/basepaint.ts)): 90% of mint fees to artists (`METRIC.CREATOR_FEES`) = `dailySupplySideRevenue`, 10% to protocol.
+  * **Lending interest** ([Aave](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/aave-v3.ts)): Interest distributed to lenders = `dailySupplySideRevenue`. Also includes Paraswap partner fees as a supply side cost.
+  * **Liquid staking** ([Lido](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/lido.ts)): 90% of staking + MEV rewards passed to stETH holders = `dailySupplySideRevenue`.
+  * **Savings/DSR costs** ([MakerDAO](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/makerdao.ts)): DSR interest paid to depositors + USDS staking rewards = `dailySupplySideRevenue` (uses `allowNegativeValue: true`).
+* `dailyRevenue`: (**Required**) The portion of `dailyFees` kept by the protocol entity itself. This maps to **Gross Profit** on the income statement. `dailyRevenue = dailyFees - dailySupplySideRevenue`.
 * `dailyProtocolRevenue`: (Optional, clarifies revenue split) The portion of `dailyRevenue` allocated to the protocol's treasury or core team.
-* `dailyHoldersRevenue`: (Optional, but important for protocols distributing to holders) The portion of `dailyRevenue` distributed to governance token holders (e.g., via staking rewards, buybacks, burns).
-* `dailySupplySideRevenue`: (Optional, but helpful) The portion of `dailyFees` distributed to liquidity providers, lenders, or other suppliers of capital/resources essential to the protocol's function.
-* `dailyBribeRevenue`: (Optional, specific use case) Governance token paid as bribe/incentive for token holder action.
-* `dailyTokenTax`: (Optional, specific use case) Fees generated from a tax applied to token transfers.
+* `dailyHoldersRevenue`: (Optional, but important for protocols distributing to holders) All value flowing to governance token holders. This maps to **Tokenholder Income** on the income statement. Includes buybacks, token burns, direct distributions, AND income from external sources (airdrops from other protocols, bribes from other protocols, etc.).
+
+> **Deprecated:** `dailyBribeRevenue` and `dailyTokenTax` are deprecated as separate dimensions. Instead, include these as labeled sub-sections within `dailyHoldersRevenue` (e.g., `dailyHoldersRevenue.add(token, amount, 'Bribes from Protocol X')`).
 
 **Fee/Revenue Attribution Examples by Protocol Type:**
 
@@ -206,16 +294,18 @@ If you are unsure how to classify fees and revenues, refer to this table or cont
 | ----------------- | ------------------------------------------- | ------------------------------------------ | ---------------------------------------------- | -------------------------------------- | -------------------------------- | -------------------------- | ------------------------------- | ---------------------------------- | -------------------------------- |
 | UserFees          | Swap fees paid by users                     | Interest paid by borrowers                 | Gas fees paid by users                         | Fees paid by users                     | Fees paid by users               | Interest paid by borrowers | % of rewards paid to protocol   | Paid management + performance fees | Fees paid by users               |
 | Fees              | =UserFees                                   | =UserFees                                  | =UserFees                                      | =UserFees                              | UserFees + burn/mint fees        | =UserFees                  | Staking rewards                 | Yield                              | =UserFees                        |
+| SupplySideRevenue | LPs revenue                                 | Interest paid to lenders                   | Sequencer costs, blob fees                     | Creator earnings                       | LP revenue, trading rebates      | \*                         | Revenue earned by stETH holders | Yield excluding protocol fees      | LPs revenue                      |
 | Revenue           | % of swap fees going to protocol governance | % of interest going to protocol governance | Burned coins (fees-sequencerCosts for rollups) | Marketplace revenue + creator earnings | Protocol governance revenue      | =ProtocolRevenue           | =ProtocolRevenue                | =ProtocolRevenue                   | =ProtocolRevenue                 |
 | ProtocolRevenue   | % of swap fees going to treasury            | % of interest going to protocol            | \*                                             | Marketplace revenue                    | Value going to treasury          | Interest going to treasury | =UserFees                       | =UserFees                          | % of fees going to treasury      |
 | HoldersRevenue    | Money going to gov token holders            | \*                                         | \*                                             | \*                                     | Value going to gov token holders | \*                         | \*                              | \*                                 | % of fees going to token holders |
-| SupplySideRevenue | LPs revenue                                 | Interest paid to lenders                   | \*                                             | \*                                     | LP revenue                       | \*                         | Revenue earned by stETH holders | Yield excluding protocol fees      | LPs revenue                      |
 
 > **Notes:**
 >
 > * Protocol governance includes treasury + gov token holders.
 > * `Revenue = HoldersRevenue + ProtocolRevenue`.
+> * `Revenue = Fees - SupplySideRevenue`.
 > * Asterisk (\*) indicates typically not applicable or zero for that category.
+> * For chains: only track transaction fees paid by users. Perp DEX fees on Hyperliquid L1 are tracked under the perp adapter, not the chain adapter.
 
 ## Implementation Steps
 
@@ -386,10 +476,11 @@ Always include a `methodology` object to explain how your metrics are calculated
 
 ```typescript
 const methodology = {
-  Fees: "Describes how total fees are calculated (e.g., Users pay 0.3% on each swap).",
-  Revenue: "Describes how protocol revenue is calculated (e.g., Protocol keeps 0.05% of each swap).",
-  SupplySideRevenue: "Describes how revenue distributed to LPs/suppliers is calculated (e.g., LPs receive 0.25% of each swap)."
-  // Add methodology for other dimensions like Volume, PremiumVolume etc. as applicable
+  Fees: "All swap fees paid by traders (0.3% per trade).",
+  Revenue: "Protocol keeps 0.05% of each swap after paying LPs.",
+  SupplySideRevenue: "LPs receive 0.25% of each swap as liquidity incentive.",
+  HoldersRevenue: "Protocol buybacks funded from treasury revenue.",
+  ProtocolRevenue: "0.05% of swap fees allocated to protocol treasury.",
 }
 
 const adapter: SimpleAdapter = {
@@ -401,60 +492,445 @@ const adapter: SimpleAdapter = {
 }
 ```
 
+The `methodology` object provides a one-line summary per dimension. For detailed per-label explanations, use `breakdownMethodology` (see below).
+
 ## Breakdown Labels & Income Statement
 
-Our adapter allows to break data into multiple sub-parts, you may want to use breakdown labels when:
+### Why We Use an Income Statement Model
 
-* Adapter has multiple sources of fees
-* Adapter has multiple destinations to distribute fees
+Our previous system only displayed aggregated numbers with no breakdown. Users didn't know what we were counting (e.g., does Ethereum fees include blob fees?), there was no way to tell if a new revenue stream was being tracked, and we only captured tokenholder income from burns/distributions while missing airdrops, bribes, etc.
 
-#### Add breakdown labels
+We moved to a system inspired by **GAAP** accounting standards. The goal is:
+* Break down each component as much as possible
+* Name and description of each component must be easy to understand — if you were a user and saw this breakdown, would you understand what each thing is?
+* When a user wonders "does this include X revenue stream/cost?" it should be trivial to answer by looking at the breakdown
+* Include every way that tokenholders make money, even if it's coming from another protocol
 
-```js
-// instead add all fees into dailyFees
-dailyFees.add('0x0000000000000000000000000000000000000000', 1e18)
+### Income Statement Template
 
-// you can break fees into subparts - for Lido
-dailyFees.add('0x0000000000000000000000000000000000000000', 5e17, 'Staking Rewards')
-dailyFees.add('0x0000000000000000000000000000000000000000', 5e17, 'MEV Rewards')
+This template is a **reference for deciding which dimension and breakdown label to use** when writing your adapter. For each revenue stream or cost in your protocol, find it in the template below to determine whether it belongs in `dailyFees`, `dailySupplySideRevenue`, `dailyRevenue`, `dailyHoldersRevenue`, etc. Then use the corresponding label in your `.add()` calls and `breakdownMethodology` object (see the code examples further below).
 
-// you can break fees into subparts - for Aave
-dailyFees.add('0x0000000000000000000000000000000000000000', 6e17, 'Borrow Interest')
-dailyFees.add('0x0000000000000000000000000000000000000000', 2e17, 'GHO Borrow Interest')
-dailyFees.add('0x0000000000000000000000000000000000000000', 2e17, 'Liquidation Fees')
+**Gross Protocol Revenue** (`dailyFees`):
+* \+ Swap Fees
+* \+ Liquidation Fees
+* \+ Interest Income (borrow interest)
+* \+ Staking Rewards
+* \+ MEV Captured
+* \+ Gas Fees (transaction fees on chains and rollups)
 
-// you can break fees into subparts - for Euler
-dailyFees.add('0x0000000000000000000000000000000000000000', 6e17, 'Borrow Interest')
-dailyFees.add('0x0000000000000000000000000000000000000000', 2e17, 'Protocol Fees')
-dailyFees.add('0x0000000000000000000000000000000000000000', 2e17, 'Curators Fees')
-```
+**Cost of Funds** (`dailySupplySideRevenue`):
+* \- LP Payments
+* \- Interest Expenses (paid to lenders/depositors)
+* \- Staking Rewards, less fees (passed through to stakers)
+* \- MEV paid to stakers, less fees
+* \- Blob fees to mainnet (for rollups)
+* \- Validator Commissions
+* \- Trading Rebates (including those funded by token emissions)
+* \- Integrator / Referral Fees (paid to partners, integrators, or referrers)
+* \- Creator Royalties / Fees
 
-Because label is a string, you can put anything into it, please check our redefine labels and use them except your adapter has specific labels. [https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/metrics.ts](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/metrics.ts)
+**Gross Profit** (`dailyRevenue`) = Gross Protocol Revenue - Cost of Funds
 
-#### Describe your labels
 
-If you add labels to adapter, always include a `breakdownMethodology` object to explain how your labels are calculated.
+---
 
-```js
+**Tokenholder Income** (`dailyHoldersRevenue`) — OFF STATEMENT:
+
+*Capital Allocations:*
+* \+ Treasury Buybacks
+* \+ Tokenholder Distributions
+
+*Other Tokenholder Flows:*
+* \+ Airdrops Received by Tokenholders from Other Protocols (e.g., Binance Earn where BNB stakers receive airdrops from tokens that launch on Binance)
+* \+ Bribes Received by Tokenholders from Other Protocols
+* \+ Other Off-Protocol Tokenholder Income
+
+**Tokenholder Income** = Capital Allocations + Other Tokenholder Flows
+
+### How to Implement This in Your Adapter
+
+The income statement above maps directly to your `.add()` calls and `breakdownMethodology`. Here are compact examples from real adapters showing different protocol types:
+
+#### Creator / Referral Platform (Zora)
+
+```typescript
+// fees/zora-sofi.ts — creators, referrers, and protocol each get a share
+dailyFees.addUSDValue(creatorRewards, 'Creator Rewards')
+dailyFees.addUSDValue(tradeReferrer, 'Trade Referrer')
+dailyFees.addUSDValue(platformReferrer, 'Platform Referrer')
+dailyFees.addUSDValue(protocolRewards, 'Protocol Rewards')
+
+// Creators + referrers = supply side (they are "suppliers" of content/traffic)
+dailySupplySideRevenue.addUSDValue(creatorRewards, 'Creator Rewards')
+dailySupplySideRevenue.addUSDValue(tradeReferrer, 'Trade Referrer')
+dailySupplySideRevenue.addUSDValue(platformReferrer, 'Platform Referrer')
+
+// Protocol keeps the rest
+dailyRevenue.addUSDValue(protocolRewards, 'Protocol Rewards')
+
 const breakdownMethodology = {
   Fees: {
-      "Staking Rewards": "ETH validators rewards.",
-      "MEV Rewards": "MEV rewards from ETH execution layer.",
+    'Creator Rewards': 'Rewards distributed to content creators.',
+    'Trade Referrer': 'Fees paid to the address that referred the trade.',
+    'Platform Referrer': 'Fees paid to the platform that referred the user.',
+    'Protocol Rewards': 'Fees retained by the Zora protocol.',
   },
-  Revenue: "Lido takes 10% all validators and NEV rewards.",
+  SupplySideRevenue: {
+    'Creator Rewards': 'Creator rewards are supply side costs.',
+    'Trade Referrer': 'Trade referral fees are supply side costs.',
+    'Platform Referrer': 'Platform referral fees are supply side costs.',
+  },
+  Revenue: {
+    'Protocol Rewards': 'Protocol rewards retained by Zora.',
+  },
+}
+```
+
+#### Perp DEX with LP Split (GMX)
+
+```typescript
+// fees/gmx.ts — 70% to GLP holders, 30% to GMX stakers
+import { METRIC } from '../../helpers/metrics';
+
+dailyFees.add(token, mintFees, METRIC.MINT_REDEEM_FEES)
+dailyFees.add(token, marginFees, METRIC.MARGIN_FEES)
+dailyFees.add(token, swapFees, METRIC.SWAP_FEES)
+
+// 70% of all fees → supply side (GLP holders)
+dailySupplySideRevenue.add(token, mintFees * 0.7, 'Mint/Redeem Fees To GLP')
+dailySupplySideRevenue.add(token, marginFees * 0.7, 'Margin Fees To GLP')
+dailySupplySideRevenue.add(token, swapFees * 0.7, 'Swap Fees To GLP')
+
+// 30% → holders revenue (GMX stakers)
+dailyHoldersRevenue.add(token, mintFees * 0.3, 'Mint/Redeem Fees To GMX Stakers')
+dailyHoldersRevenue.add(token, marginFees * 0.3, 'Margin Fees To GMX Stakers')
+dailyHoldersRevenue.add(token, swapFees * 0.3, 'Swap Fees To GMX Stakers')
+```
+
+#### Liquid Staking (Lido)
+
+```typescript
+// fees/lido.ts — 90% to stakers, 10% protocol fee
+import { METRIC } from '../../helpers/metrics';
+
+dailyFees.add(token, stakingRewards, METRIC.STAKING_REWARDS)
+dailyFees.add(token, mevRewards, METRIC.MEV_REWARDS)
+
+// 90% passed through to stETH holders
+dailySupplySideRevenue.add(token, stakingRewards * 0.9, 'Staking Rewards To Stakers')
+dailySupplySideRevenue.add(token, mevRewards * 0.9, 'MEV Rewards To Stakers')
+
+// 10% kept by protocol
+dailyRevenue.add(token, stakingRewards * 0.1, 'Staking Rewards Fee')
+dailyRevenue.add(token, mevRewards * 0.1, 'MEV Rewards Fee')
+```
+
+### When to Use Breakdown Labels
+
+**Always provide labels, even when there is only one source/destination of fees.** This prevents having to update and backfill data later when the adapter is listed under a parent protocol.
+
+For example, when writing a Fluid DEX adapter, add a `'Swap Fees'` label even though it has only one source of fees. Later, when Fluid Lending is also listed and both are grouped under the Fluid parent protocol, the DEX adapter already has proper breakdown labels and doesn't need updating or data backfilling.
+
+### How Labels Change Per Dimension
+
+Labels should vary by dimension to provide the most useful information:
+
+* **`dailyFees`**: Use **source-of-fees** labels that describe where money comes from. Simple labels like: `'Swap Fees'`, `'Borrow Interest'`, `'Flashloan Fees'`, `'Liquidation Fees'`, `'Staking Rewards'`, `'MEV Rewards'`
+* **`dailyRevenue`**, **`dailyProtocolRevenue`**, **`dailySupplySideRevenue`**, **`dailyHoldersRevenue`**: Use **more detailed labels** that describe both the source and destination: `'Swap Fees To LPs'`, `'Borrow Interest To Treasury'`, `'Borrow Interest To Lenders'`, `'Staking Rewards To Protocol'`
+
+This distinction matters because the same source of fees often splits across multiple destinations:
+
+```typescript
+// dailyFees: simple source labels
+dailyFees.add(token, totalBorrowInterest, 'Borrow Interest')
+
+// dailySupplySideRevenue: detailed destination labels
+dailySupplySideRevenue.add(token, lenderShare, 'Borrow Interest To Lenders')
+
+// dailyRevenue: detailed destination labels
+dailyRevenue.add(token, protocolShare, 'Borrow Interest To Treasury')
+```
+
+### Adding Breakdown Labels in Code
+
+The third parameter in `.add()` specifies the category label. All balance methods support this:
+
+```typescript
+// .add() with label
+dailyFees.add(tokenAddress, amount, 'Borrow Interest')
+
+// .addGasToken() with label
+dailyFees.addGasToken(amount, 'Staking Rewards')
+
+// .addUSDValue() with label
+dailySupplySideRevenue.addUSDValue(usdAmount, 'Borrow Interest To Lenders')
+
+// .add() with Balances object and label
+dailyRevenue.add(balancesObj, 'Spot Fees')
+```
+
+### Label Naming Best Practices
+
+Labels must be **clear, descriptive, and immediately understandable to a user who sees the breakdown**:
+
+**Good labels:**
+* `'Borrow Interest'` — clear what borrowers are paying
+* `'GHO Borrow Interest'` — specific to the GHO market
+* `'Liquidation Fees'` — describes the fee source
+* `'Staking Rewards'` — clear revenue source
+* `'MEV Rewards'` — specific MEV-related revenue
+* `'Spot Fees'` — trading fees on spot markets
+* `'Borrow Interest To Treasury'` — clear destination
+* `'Borrow Interest To Lenders'` — clear who receives it
+* `'Spot fees on Unit markets'` — specific enough to distinguish from other spot fees
+
+**Bad labels:**
+* `'Protocol Fees'` — too vague, doesn't explain what kind of fees
+* `'Fees'` — not descriptive at all
+* `'Revenue'` — doesn't explain the source
+* `'Other'` — not informative
+* `'Misc'` — meaningless to users
+
+**Key principles:**
+1. **Be specific**: Users should immediately understand what each label means
+2. **Break down as much as possible**: More granular breakdowns are always better
+3. **Use constants when they fit**: Check `helpers/metrics.ts` for shared labels, but **prioritize clarity over reuse**
+4. **Vary labels across dimensions**: Use different labels in dailyFees vs dailySupplySideRevenue when it helps understanding
+5. **Think like income statements**: Would an investor reading this breakdown understand exactly where the money comes from and goes?
+6. **Answer "does this include X?"**: When a user wonders if a specific revenue stream or cost is included, the answer should be obvious from the breakdown
+
+### Using Metric Constants
+
+Standard labels are defined in [`helpers/metrics.ts`](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/metrics.ts):
+
+```typescript
+import { METRIC } from '../../helpers/metrics';
+
+METRIC.BORROW_INTEREST       // 'Borrow Interest'
+METRIC.LIQUIDATION_FEES      // 'Liquidation Fees'
+METRIC.FLASHLOAN_FEES        // 'Flashloan Fees'
+METRIC.SWAP_FEES             // 'Token Swap Fees'
+METRIC.LP_FEES               // 'LP Fees'
+METRIC.STAKING_REWARDS       // 'Staking Rewards'
+METRIC.MEV_REWARDS           // 'MEV Rewards'
+METRIC.TOKEN_BUY_BACK        // 'Token Buy Back'
+METRIC.CREATOR_FEES          // 'Creator Fees'
+METRIC.MARGIN_FEES           // 'Margin Fees'
+METRIC.OPEN_CLOSE_FEES       // 'Open/Close Fees'
+METRIC.PERFORMANCE_FEES      // 'Performance Fees'
+METRIC.MANAGEMENT_FEES       // 'Management Fees'
+METRIC.CURATORS_FEES         // 'Curators Fees'
+METRIC.OPERATORS_FEES        // 'Operators Fees'
+METRIC.TRADING_FEES          // 'Trading Fees'
+METRIC.TRANSACTION_GAS_FEES  // 'Transaction Gas Fees'
+METRIC.TRANSACTION_BASE_FEES // 'Transaction Base Fees'
+METRIC.TRANSACTION_PRIORITY_FEES // 'Transaction Priority Fees'
+METRIC.MINT_REDEEM_FEES      // 'Mint/Redeem Fees'
+METRIC.DEPOSIT_WITHDRAW_FEES // 'Deposit/Withdraw Fees'
+METRIC.SERVICE_FEES          // 'Service Fees'
+METRIC.ASSETS_YIELDS         // 'Assets Yields'
+METRIC.PROTOCOL_FEES         // 'Protocol Fees'
+```
+
+**When to use constants vs custom labels:**
+* **Use constants** when they clearly describe your category
+* **Write custom labels** when constants would be unclear or confusing — user understanding is more important than code consistency
+* Before creating a new constant, check if an existing one fits. Before using a constant, check if it's clear enough for your use case.
+
+### breakdownMethodology Object
+
+**Every label used in `.add()` calls MUST appear in `breakdownMethodology`**, and every label in `breakdownMethodology` must have corresponding data in code. This object documents each sub-section.
+
+#### Structure
+
+```typescript
+const breakdownMethodology = {
+  Fees: {
+    'Label A': 'Description of this revenue source',
+    'Label B': 'Description of this revenue source',
+  },
+  Revenue: {
+    'Label C': 'Description of what protocol keeps from this source',
+  },
+  SupplySideRevenue: {
+    'Label D': 'Description of what suppliers receive',
+  },
+  ProtocolRevenue: {
+    'Label E': 'Description of what goes to treasury',
+  },
+  HoldersRevenue: {
+    'Label F': 'Description of tokenholder income source',
+  },
+}
+```
+
+#### Complete Example: Aave (Lending)
+
+```typescript
+const breakdownMethodology = {
+  Fees: {
+    'Borrow Interest': 'All interest paid by borrowers from all markets (excluding GHO).',
+    'Borrow Interest GHO': 'All interest paid by borrowers from GHO only.',
+    'Liquidation Fees': 'Fees from liquidation penalty and bonuses.',
+    'Flashloan Fees': 'Flashloan fees paid by flashloan borrowers and executors.',
+  },
+  Revenue: {
+    'Borrow Interest': 'A portion of interest paid by borrowers from all markets (excluding GHO).',
+    'Borrow Interest GHO': 'All 100% interest paid by GHO borrowers.',
+    'Liquidation Fees': 'A portion of fees from liquidation penalty and bonuses.',
+    'Flashloan Fees': 'A portion of fees paid by flashloan borrowers and executors.',
+  },
+  SupplySideRevenue: {
+    'Borrow Interest': 'Amount of interest distributed to lenders from all markets (excluding GHO).',
+    'Borrow Interest GHO': 'No supply side revenue for lenders on GHO market.',
+    'Liquidation Fees': 'Fees from liquidation penalty and bonuses are distributed to lenders.',
+    'Flashloan Fees': 'Flashloan fees paid by flashloan borrowers and executors are distributed to lenders.',
+  },
+  ProtocolRevenue: {
+    'Borrow Interest': 'Interest from all markets (excluding GHO) collected by Aave treasury.',
+    'Borrow Interest GHO': 'All interest paid on GHO market collected by Aave treasury.',
+    'Liquidation Fees': 'A portion of liquidation fees collected by Aave treasury.',
+    'Flashloan Fees': 'A portion of flashloan fees collected by Aave treasury.',
+  },
+}
+```
+
+#### Example: Fluid (Lending with Buybacks)
+
+```typescript
+const FLUID_METRICS = {
+  BorrowInterest: METRIC.BORROW_INTEREST,
+  TokenBuyBack: METRIC.TOKEN_BUY_BACK,
+  BorrowInterestToTreasury: 'Borrow Interest To Treasury',
+  BorrowInterestToLenders: 'Borrow Interest To Lenders',
 }
 
+const breakdownMethodology = {
+  Fees: {
+    [FLUID_METRICS.BorrowInterest]: "All interest paid by borrowers.",
+  },
+  Revenue: {
+    [FLUID_METRICS.BorrowInterestToTreasury]: "Percentage of interest going to treasury.",
+  },
+  ProtocolRevenue: {
+    [FLUID_METRICS.BorrowInterestToTreasury]: "Percentage of interest going to treasury.",
+  },
+  SupplySideRevenue: {
+    [FLUID_METRICS.BorrowInterestToLenders]: "Amount of interest distributed to lenders.",
+  },
+  HoldersRevenue: {
+    [FLUID_METRICS.TokenBuyBack]: "FLUID token buyback from the treasury.",
+  },
+}
+```
+
+#### Example: Hyperliquid (DEX with Buybacks)
+
+```typescript
+const breakdownMethodology = {
+  Fees: {
+    'Spot Fees': 'Fees collected on all spot trades, excluding trades on markets with Unit assets (eg bridged BTC).',
+    'Spot fees on Unit markets': 'Fees from spot trades on markets that include an asset deployed by Unit, in these spot markets all fees go to Unit.',
+  },
+  Revenue: {
+    'Spot Fees': '99% of spot trade fees, excluding perp fees and unit protocol fees.',
+  },
+  SupplySideRevenue: {
+    'Unit Revenue': 'All fees earned on Unit spot markets go to Unit.',
+    'HLP': '1% of the spot fees go to HLP vault (used to be 3% before 30 Aug 2025).',
+  },
+  HoldersRevenue: {
+    [METRIC.TOKEN_BUY_BACK]: "99% of spot trade fees (excluding perp fees and unit protocol fees) for buy back HYPE tokens.",
+  },
+}
+```
+
+#### Example: Liquity (CDP with No Protocol Revenue)
+
+```typescript
+const breakdownMethodology = {
+  Fees: {
+    'Borrow Fees': 'One-time borrow fees paid by borrowers.',
+    'Redemption Fees': 'Redemption fees paid by borrowers.',
+    'Gas Compensation': 'Gas compensations paid to liquidators when triggering liquidations.',
+    'Liquidation Profit': 'Profit from ETH collaterals distributed to stability pool stakers on liquidations.',
+  },
+  Revenue: {
+    'Borrow Fees': 'One-time borrow fees paid by borrowers.',
+    'Redemption Fees': 'Redemption fees paid by borrowers.',
+  },
+  HoldersRevenue: {
+    'Borrow Fees': 'Borrow fees distributed to LUSD stability pool and LQTY stakers.',
+    'Redemption Fees': 'Redemption fees distributed to LUSD stability pool and LQTY stakers.',
+  },
+  SupplySideRevenue: {
+    'Gas Compensation': 'Gas compensations paid to liquidators when triggering liquidations.',
+    'Liquidation Profit': 'Profit from ETH collaterals distributed to stability pool stakers.',
+  }
+}
+```
+
+### Adding to Your Adapter
+
+```typescript
 const adapter: SimpleAdapter = {
   version: 2,
   fetch,
   chains: [CHAIN.ETHEREUM],
   start: '2023-01-01',
-  methodology, // explain common metrics
-  breakdownMethodology, // explain breakdown labels
+  methodology,
+  breakdownMethodology,
 }
 ```
 
-Example: [Lido](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/lido.ts)
+### Requirements Checklist
+
+**Must have:**
+1. Every label used in `.add()` calls has a corresponding entry in `breakdownMethodology`
+2. Every label in `breakdownMethodology` has corresponding data assigned in code
+3. Labels are descriptive and immediately understandable to users
+4. Descriptions clearly explain what each category represents
+5. Labels are provided even when there's only one source of fees (for parent protocol compatibility)
+6. `dailySupplySideRevenue` (Cost of Revenue) is tracked whenever the protocol pays out to suppliers
+
+**Common mistakes to avoid:**
+1. Using vague labels like "Protocol Fees" or "Other" — be specific
+2. Missing `breakdownMethodology` entries for labels used in code
+3. Having `breakdownMethodology` entries with no corresponding data
+4. Not breaking down enough — more detail is always better
+5. Using the same labels across all dimensions when different labels would be clearer
+6. Forgetting to label single-source adapters (breaks when listed under parent protocol)
+7. Tracking block rewards as fees — they are incentives, not fees
+8. Including perp DEX fees in chain adapters — those belong in the perp adapter
+
+### Real-World Examples
+
+Browse these adapters for complete implementations:
+* [Aave](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/aave-v3.ts) — Multi-market lending with GHO breakdown and Paraswap partner fees
+* [Fluid](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/fluid/index.ts) — Lending with treasury/lender split and buybacks
+* [Liquity](https://github.com/DefiLlama/dimension-adapters/blob/master/helpers/liquity.ts) — CDP with borrow, redemption, and liquidation fees
+* [Hyperliquid](https://github.com/DefiLlama/dimension-adapters/blob/master/dexs/hyperliquid-spot/index.ts) — DEX with unit markets and HYPE buybacks
+* [GMX](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/gmx.ts) — Perp DEX with 70/30 LP/staker split
+* [Lido](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/lido.ts) — Liquid staking with staking + MEV reward breakdown
+* [Zora](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/zora-sofi.ts) — Creator/referral platform with integrator fees as supply side
+* [BasePaint](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/basepaint.ts) — Creator royalties (90% to artists)
+* [MakerDAO](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/makerdao.ts) — CDP with DSR costs and stability fees
+* [Ethereum](https://github.com/DefiLlama/dimension-adapters/blob/master/fees/ethereum/index.ts) — Chain adapter with base/priority fee breakdown
+
+For full income statement examples showing how major protocols in each category break down their financials, see the [examples folder](./examples/).
+
+## Code Structure Guidelines
+
+Follow these rules when writing adapters:
+
+* **Prefer on-chain data**: Use on-chain event logs and contract calls where possible. We are stricter about this for chains where we maintain our own indexer, or where there is significant volume/fees, or where you suspect wash trading.
+* **Use `pullHourly: true`** (version 2 adapters only): This avoids recomputing data for the same time period repeatedly, and provides more granular hourly data.
+* **Never swallow errors**: It's better to fail than to return incorrect data. If a small chain with $10K volume fails, it shouldn't break an adapter that tracks $100M daily on other chains — return 0 for the failing chain.
+* **Use/add helper code**: When multiple adapters use similar logic, extract it into shared helpers.
+* **No npm dependencies**: Do not add npm packages. This leads to bloat.
+* **Use `api.multiCall`**: Prefer `api.multiCall` over `Promise.all` for batching EVM calls. Use `PromisePool` for non-EVM calls.
+* **Return token breakdowns**: Always return amounts with token addresses (not pre-converted USD). Always include `methodology` and `breakdownMethodology` (where appropriate).
+* **Watch for wash trading**: Be vigilant about wash trading, especially on low-fee chains.
 
 ## Important Considerations
 
@@ -771,6 +1247,13 @@ You can find the full source code for these helper functions in the DefiLlama Gi
 **Monitoring Systems**: We maintain internal alert systems that detect unusual data spikes, broken adapters, and anomalies across both TVL and dimension adapters (fees/revenue/volume). This allows the team to quickly identify and fix issues.
 
 **Historical Data Integrity**: When protocols add new components (like treasury wallets, new contracts, etc.), we backfill historical data to maintain completeness and accuracy. This ensures users have access to accurate historical insights.
+
+### Data Classification Rules
+
+* **Fees**: Only fees paid by users for a transaction/storage/etc should be tracked as fees. Block rewards are a cost and must be tracked as incentives, not fees.
+* **Revenue**: Only the part of fees that gets burnt (or similar) can be tracked as revenue. The part that goes to stakers does not benefit the chain/holders — make sure to tag these correctly in the breakdown.
+* **Holder revenue**: Usually the same as revenue unless a portion is set aside for the protocol (like in the case of Zcash).
+* **Chain fees**: Track only the transaction fees paid by users. Do not include perp DEX fees for protocols like Hyperliquid L1 — those are counted under the perp listing.
 
 ### How we handle data integrity and keep data organic?
 
