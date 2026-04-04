@@ -231,3 +231,10 @@ We removed TVL from unproductive assets with very low usage and no borrowing act
   Few deposits, no borrowing\
   `0xabFb7A392a6DaaC50f99c5D14B5f27EFfd08Fe03`
 
+#### Curvance
+
+We removed TVL from eVTC unproductive assets deposited from a single wallet and no borrows.
+
+- eBTC - Monad: 0x2840772E14fFbe337aB966727B7D1Dd09BDc76E4
+
+
