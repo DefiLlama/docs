@@ -236,5 +236,6 @@ We removed TVL from unproductive assets with very low usage and no borrowing act
 We removed TVL from eBTC unproductive assets deposited from a single wallet and no borrows.
 
 - eBTC - Monad: 0x2840772E14fFbe337aB966727B7D1Dd09BDc76E4
+- vUSD - Monad: 0x42369afe4ba4225b800b8024acc5f14f42a3836c
 
 
