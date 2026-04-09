@@ -237,3 +237,8 @@ We removed TVL from eBTC unproductive assets deposited from a single wallet and 
 
 - eBTC - Monad: 0x2840772E14fFbe337aB966727B7D1Dd09BDc76E4
 
+#### Townsquare
+
+We removed TVL from unproductive assets in pools that have a few deposit addresses
+
+- enzoBTC - Monad: 0xD7aCB868F97F8286D5d3A0Fd5Ef112a8a72eCD90 
