@@ -25,8 +25,6 @@ Official project or token logo.
 **Example:**\
 [`https://icons.llamao.fi/icons/protocols/ondo-finance?w=48&h=48`](https://icons.llamao.fi/icons/protocols/ondo-finance?w=48\&h=48)
 
-**Answer:**
-
 ***
 
 #### Ticker
@@ -42,8 +40,6 @@ Unique trading symbol of the token.
 **Example:**\
 `USYC`
 
-**Answer:**
-
 ***
 
 #### Token Name
@@ -53,8 +49,6 @@ Full official name of the tokenized asset.
 
 **Example:**\
 `Ondo US Dollar Yield Token`
-
-**Answer:**
 
 ***
 
@@ -66,8 +60,6 @@ Official project website.
 **Example:**\
 `https://ondo.finance`
 
-**Answer:**
-
 ***
 
 #### Twitter / X Profile
@@ -77,8 +69,6 @@ Official Twitter/X account of the project or issuer.
 
 **Example:**\
 `https://x.com/ondofinance`
-
-**Answer:**
 
 ***
 
@@ -95,8 +85,6 @@ Telegram group/channel OR Discord invite link.
 OR\
 `https://discord.gg/(projectname)`
 
-**Answer:**
-
 ***
 
 ## 2. Blockchain Information
@@ -109,8 +97,6 @@ Main blockchain where the canonical version of the token is issued.
 **Example:**\
 `ethereum`
 
-**Answer:**
-
 ***
 
 #### All Chains
@@ -120,8 +106,6 @@ All blockchains where the token exists.
 
 **Example:**\
 `ethereum, arbitrum, base`
-
-**Answer:**
 
 ***
 
@@ -137,8 +121,6 @@ Chain-prefixed format:
 
 **Example:**\
 `ethereum:0x1234567890abcdef1234567890abcdef12345678`
-
-**Answer:**
 
 ***
 
@@ -157,8 +139,6 @@ ethereum:0xabc123 (Treasury)
 ethereum:0xdef456 (Mint Authority)
 ethereum:0xghi789 (Custodian)
 ```
-
-**Answer:**
 
 ***
 
@@ -185,8 +165,6 @@ One of the following categories (or closest match):
 * Structured Products
 * Funds / ETFs
 
-**Answer:**
-
 ***
 
 ## 4. Market Data
@@ -212,8 +190,6 @@ If NOT listed:
 Write:\
 `Not listed`
 
-**Answer:**
-
 ***
 
 ## 5. Issuer Information
@@ -229,8 +205,6 @@ Full legal entity name
 
 **Example:**\
 `SolBridge Energy Foundation`
-
-**Answer:**
 
 ***
 
@@ -258,8 +232,6 @@ If none:
 Write:\
 `None`
 
-**Answer:**
-
 ***
 
 ## 7. Exchange & Access
@@ -278,8 +250,6 @@ If TRUE, also provide exchange names.
 **Example:**\
 `TRUE – Listed on Coinbase, Kraken`
 
-**Answer:**
-
 ***
 
 #### KYC to Mint
@@ -290,8 +260,6 @@ Whether KYC is required to mint/redeem tokens with issuer.
 **What to provide:**
 
 `TRUE` or `FALSE`
-
-**Answer:**
 
 ***
 
@@ -306,8 +274,6 @@ Whether wallet must be approved to hold or receive tokens.
 
 This indicates permissioned tokens.
 
-**Answer:**
-
 ***
 
 ## 8. Transfer & Custody
@@ -320,8 +286,6 @@ Whether tokens can be transferred freely between wallets.
 **What to provide:**
 
 `TRUE` or `FALSE`
-
-**Answer:**
 
 ***
 
@@ -336,8 +300,6 @@ Whether users can hold tokens in their own wallet.
 
 If FALSE → tokens must remain with custodian.
 
-**Answer:**
-
 ***
 
 ## 9. Optional but Recommended
@@ -347,16 +309,12 @@ If FALSE → tokens must remain with custodian.
 **Definition:**\
 Short explanation of the asset and backing.
 
-**Answer:**
-
 ***
 
 #### Documentation Link
 
 **Definition:**\
 Technical or legal documentation explaining token structure.
-
-**Answer:**
 
 ***
 
@@ -365,7 +323,7 @@ Technical or legal documentation explaining token structure.
 **Definition:**\
 Issuer or team contact email.
 
-**Answer:**
+***
 
 ## 10. **Redemption Process**
 
@@ -373,4 +331,4 @@ Issuer or team contact email.
 
 _**What to provide**_**:** Platform or URL where redemption occurs Minimum redemption amount (if any) Settlement timeline Any additional requirements (KYC, whitelisting, etc.)
 
-&#x20;Example: Holders redeem via app.ondo.finance with a $5,000 minimum. Settlement takes T+1 to a linked bank account. KYC required. If not redeemable: Write N/A
+Example: Holders redeem via app.ondo.finance with a $5,000 minimum. Settlement takes T+1 to a linked bank account. KYC required. If not redeemable: Write N/A
