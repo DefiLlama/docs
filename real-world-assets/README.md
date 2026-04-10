@@ -1,19 +1,18 @@
-# Overview
+# Real World Assets
 
-This section documents the classification rules, taxonomy, evidence flags, and metric definitions used to power the DeFiLlama RWA Dashboard.
+These guidelines define how DeFiLlama classifies, measures, and displays tokenized real-world assets on the [RWA dashboard](https://defillama.com/rwa). They cover evidence flags, metric definitions, access models, RWA classification rules, column definitions, type taxonomy, category taxonomy, and asset class taxonomy.
 
-## Introduction
+The goal is consistent asset classification so that users can understand how assets are categorized and measured, and compare assets using standardized metrics.
 
-The DeFiLlama RWA Dashboard provides comprehensive tracking and classification of tokenized real-world assets across blockchain networks. This documentation covers:
+The RWA section is split into two dashboards:
 
-* [**Methodology & Metrics**](methodology-and-metrics.md): Evidence flags, metric definitions, access models, and RWA classification rules
-* [**Definitions & Taxonomy**](definitions-and-taxonomy.md): Column definitions, type taxonomy, category taxonomy, and asset class taxonomy
+- **[RWA Dashboard](https://defillama.com/rwa)** — tracks tokenized assets, stablecoins, funds, credit, wrappers, and governance tokens.
+- **[RWA Perps Dashboard](https://defillama.com/rwa/perps)** — tracks perpetual futures markets tied to real-world reference assets such as equities, commodities, bonds, and ETFs.
 
-## Purpose
+## Subpages
 
-These guidelines ensure consistent, transparent classification of real-world assets, enabling users to:
-
-* Understand how assets are categorized and measured
-* Compare assets using standardized metrics
-* Verify asset characteristics through evidence flags
-* Navigate the RWA ecosystem with clear taxonomies
+- [Eligibility & Exclusion](eligibility-and-exclusion.md) — inclusion criteria, exclusion criteria, and expulsion rules that determine whether an asset belongs in the RWA universe.
+- [Methodology & Metrics](methodology-and-metrics.md) — evidence flags, metric definitions, access models, and RWA classification rules.
+- [Definitions & Taxonomy](definitions-and-taxonomy.md) — column definitions, type taxonomy, category taxonomy, and asset class taxonomy.
+- [RWA Perps](rwa-perps.md) — dashboard guide, column definitions, asset class taxonomy, and reference asset group taxonomy for the RWA Perps dashboard.
+- [RWA Token Submission Form](https://forms.defillama.com/rwa-submission) — required fields for submitting a new RWA token to the dashboard.

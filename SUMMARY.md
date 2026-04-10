@@ -50,9 +50,10 @@
 ## Real World Assets
 
 * [Overview](real-world-assets/README.md)
+  * [Eligibility & Exclusion](real-world-assets/eligibility-and-exclusion.md)
   * [Methodology & Metrics](real-world-assets/methodology-and-metrics.md)
   * [Definitions & Taxonomy](real-world-assets/definitions-and-taxonomy.md)
-  * [RWA Token Submission Form](real-world-assets/real-world-assets/rwa-token-submission-form.md)
+  * [RWA Perps](real-world-assets/rwa-perps.md)
 
 ***
 
