@@ -208,5 +208,5 @@ These are the questions that matter for investment decisions.
 
 ### Ready to submit your protocol’s Token Rights?&#x20;
 
-### [Fill out this form](https://token-rights-teams.llama.fi/)
+### [Fill out this form](https://forms.defillama.com/token-rights)
 
