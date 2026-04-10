@@ -7,7 +7,7 @@ description: >-
 
 # RWA Token Submission Form
 
-#### https://docs.google.com/forms/d/e/1FAIpQLSfZvXQKwv6O\_Ty4yHCmxtYdeb23Rfg3KmgfKPJM\_zjHT2OHfg/viewform
+#### [https://docs.google.com/forms/d/e/1FAIpQLSfZvXQKwv6O\_Ty4yHCmxtYdeb23Rfg3KmgfKPJM\_zjHT2OHfg/viewform](https://docs.google.com/forms/d/e/1FAIpQLSfZvXQKwv6O_Ty4yHCmxtYdeb23Rfg3KmgfKPJM_zjHT2OHfg/viewform)
 
 ## 1. Basic Information
 
