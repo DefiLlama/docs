@@ -242,3 +242,15 @@ We removed TVL from eBTC unproductive assets deposited from a single wallet and 
 We removed TVL from unproductive assets in pools that have a few deposit addresses
 
 - enzoBTC - Monad: 0xD7aCB868F97F8286D5d3A0Fd5Ef112a8a72eCD90 
+
+#### Dolomite
+
+We removed TVL from WLFI market which almost supplied by WLFI team multisig
+
+- WLFI - 0xda5e1988097297dcdc1f90d4dfe7909e847cbef6
+
+#### TermMax
+
+We removed TVL from brBTC market on BSC which have no borrow
+
+- brBTC market - 0x529A60A7aCDBDdf3D71d8cAe72720716BC192106
