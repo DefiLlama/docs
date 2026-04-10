@@ -1,193 +1,102 @@
 # Methodology & Metrics
 
+This page describes how DeFiLlama evaluates and measures the tokenized real-world assets tracked on the [RWA dashboard](https://defillama.com/rwa). It covers evidence flags, metric definitions, access model classification, and the RWA classification framework.
+
+---
+
 ## Evidence Flags
 
-These fields are treated as factual signals and are recorded as **Yes** or **x**:
+Each asset is tagged with seven factual signals. A value of **Yes** means the claim has been publicly verified. A value of **x** covers both negative answers and cases that have not yet been verified.
 
-- Attestations
-- Redeemable
-- CEX Listed
-- KYC for mint/redeem
-- KYC/Allowlisted/Whitelisted to Transfer/Hold
-- Transferable
-- Self Custody
+| Flag | What it records |
+| --- | --- |
+| Attestations | Public proof-of-reserves or asset-verification reports from the issuer. |
+| Redeemable | A documented redemption pathway allowing holders to redeem for underlying assets. |
+| CEX Listed | Availability on at least one centralized exchange. |
+| KYC for mint/redeem | Identity verification (KYC/KYB/onboarding) required to mint or redeem through the issuer. |
+| KYC/Allowlisted/Whitelisted to Transfer/Hold | Prior verification or allowlisting required to hold or transfer the token, enforced at the token, contract, or venue level. |
+| Transferable | The token can be transferred freely between onchain addresses. |
+| Self Custody | The token can be held in a user-controlled wallet. |
 
-### How to read Yes and x
-
-- **Yes** means the field is publicly verifiable as Yes.
-- **x** means not publicly verifiable as Yes (this includes cases where the answer is No, and cases where it is Unknown due to missing disclosure).
-
-Frontend display can show Yes explicitly, and can treat x as blank, or "Not publicly verifiable," depending on design.
-
-### Evidence Flag Definitions
-
-#### Attestations
-
-- **Yes** if there is a public proof source from the issuer showing reserves or underlying assets (attestation report, audit report, proof-of-reserves report, or similar), with clear scope and a date or update cadence.
-- **x** if no such public proof source is available.
-
-#### Redeemable
-
-- **Yes** if holders have a documented way to redeem the token for the underlying asset or for a cash equivalent, either directly with the issuer, or through a clearly documented redemption process.
-- **x** if redemption is not offered, not documented, or purely discretionary.
-
-#### Transferable
-
-- **Yes** if the token can be transferred onchain between wallet addresses under normal use, including cases where transfers are restricted to allowlisted wallets.
-- **x** if transfers are blocked, or not practically possible (for example, non-transferable tokens, internal ledger entries, or tokens locked to one wallet).
-
-#### Self Custody
-
-- **Yes** if a user can hold the token in a self-custody wallet (user-controlled address or user-controlled multisig), not only through a custodian or platform account.
-- **x** if the token must be held through an authorized custodian, broker, or platform account, with no self-custody option.
-
-#### KYC for mint/redeem
-
-- **Yes** if minting or redeeming through the issuer's primary process requires onboarding with identity verification and anti-money-laundering checks.
-- **x** if minting and redeeming are available without identity verification, or if no issuer mint or redeem process is documented.
-
-#### KYC/Allowlisted/Whitelisted to Transfer/Hold
-
-- **Yes** if holding or transferring requires being verified or allowlisted (for example, wallet-level whitelists, transfer restrictions, identity registries, or enforced verification for secondary transfers).
-- **x** if any wallet can hold and transfer without being allowlisted.
-
-#### CEX Listed
-
-- **Yes** if the asset is available to trade on a centralized exchange.
-- **x** if it is not available to trade on a centralized exchange.
-
-**Note**: CEX Listed is informational and is not used for RWA Classification.
+---
 
 ## Metrics
 
 ### Onchain Marketcap
 
-**Definition**: Onchain Marketcap is the circulating onchain token supply multiplied by price, excluding burned tokens.
-
-#### How it's computed
-
-- **Supply**: total token supply minus burned tokens (and other provably non-circulating supply, if verifiable)
-- **Price**: the reference market price used by DeFiLlama for that asset
-- **Onchain Marketcap**: (circulating onchain supply) × (price)
-
-**Implementation note**: This should be reproducible from onchain reads using an open adapter.
+Total USD value of the asset that exists onchain across all tracked chains. Calculated by multiplying circulating supply (excluding burned tokens) by the reference price sourced via DeFiLlama.
 
 ### Active Marketcap
 
-**Definition**: Active Marketcap is the portion of Onchain Marketcap that reflects independent market ownership and economic risk, excluding issuer-controlled, custodian-controlled, or operational balances that do not represent market float.
-
-#### What counts
-
-- Tokens held by independent holders in self-custody wallets
-- Tokens deployed in third-party DeFi contracts (lending, pools, vaults, and similar)
-- Tokens held in exchange wallets tied to customer balances, where customers are exposed to price moves and can exit
-
-#### What does not count
-
-- Issuer, platform, and operational wallets (treasury, mint, redeem, distribution, and similar)
-- Custody or omnibus wallets where balances are effectively book-entry and do not represent independent onchain float
-- Clearly internal loops where tokens circulate among issuer-controlled or platform-controlled wallets without changing economic ownership
-
-#### Simple economic impact test
-
-**Question**: If this wallet were hacked, would it cause material economic impact because the attacker could meaningfully sell, deploy, or extract value?
-
-- **Yes**: count it as Active
-- **No**: treat it as Onchain, but not Active
+The portion of Onchain Marketcap that is taking real market risk in user or protocol hands. Active Marketcap isolates independent market ownership by including self-custody holdings and third-party DeFi positions, while excluding issuer wallets, custody omnibus accounts, and internal operational flows. The economic test is whether compromise of a given wallet would enable meaningful value extraction by a third party.
 
 ### DeFi Active TVL
 
-**Definition**: DeFi Active TVL is the value of an asset that is deposited, pooled, or otherwise used inside third-party DeFi protocols tracked by DeFiLlama.
+The subset of Active Marketcap that is deployed in third-party DeFi protocols tracked by DeFiLlama. Issuer-managed contracts and exchange wallets are excluded.
 
-#### What counts
+### Utilization
 
-- Balances held in third-party DeFi protocols (lending markets, AMMs, pools, vaults, and similar)
-- Positions that are publicly readable onchain and supported by a DeFiLlama adapter
+The ratio of DeFi Active TVL to Onchain Marketcap, expressed as a percentage. This shows how much of the total onchain supply is actively being used in DeFi protocols.
 
-#### What does not count
-
-- The issuing platform's own contracts used mainly for minting, redemption, custody, or internal operations
-- Centralized exchange wallets
-- Issuer-controlled wallets and contracts that do not represent third-party DeFi usage
-
-**Note**: DeFi Active TVL is meant to reflect third-party DeFi usage, not total issuance, and not issuer-managed deployments.
+---
 
 ## Access Model
 
-Access Model describes how a user can hold and move the asset onchain.
+The Access Model describes how users can hold and transfer the asset. Five categories are assigned based on a deterministic hierarchy that evaluates allowlist requirements first, then transferability and self-custody in sequence.
 
-### Allowed values
+| Access Model | Meaning |
+| --- | --- |
+| Permissioned | Requires KYC/AML verification to hold or transfer the asset. |
+| Permissionless | Open to any wallet address without identity verification. |
+| Non-transferable | Holdable but locked to the original wallet; cannot be transferred to other addresses. |
+| Custodial Only | Must be held through an authorized custodian; no self-custody option. |
+| Unknown | Access requirements have not been disclosed. |
 
-- Permissioned
-- Permissionless
-- Non-transferable
-- Custodial Only
-- Unknown
-
-### Definitions
-
-- **Permissioned**: Holding or transferring requires allowlisting, whitelisting, or enforced verification.
-- **Permissionless**: Any wallet can hold and transfer, without enforced verification for holding or transfer.
-- **Non-transferable**: Can be held, but cannot be transferred to other wallets.
-- **Custodial Only**: Must be held through an authorized custodian or platform account, with no self-custody option.
-- **Unknown**: Access requirements are not disclosed publicly.
-
-### Derivation rules
-
-Apply these rules in order, using KYC/Allowlisted/Whitelisted to Transfer/Hold, Transferable, and Self Custody:
-
-1. If KYC/Allowlisted/Whitelisted to Transfer/Hold = Yes → **Permissioned**
-2. Else if Transferable = Yes and Self Custody = Yes → **Permissionless**
-3. Else if Transferable = x and Self Custody = Yes → **Non-transferable**
-4. Else if Self Custody = x → **Custodial Only**
-5. Else → **Unknown**
-
-**Note**: KYC for mint/redeem affects primary issuance and redemption access. It does not determine whether secondary holding or transfer is permissioned.
+---
 
 ## RWA Classification
 
-RWA Classification describes what the entry economically represents.
+Every entry receives one of five classification labels that describe its economic nature. These labels are derived from the evidence flags and structural properties of the asset.
 
-### Allowed values
+| Classification | Meaning |
+| --- | --- |
+| True RWA | Tokenized real-world asset that is transferable and self-custodial, with both documented redemption and reserve/asset verification. |
+| RWA | Tokenized real-world asset that is transferable and self-custodial, with either documented redemption or reserve/asset verification. |
+| Programmable Finance | RWA-linked onchain products such as wrappers, strategy/pool tokens, synthetics, or restricted fund tokens that are not transferable or self-custodial. |
+| Non-RWA (Platform) | Platform or infrastructure item related to RWAs, not an asset token or RWA exposure instrument. |
+| Non-RWA (Gov/Utility) | Governance or utility token that is not a tokenized real-world asset or RWA exposure instrument. |
 
-- RWA
-- Programmable Finance
-- Non-RWA (Platform)
-- Non-RWA (Gov/Utility)
+A two-tier badge system is used on the dashboard. Green badges are awarded to assets that meet both attestation and redemption requirements. Standard badges are shown for assets that meet either condition.
 
-### Definitions
+---
 
-- **RWA**: A tokenized real-world asset that is transferable and self-custodial, with at least one of: redemption, or public reserve or asset verification.
-- **Programmable Finance**: An onchain exposure product tied to RWAs, such as wrappers, vault shares, strategy or pool tokens, synthetics, or other structured exposures.
-- **Non-RWA (Platform)**: A platform or infrastructure entry related to RWAs, rather than an asset or exposure instrument.
-- **Non-RWA (Gov/Utility)**: A governance or utility token that is not an RWA, and not an RWA exposure instrument.
+## Dashboard Guide
 
-### Classification procedure
+The [RWA dashboard](https://defillama.com/rwa) is the primary interface for exploring tokenized real-world assets tracked by DeFiLlama. It is organized into the following sections.
 
-Entries already labeled **Non-RWA (Platform)** or **Non-RWA (Gov/Utility)** are not changed by the rules below.
+### Top-Level Metrics
 
-1. If the token is a **Derived or Structured Token**, classify it as **Programmable Finance**.
-2. Otherwise apply the **RWA rule**.
+Four summary cards are displayed at the top of the page:
 
-#### RWA rule
+| Card | Description |
+| --- | --- |
+| Total RWA Active Mcap | Aggregate Active Marketcap across all tracked RWA assets. |
+| Total RWA Onchain Mcap | Aggregate Onchain Marketcap across all tracked RWA assets. |
+| DeFi Active TVL | Total value of RWA assets deployed in third-party DeFi protocols. |
+| Total Asset Issuers | Count of distinct issuers across all tracked assets. |
 
-If Transferable = Yes and Self Custody = Yes and (Attestations = Yes or Redeemable = Yes) → **RWA**.
-Else → **Programmable Finance**.
+### Navigation Tabs
 
-#### Derived or Structured Token test
+The dashboard has five tabs: **Overview**, **Chains**, **Platforms**, **Asset Groups**, and **Categories**. The Overview tab shows the full asset list across all views. Chains, Platforms, Asset Groups, and Categories provide filtered and aggregated views by each dimension.
 
-Treat a token as Derived or Structured if it is any of the following:
+### Chain Filters
 
-- Wrapper or receipt token
-- Vault share
-- Strategy token
-- Pool token (LP token, or tranche-like exposure)
-- Synthetic exposure token
-- Locked derivative (time-locked, escrowed, or staked variants of another token)
+A row of chain pills below the tabs allows filtering all data by blockchain. Selecting a specific chain (e.g. Ethereum, Arbitrum, Base) restricts the metrics, chart, and table to assets deployed on that chain.
 
-### RWA badge display
+### Time Series Chart
 
-This is a display layer only. The underlying classification remains RWA.
+An interactive chart sits below the metrics cards and can display Active Mcap, Onchain Mcap, or DeFi Active TVL over time. The chart type can be toggled (e.g. Time Series Chart) and data can be grouped by Asset Group. The chart is exportable as CSV or PNG.
 
-- **Green RWA**: Attestations = Yes and Redeemable = Yes
-- **Standard RWA**: Attestations = Yes or Redeemable = Yes
+### Assets Rankings Table
+
+A searchable, sortable table lists every tracked asset. The default columns are: Name, Asset Group, Active Marketcap, Onchain Marketcap, DeFi Active TVL, Utilization, Category, Asset Class, Access Model, and Type. A column selector allows users to show or hide additional fields. The table can be exported as CSV.
