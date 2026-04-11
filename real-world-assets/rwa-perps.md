@@ -56,18 +56,36 @@ Additional columns available via the column selector include:
 
 | Column | Description |
 | --- | --- |
+| Category | Classification category for the market entry (all entries belong to RWA Perps). |
+| Parent Platform | Parent protocol or platform that operates the venue. |
+| Margin Asset | Margin currency used by the market (e.g. USDC, USDT). |
+| Settlement Asset | Cash-settlement currency for the contract (e.g. USDC, USDT, USDH). |
 | Issuer | Entity responsible for issuing or managing the underlying real-world asset. |
+| Oracle Provider | Oracle service used for price feeds on the contract. |
+| RWA Classification | Classification label assigned to the entry. See [Methodology & Metrics](methodology-and-metrics.md). |
 | Access Model | Whether trading the contract requires KYC, permissioning, or is permissionlessly accessible. |
+| Maker Fee | Fee rate charged to the maker side of a trade on this contract. |
+| Taker Fee | Fee rate charged to the taker side of a trade on this contract. |
+| Deployer Fee Share | Percentage of protocol fees allocated to the deployer of the market. |
+| Cum. Funding / Unit | Cumulative funding payments per unit of the contract since inception. |
+| Oracle Px | Latest oracle price for the underlying asset. |
+| Mid Px | Mid-market price of the perpetual contract. |
+| Prev Day Px | Closing price of the contract from the previous day. |
+| Volume 7d | Total USD notional volume traded on this contract over the last 7 days. |
 | Volume 30d | Total USD notional volume traded on this contract over the last 30 days. |
+| Volume All Time | Total USD notional volume traded on this contract since inception. |
 | Est. Protocol Fees 24h | Estimated fees earned by the protocol from trading activity on this contract in the last 24 hours. |
+| Est. Protocol Fees 7d | Estimated fees earned by the protocol from this contract over the last 7 days. |
+| Est. Protocol Fees 30d | Estimated fees earned by the protocol from this contract over the last 30 days. |
+| Est. Protocol Fees All Time | Total estimated fees earned by the protocol from this contract since inception. |
 
 ### Venues Tab
 
 The Venues tab provides a venue-level view, aggregating market data across all contracts listed on each protocol or exchange.
 
-#### Chain Filters
+#### Venue Filters
 
-A row of venue pills allows filtering by specific venue (e.g. km, vntl, xyz). Selecting "All" shows aggregated data across all venues.
+A row of venue pills allows filtering by specific venue. Selecting "All" shows aggregated data across all venues.
 
 #### Venue Chart
 
@@ -103,7 +121,10 @@ The tables below document every column on the RWA Perps dashboard. For columns s
 | Asset Class | High-level economic category of the underlying asset, such as commodities, equities, or fixed income. See the Asset Class Taxonomy below. |
 | Canonical Market ID | Venue-qualified market identifier used when the entry is a market rather than a token contract, such as `xyz:GOLD` or `cash:GOLD-USDT`. This is the canonical internal market slug, not the frontend trading pair. |
 | Pair | Displayed trading pair or quote convention for perpetual markets, such as GOLD-USDC or TSLA-USDT. Use `x` when the row is not a market or when no pair is applicable. |
-| Margin / Settlement Asset | Frontend-readable market quote suffix or settlement unit, such as USDC, USDT, or USDH. This shows the margin and cash-settlement asset used by the market rather than the tracked underlying. |
+| Margin Asset | Margin currency used by the market, such as USDC or USDT. |
+| Settlement Asset | Cash-settlement currency for the contract, such as USDC, USDT, or USDH. This shows the settlement unit used by the market rather than the tracked underlying. |
+| Parent Platform | Parent protocol or platform that operates the venue. |
+| Oracle Provider | Oracle service used for price feeds on the contract. |
 | Reference Asset | Normalized exact asset, benchmark, ETF, company, or commodity tracked by the market. Used for exact cross-venue alignment and exact-asset dashboard pages. Examples: Gold, Silver, S&P 500, Tesla, Crude Oil (WTI). |
 | Reference Asset Group | Broader user-facing grouping used to pull related markets into a single dashboard view across venues. Examples: Oil, Precious Metals, Public Equities, Equity Indices. See the Asset Group Taxonomy in [Definitions & Taxonomy](definitions-and-taxonomy.md). |
 
@@ -118,8 +139,20 @@ The tables below document every column on the RWA Perps dashboard. For columns s
 | Latest Funding Rate | Most recent periodic funding rate paid between long and short position holders. A positive rate means longs pay shorts; negative means shorts pay longs. |
 | Premium | Percentage difference between the perpetual contract price and the underlying asset's spot or index price. A positive premium means the perp trades above spot. |
 | Max Leverage | Maximum leverage multiplier available for the contract on the venue. |
+| Maker Fee | Fee rate charged to the maker side of a trade on this contract. |
+| Taker Fee | Fee rate charged to the taker side of a trade on this contract. |
+| Deployer Fee Share | Percentage of protocol fees allocated to the deployer of the market. |
+| Cum. Funding / Unit | Cumulative funding payments per unit of the contract since inception. |
+| Oracle Px | Latest oracle price for the underlying asset, as reported by the contract's oracle provider. |
+| Mid Px | Mid-market price of the perpetual contract, calculated as the midpoint between best bid and best ask. |
+| Prev Day Px | Closing price of the contract from the previous day. |
+| Volume 7d | Total USD notional volume traded on the contract over the last 7 days. |
 | Volume 30d | Total USD notional volume traded on the contract over the last 30 days. |
+| Volume All Time | Total USD notional volume traded on the contract since inception. |
 | Est. Protocol Fees 24h | Estimated fees earned by the protocol from trading activity on this contract in the last 24 hours. |
+| Est. Protocol Fees 7d | Estimated fees earned by the protocol from this contract over the last 7 days. |
+| Est. Protocol Fees 30d | Estimated fees earned by the protocol from this contract over the last 30 days. |
+| Est. Protocol Fees All Time | Total estimated fees earned by the protocol from this contract since inception. |
 
 ---
 
