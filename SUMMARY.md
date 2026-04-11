@@ -19,10 +19,6 @@
   * [Important considerations](list-your-project/other-dashboards/important-considerations.md)
   * [Helper functions](list-your-project/other-dashboards/helper-functions.md)
   * [Testing](list-your-project/other-dashboards/testing.md)
-* [Emissions dashboard](list-your-project/emissions-dashboard/README.md)
-  * [Protocol Files](list-your-project/emissions-dashboard/protocol-files.md)
-  * [Emission Sections](list-your-project/emissions-dashboard/emission-sections.md)
-  * [Testing](list-your-project/emissions-dashboard/testing.md)
 * [Oracles TVS](list-your-project/oracles-tvs.md)
 * [Token Rights](list-your-project/token-rights.md)
 
