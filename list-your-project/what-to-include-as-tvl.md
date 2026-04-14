@@ -254,11 +254,3 @@ We removed TVL from WLFI market which almost supplied by WLFI team multisig
 We removed TVL from brBTC market on BSC which have no borrow
 
 - brBTC market - 0x529A60A7aCDBDdf3D71d8cAe72720716BC192106
-
-#### AFI Protocol
-
-We removed TVL from afi_rwaUSDi vaults, they have only one large deposit
-
-- ethereum - 0xFEE3FBe137cDDcBc479D946EC09596e65e2F29D3
-- base - 0xed5aa9b6eb62298492c7246fe724ee088a760155
-- monad - 0xed5aa9b6eb62298492c7246fe724ee088a760155
